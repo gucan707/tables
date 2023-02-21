@@ -1,0 +1,99 @@
+import { TagColors } from "./color";
+import { TableColumnTypes } from "./tableHead";
+
+type CommonAtrributes = {
+  id: string;
+  /** 对应的列表头的 id */
+  headId: string;
+};
+
+/** 文本 */
+export type TextType = {
+  type: TableColumnTypes.Text;
+  text: string;
+} & CommonAtrributes;
+
+/** 复选框 */
+export type CheckboxType = {
+  type: TableColumnTypes.Checkbox;
+  checked: boolean;
+} & CommonAtrributes;
+
+/** 单选 */
+export type SelectType = {
+  type: TableColumnTypes.Select;
+  content: SelectOptionType;
+} & CommonAtrributes;
+
+/** 选项 tab 类型，用于单多选 */
+export type SelectOptionType = {
+  id: string;
+  text: string;
+  color: TagColors;
+};
+
+/** 多选 */
+export type MultiSelectType = {
+  type: TableColumnTypes.MultiSelect;
+  contents: SelectOptionType[];
+} & CommonAtrributes;
+
+/** 日期 */
+export type DateType = {
+  type: TableColumnTypes.Date;
+  /** 日期时间戳，单位：毫秒 */
+  date: number;
+  /** 日期格式化方式 */
+  format: DateFormatOptions;
+} & CommonAtrributes;
+
+/** 日期格式化方式 */
+export enum DateFormatOptions {
+  /** 年月日, 例如: 2023/01/01 */
+  YMD,
+  /** 年月日时间, 例如: 2023/01/01 11:00 */
+  YMDT,
+  /** 月日, 例如: 01/01 */
+  MD,
+  /** 月日时间, 例如: 01/01 11:00 */
+  MDT,
+}
+
+/** 数字 */
+export type NumberType = {
+  type: TableColumnTypes.Number;
+  content: number;
+  /** 小数位数 */
+  decimal: NumberFormatDecimal;
+  /** 百分比格式 */
+  percent: NumberFormatPercent;
+} & CommonAtrributes;
+
+/** 小数位数 */
+enum NumberFormatDecimal {
+  None,
+  One,
+  Two,
+}
+
+/** 百分比格式 */
+enum NumberFormatPercent {
+  /** 非百分比 */
+  None,
+  /** 百分比 */
+  Percent,
+}
+
+/** 一行数据 */
+export type RowData = (
+  | TextType
+  | CheckboxType
+  | SelectType
+  | MultiSelectType
+  | DateType
+)[];
+
+export type Row = {
+  data: RowData;
+  tableId: string;
+};
