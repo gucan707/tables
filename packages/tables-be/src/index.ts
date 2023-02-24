@@ -24,7 +24,7 @@ app
   .use(KoaBody())
   .use((ctx) => {
     console.log(ctx.request.body);
-    ctx.body = "gcc";
+    ctx.body = "1234";
   });
 
 httpServer.listen(3011);
