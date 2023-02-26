@@ -1,4 +1,4 @@
-export enum TagColors {
+export enum TableTagColors {
   Red = "rgba(255, 183, 183, 0.5)",
   Orange = "rgba(255, 202, 172, 0.5)",
   Yellow = "rgba(255, 239, 156, 0.5)",

@@ -5,6 +5,7 @@ import logger from "koa-logger";
 import { Server } from "socket.io";
 
 import cors from "@koa/cors";
+import router from "./router";
 
 const app = new Koa();
 
@@ -22,10 +23,8 @@ app
   .use(logger())
   .use(cors({ credentials: true, origin: "http://localhost:3000" }))
   .use(KoaBody())
-  .use((ctx) => {
-    console.log(ctx.request.body);
-    ctx.body = "1234";
-  });
+  .use(router.routes())
+  .use(router.allowedMethods());
 
 httpServer.listen(3011);
 

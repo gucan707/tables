@@ -2,3 +2,4 @@ packages:
   - "packages/tables-fe"
   - "packages/tables-be"
   - "packages/types"
+  - "packages/utils"

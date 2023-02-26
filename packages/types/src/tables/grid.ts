@@ -1,4 +1,4 @@
-import { TagColors } from "./color";
+import { TableTagColors } from "./color";
 import { TableColumnTypes } from "./tableHead";
 
 type CommonAtrributes = {
@@ -29,7 +29,7 @@ export type SelectType = {
 export type SelectOptionType = {
   id: string;
   text: string;
-  color: TagColors;
+  color: TableTagColors;
 };
 
 /** 多选 */
