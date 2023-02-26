@@ -26,8 +26,8 @@ app
   .use(router.routes())
   .use(router.allowedMethods());
 
-httpServer.listen(3011);
+httpServer.listen(8080);
 
-console.log("listen on 3011");
+console.log("listen on 8080");
 
 export default io;
