@@ -2,7 +2,6 @@ import { IMiddleware } from "koa-router";
 import { users } from "../../db";
 import { ReqCreateUser, ResCommon, ResCreateUser } from "@tables/types";
 import { checkUsername } from "@tables/utils";
-import { ObjectId } from "mongodb";
 
 export const createUser: IMiddleware = async (ctx) => {
   const req = ctx.request.body as ReqCreateUser;
