@@ -1,5 +1,4 @@
 import {
-  ReqCreateTable,
   ResCommon,
   ResCreateTable,
   Row,
