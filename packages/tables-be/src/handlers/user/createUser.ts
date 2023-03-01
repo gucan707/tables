@@ -2,6 +2,7 @@ import { IMiddleware } from "koa-router";
 import { users } from "../../db";
 import { ReqCreateUser, ResCommon, ResCreateUser } from "@tables/types";
 import { checkUsername } from "@tables/utils";
+import { ObjectId } from "mongodb";
 
 export const createUser: IMiddleware = async (ctx) => {
   const req = ctx.request.body as ReqCreateUser;
@@ -23,15 +24,18 @@ export const createUser: IMiddleware = async (ctx) => {
     return;
   }
 
-  const user = await users.insertOne({
+  const _id = new ObjectId().toString();
+
+  await users.insertOne({
     name: req.name,
     pw: req.pw,
+    _id,
   });
-  const ret: ResCommon<ResCreateUser> = {
+  const res: ResCommon<ResCreateUser> = {
     status: 200,
     msg: "ok",
-    data: user.insertedId.toString(),
+    data: _id,
   };
 
-  ctx.body = ret;
+  ctx.body = res;
 };

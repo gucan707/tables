@@ -25,11 +25,11 @@ export const signInWithPw: IMiddleware = async (ctx) => {
     return;
   }
 
-  const ret: ResCommon<ResSignIn> = {
+  const res: ResCommon<ResSignIn> = {
     status: 200,
     msg: "ok",
-    data: jwt.sign({ user: req.name }, TOKEN_SCRETE),
+    data: jwt.sign({ user: req.name, _id: existedUser._id }, TOKEN_SCRETE),
   };
 
-  ctx.body = ret;
+  ctx.body = res;
 };

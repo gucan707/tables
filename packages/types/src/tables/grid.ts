@@ -2,8 +2,8 @@ import { TableTagColors } from "./color";
 import { TableColumnTypes } from "./tableHead";
 
 type CommonAtrributes = {
-  id: string;
-  /** 对应的列表头的 id */
+  _id: string;
+  /** 对应的列表头的 _id */
   headId: string;
 };
 
@@ -27,7 +27,7 @@ export type SelectType = {
 
 /** 选项 tab 类型，用于单多选 */
 export type SelectOptionType = {
-  id: string;
+  _id: string;
   text: string;
   color: TableTagColors;
 };
