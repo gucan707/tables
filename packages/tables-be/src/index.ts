@@ -6,6 +6,7 @@ import { Server } from "socket.io";
 
 import cors from "@koa/cors";
 import router from "./router";
+import { handleError } from "./middleware/handleError";
 
 const app = new Koa();
 
@@ -21,6 +22,7 @@ const io = new Server(httpServer, {
 
 app
   .use(logger())
+  .use(handleError)
   .use(cors({ credentials: true, origin: "http://localhost:3000" }))
   .use(KoaBody())
   .use(router.routes())

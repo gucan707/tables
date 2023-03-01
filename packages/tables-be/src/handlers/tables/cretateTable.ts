@@ -10,11 +10,14 @@ import {
 import { IMiddleware } from "koa-router";
 import { ObjectId } from "mongodb";
 import { tables } from "../../db";
+import { checkToken } from "../../utils/checkToken";
 
 export const createTable: IMiddleware = async (ctx) => {
-  const req = ctx.request.body as ReqCreateTable;
+  const userInfo = checkToken(ctx);
+  console.log("1");
+
   const tableId = new ObjectId().toString();
-  const initialTable = getInitialTable(req.owner, tableId);
+  const initialTable = getInitialTable(userInfo._id, tableId);
   await tables.insertOne(initialTable);
 
   const res: ResCommon<ResCreateTable> = {

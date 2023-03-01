@@ -1,4 +1,4 @@
-import { ReqSignIn, ResCommon, ResSignIn } from "@tables/types";
+import { ReqSignIn, ResCommon, ResSignIn, UserToken } from "@tables/types";
 import { IMiddleware } from "koa-router";
 import jwt from "jsonwebtoken";
 import { users } from "../../db";
@@ -25,10 +25,15 @@ export const signInWithPw: IMiddleware = async (ctx) => {
     return;
   }
 
+  const userInfo: UserToken = {
+    _id: existedUser._id,
+    name: req.name,
+  };
+
   const res: ResCommon<ResSignIn> = {
     status: 200,
     msg: "ok",
-    data: jwt.sign({ user: req.name, _id: existedUser._id }, TOKEN_SCRETE),
+    data: jwt.sign(userInfo, TOKEN_SCRETE),
   };
 
   ctx.body = res;
