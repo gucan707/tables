@@ -62,6 +62,8 @@ importers:
     specifiers:
       '@arco-design/web-react': ^2.45.1
       '@arco-plugins/webpack-react': ^1.4.8
+      '@tables/types': workspace:^
+      '@tables/utils': workspace:^
       '@testing-library/jest-dom': ^5.16.5
       '@testing-library/react': ^13.4.0
       '@testing-library/user-event': ^13.5.0
@@ -80,6 +82,8 @@ importers:
       web-vitals: ^2.1.4
     dependencies:
       '@arco-design/web-react': 2.45.1_zula6vjvt3wdocc4mwcxqa6nzi
+      '@tables/types': link:../types
+      '@tables/utils': link:../utils
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
       '@testing-library/user-event': 13.5.0
@@ -103,7 +107,10 @@ importers:
     specifiers: {}
 
   packages/utils:
-    specifiers: {}
+    specifiers:
+      typescript: ^4.9.5
+    dependencies:
+      typescript: 4.9.5
 
 packages:
 
