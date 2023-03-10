@@ -1,21 +1,5 @@
-enum OperatorType {
-  Insert,
-  Delete,
-  Retain,
-}
-type Operator<T> =
-  | {
-      type: OperatorType.Delete | OperatorType.Retain;
-      count: number;
-      data?: never;
-    }
-  | {
-      type: OperatorType.Insert;
-      count?: never;
-      data: T extends string ? T : T[];
-    };
-
-abstract class OT1D<T> {
+import { Operator, OperatorType } from "@tables/types";
+export abstract class OT1D<T> {
   ops: Operator<T>[] = [];
   baseLength: number = 0;
   targetLength: number = 0;

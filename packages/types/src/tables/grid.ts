@@ -5,6 +5,7 @@ type CommonAtrributes = {
   _id: string;
   /** 对应的列表头的 _id */
   headId: string;
+  version: number;
 };
 
 /** 文本 */
@@ -94,6 +95,7 @@ export type RowData = (
 )[];
 
 export type Row = {
+  _id: string;
   data: RowData;
   tableId: string;
 };

@@ -13,6 +13,12 @@ importers:
     devDependencies:
       '@types/jsonwebtoken': 9.0.1
 
+  packages/ot:
+    specifiers:
+      '@tables/types': workspace:^
+    dependencies:
+      '@tables/types': link:../types
+
   packages/tables-be:
     specifiers:
       '@koa/cors': ^4.0.0
