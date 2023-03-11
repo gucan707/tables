@@ -1,9 +1,13 @@
-import { FC } from "react";
-import { Button, Form, Input, Tabs, Typography } from "@arco-design/web-react";
 import "./index.less";
+
+import { FC } from "react";
+
+import { Button, Form, Input, Tabs, Typography } from "@arco-design/web-react";
+
+import { signIn } from "../../http/user/signIn";
+import { signUp } from "../../http/user/signUp";
 import { useSignInInfo } from "./hooks/useSignInInfo";
 import { useSignUpInfo } from "./hooks/useSignUpInfo";
-import { signUp } from "../../http/user/signUp";
 
 const FormItem = Form.Item;
 const TabPane = Tabs.TabPane;
@@ -34,7 +38,9 @@ export const SignIn: FC = () => {
               />
             </FormItem>
             <FormItem className="sign-tabs-form-button" wrapperCol={{}}>
-              <Button type="primary">登录</Button>
+              <Button onClick={() => signIn(signInInfo)} type="primary">
+                登录
+              </Button>
             </FormItem>
           </Form>
         </TabPane>
