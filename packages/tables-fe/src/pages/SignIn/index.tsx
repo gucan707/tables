@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Button, Form, Input, Tabs } from "@arco-design/web-react";
+import { Button, Form, Input, Tabs, Typography } from "@arco-design/web-react";
 import "./index.less";
 import { useSignIn } from "./hooks/useSignIn";
 import { useSignUp } from "./hooks/useSignUp";
@@ -32,7 +32,7 @@ export const SignIn: FC = () => {
                 placeholder="请输入密码"
               />
             </FormItem>
-            <FormItem wrapperCol={{}}>
+            <FormItem className="sign-tabs-form-button" wrapperCol={{}}>
               <Button type="primary">登录</Button>
             </FormItem>
           </Form>
@@ -44,7 +44,11 @@ export const SignIn: FC = () => {
                 value={signUpInfo.name}
                 onChange={setName}
                 placeholder="请输入用户名"
+                status={errorMsg.name ? "error" : undefined}
               />
+              {!!errorMsg.name && (
+                <Typography.Text type="error">{errorMsg.name}</Typography.Text>
+              )}
             </FormItem>
             <FormItem label="密码">
               <Input.Password
@@ -52,7 +56,11 @@ export const SignIn: FC = () => {
                 onChange={setPw}
                 visibilityToggle
                 placeholder="请输入密码"
+                status={errorMsg.pw ? "error" : undefined}
               />
+              {!!errorMsg.pw && (
+                <Typography.Text type="error">{errorMsg.pw}</Typography.Text>
+              )}
             </FormItem>
             <FormItem label="重复密码">
               <Input.Password
@@ -60,9 +68,15 @@ export const SignIn: FC = () => {
                 onChange={setRepeatPw}
                 visibilityToggle
                 placeholder="请再次输入密码"
+                status={errorMsg.repeatPw ? "error" : undefined}
               />
+              {!!errorMsg.repeatPw && (
+                <Typography.Text type="error">
+                  {errorMsg.repeatPw}
+                </Typography.Text>
+              )}
             </FormItem>
-            <FormItem wrapperCol={{}}>
+            <FormItem className="sign-tabs-form-button" wrapperCol={{}}>
               <Button type="primary">注册</Button>
             </FormItem>
           </Form>

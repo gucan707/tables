@@ -31,6 +31,8 @@ export function useSignUp() {
         ...errorMsg,
         pw: "密码需6～15位，且至少包含数字与英文字母",
       });
+    } else {
+      _setErrorMsg({ ...errorMsg, pw: "" });
     }
     _setSignUpInfo({ ...signUpInfo, pw });
   };
@@ -38,6 +40,8 @@ export function useSignUp() {
   const setRepeatPw = (pw: string) => {
     if (pw !== signUpInfo.pw) {
       _setErrorMsg({ ...errorMsg, repeatPw: "两次密码不一致" });
+    } else {
+      _setErrorMsg({ ...errorMsg, repeatPw: "" });
     }
     _setSignUpInfo({ ...signUpInfo, repeatPw: pw });
   };
