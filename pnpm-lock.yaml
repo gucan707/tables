@@ -119,6 +119,7 @@ importers:
       '@types/react-dom': ^18.0.11
       '@vitejs/plugin-react': ^3.1.0
       axios: ^1.3.4
+      js-sha256: ^0.9.0
       less: ^4.1.3
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -139,6 +140,7 @@ importers:
       '@types/node': 16.18.12
       '@types/react-dom': 18.0.11
       axios: 1.3.4
+      js-sha256: 0.9.0
       less: 4.1.3
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -8309,6 +8311,10 @@ packages:
 
   /js-sdsl/4.3.0:
     resolution: {integrity: sha512-mifzlm2+5nZ+lEcLJMoBK0/IH/bDg8XnJfd/Wq6IP+xoCjLZsTOnV2QpxlVbX9bMnkl5PdEjNtBJ9Cj1NjifhQ==}
+    dev: false
+
+  /js-sha256/0.9.0:
+    resolution: {integrity: sha512-sga3MHh9sgQN2+pJ9VYZ+1LPwXOxuBJBA5nrR5/ofPfuiJBE2hnjsaN8se8JznOmGLN2p49Pe5U/ttafcs/apA==}
     dev: false
 
   /js-tokens/4.0.0:

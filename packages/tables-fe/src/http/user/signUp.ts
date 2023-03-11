@@ -1,8 +1,11 @@
-import { SignUpInfo } from "../../pages/SignIn/hooks/useSignUpInfo";
-import { SIGN_UP_URL } from "../url";
+import { sha256 } from "js-sha256";
+
 import { Message } from "@arco-design/web-react";
-import { request } from "../request";
 import { ReqCreateUser, ResCreateUser } from "@tables/types";
+
+import { SignUpInfo } from "../../pages/SignIn/hooks/useSignUpInfo";
+import { request } from "../request";
+import { SIGN_UP_URL } from "../url";
 
 export async function signUp(
   info: Omit<SignUpInfo, "repeatPw">,
@@ -26,7 +29,7 @@ export async function signUp(
   const res = await request<ResCreateUser, ReqCreateUser>({
     url: SIGN_UP_URL,
     method: "POST",
-    data: { name: info.name, pw: info.pw },
+    data: { name: info.name, pw: sha256(info.pw) },
   });
 
   res && Message.success("注册成功！");
