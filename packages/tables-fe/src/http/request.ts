@@ -1,5 +1,8 @@
-import { ResCommon } from "@tables/types";
 import axios, { AxiosRequestConfig } from "axios";
+
+import { Message } from "@arco-design/web-react";
+import { ResCommon } from "@tables/types";
+
 import { SERVER_BASE_URL } from "./url";
 
 export function request<T = {}, D = {}>(config: AxiosRequestConfig<D>) {
@@ -33,7 +36,7 @@ export function request<T = {}, D = {}>(config: AxiosRequestConfig<D>) {
       }
     } catch (err) {
       console.error(err);
-      err instanceof Error && alert(err.message);
+      err instanceof Error && Message.error(err.message);
 
       // if (err instanceof Error) {
       //   const id = nanoid();
