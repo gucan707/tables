@@ -18,6 +18,11 @@ export async function signUp(
 
   if (hasErr) return;
 
+  if (Object.values(info).some((val) => val === "")) {
+    Message.error("请完善注册信息");
+    return;
+  }
+
   const res = await request<ResCreateUser, ReqCreateUser>({
     url: SIGN_UP_URL,
     method: "POST",
