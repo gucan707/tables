@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Button, Form, Input, Tabs } from "@arco-design/web-react";
-import "./index.scss";
+import "./index.less";
 import { useSignIn } from "./hooks/useSignIn";
 import { useSignUp } from "./hooks/useSignUp";
 
