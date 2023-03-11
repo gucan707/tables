@@ -1,15 +1,16 @@
 import { FC } from "react";
 import { Button, Form, Input, Tabs, Typography } from "@arco-design/web-react";
 import "./index.less";
-import { useSignIn } from "./hooks/useSignIn";
-import { useSignUp } from "./hooks/useSignUp";
+import { useSignInInfo } from "./hooks/useSignInInfo";
+import { useSignUpInfo } from "./hooks/useSignUpInfo";
+import { signUp } from "../../http/user/signUp";
 
 const FormItem = Form.Item;
 const TabPane = Tabs.TabPane;
 
 export const SignIn: FC = () => {
-  const { setSignInInfo, signInInfo } = useSignIn();
-  const { errorMsg, setName, setPw, setRepeatPw, signUpInfo } = useSignUp();
+  const { setSignInInfo, signInInfo } = useSignInInfo();
+  const { errorMsg, setName, setPw, setRepeatPw, signUpInfo } = useSignUpInfo();
 
   return (
     <div className="sign">
@@ -77,7 +78,12 @@ export const SignIn: FC = () => {
               )}
             </FormItem>
             <FormItem className="sign-tabs-form-button" wrapperCol={{}}>
-              <Button type="primary">注册</Button>
+              <Button
+                type="primary"
+                onClick={() => signUp(signUpInfo, errorMsg)}
+              >
+                注册
+              </Button>
             </FormItem>
           </Form>
         </TabPane>

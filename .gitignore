@@ -2,3 +2,4 @@ node_modules
 build
 dbInfo.ts
 private
+.DS_Store

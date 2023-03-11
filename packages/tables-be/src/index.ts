@@ -14,7 +14,7 @@ const httpServer = createServer(app.callback());
 
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://127.0.0.1:3000",
+    origin: "http://127.0.0.1:5173",
     methods: ["GET", "POST"],
   },
   path: "foo",
@@ -23,7 +23,7 @@ const io = new Server(httpServer, {
 app
   .use(logger())
   .use(handleError)
-  .use(cors({ credentials: true, origin: "http://localhost:3000" }))
+  .use(cors({ credentials: true, origin: "http://127.0.0.1:5173" }))
   .use(KoaBody())
   .use(router.routes())
   .use(router.allowedMethods());

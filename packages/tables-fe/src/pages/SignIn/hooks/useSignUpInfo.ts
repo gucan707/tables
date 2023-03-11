@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export type SignUpInfo = Pick<User, "name" | "pw"> & { repeatPw: string };
 
-export function useSignUp() {
+export function useSignUpInfo() {
   const initial: SignUpInfo = {
     name: "",
     pw: "",
