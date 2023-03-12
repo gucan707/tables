@@ -72,6 +72,13 @@ export const fakeTables: Table[] = [
             headId: "640c4048a72793f4e8e7656e",
             version: 1,
           },
+          {
+            type: TableColumnTypes.Text,
+            _id: "5",
+            text: "哈哈哈哈哈哈哈哈哈",
+            headId: "640c4048a72793f4e8e76569",
+            version: 1,
+          },
         ],
       },
     ],
