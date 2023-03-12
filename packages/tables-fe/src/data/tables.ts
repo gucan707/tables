@@ -1,4 +1,4 @@
-import { Table, TableColumnTypes } from "@tables/types";
+import { DateFormatOptions, Table, TableColumnTypes } from "@tables/types";
 
 export const fakeTables: Table[] = [
   {
@@ -47,6 +47,14 @@ export const fakeTables: Table[] = [
             _id: "2",
             checked: true,
             headId: "640c4048a72793f4e8e7656a",
+            version: 1,
+          },
+          {
+            type: TableColumnTypes.Date,
+            _id: "4",
+            date: 1678610596662,
+            format: DateFormatOptions.YMDT,
+            headId: "640c4048a72793f4e8e7656d",
             version: 1,
           },
         ],

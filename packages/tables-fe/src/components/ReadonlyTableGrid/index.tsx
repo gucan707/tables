@@ -73,9 +73,11 @@ function getFormattedDate(time: number, format: DateFormatOptions) {
   const date = new Date(time);
   const year = date.getFullYear(),
     month = date.getMonth() + 1,
-    day = date.getDay(),
+    day = date.getDate(),
     hour = date.getHours(),
     minute = date.getMinutes();
+
+  console.log({ date, year, month, day, hour, minute });
 
   switch (format) {
     case DateFormatOptions.MD:
