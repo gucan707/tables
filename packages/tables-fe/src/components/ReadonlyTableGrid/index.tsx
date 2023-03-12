@@ -16,10 +16,8 @@ export type ReadonlyTableGridProps = {
 
 export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
   const { grid } = props;
-  console.log(19, { grid });
 
   if (!grid) return <td></td>;
-  console.log({ grid });
 
   let content: JSX.Element;
   switch (grid.type) {

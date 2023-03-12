@@ -8,7 +8,6 @@ import { TableIcon } from "../TableIcon";
 
 export const ReadonlyTable: FC = () => {
   const { heads, body } = fakeTables[0];
-  console.log(body);
 
   return (
     <table className="readonly_table">

@@ -12,7 +12,6 @@ export type ReadonlyTableRowProps = {
 export const ReadonlyTableRow: FC<ReadonlyTableRowProps> = (props) => {
   const { row, heads } = props;
   const mapRow = getMapRow(row);
-  console.log({ mapRow });
 
   return (
     <tr>
