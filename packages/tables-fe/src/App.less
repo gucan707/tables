@@ -1,4 +1,21 @@
 .App {
   --border-gray: #e7e7e7;
   --font-gray: rgba(55, 53, 47, 0.65);
+  --grid-padding: 5px 10px;
+}
+
+.grid_common {
+  width: 200px;
+  min-width: 60px;
+  border: 1px solid var(--border-gray);
+  border-right: none;
+  border-bottom: none;
+  padding: var(--grid-padding);
+  color: var(--font-gray);
+  text-align: start;
+  font-weight: normal;
+
+  &:first-child {
+    border-left: none;
+  }
 }

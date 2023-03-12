@@ -14,7 +14,10 @@ export const ReadonlyTable: FC = () => {
       <thead className="readonly_table-heads">
         <tr>
           {heads.map((head) => (
-            <th key={head._id} className="readonly_table-heads-item">
+            <th
+              key={head._id}
+              className="readonly_table-heads-item grid_common"
+            >
               <TableIcon
                 type={head.type}
                 className="readonly_table-heads-item-icon"

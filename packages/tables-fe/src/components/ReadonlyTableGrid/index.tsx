@@ -64,7 +64,7 @@ export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
       break;
   }
 
-  return <td className="readonly_grid">{content}</td>;
+  return <td className="readonly_grid grid_common">{content}</td>;
 };
 
 function getFormattedDate(time: number, format: DateFormatOptions) {
