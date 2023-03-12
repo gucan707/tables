@@ -10,28 +10,30 @@ export const ReadonlyTable: FC = () => {
   const { heads, body } = fakeTables[0];
 
   return (
-    <table className="readonly_table">
-      <thead className="readonly_table-heads">
-        <tr>
-          {heads.map((head) => (
-            <th
-              key={head._id}
-              className="readonly_table-heads-item grid_common"
-            >
-              <TableIcon
-                type={head.type}
-                className="readonly_table-heads-item-icon"
-              />
-              {head.name}
-            </th>
+    <div className="readonly_table-container">
+      <table className="readonly_table">
+        <thead className="readonly_table-heads">
+          <tr>
+            {heads.map((head) => (
+              <th
+                key={head._id}
+                className="readonly_table-heads-item grid_common"
+              >
+                <TableIcon
+                  type={head.type}
+                  className="readonly_table-heads-item-icon"
+                />
+                {head.name}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {body.map((row) => (
+            <ReadonlyTableRow heads={heads} row={row} key={row._id} />
           ))}
-        </tr>
-      </thead>
-      <tbody>
-        {body.map((row) => (
-          <ReadonlyTableRow heads={heads} row={row} key={row._id} />
-        ))}
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   );
 };
