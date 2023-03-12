@@ -71,31 +71,31 @@ export type NumberType = {
 } & CommonAtrributes;
 
 /** 小数位数 */
-enum NumberFormatDecimal {
+export enum NumberFormatDecimal {
   None,
   One,
   Two,
 }
 
 /** 百分比格式 */
-enum NumberFormatPercent {
+export enum NumberFormatPercent {
   /** 非百分比 */
   None,
   /** 百分比 */
   Percent,
 }
 
-/** 一行数据 */
-export type RowData = (
+/** 一格数据 */
+export type Grid =
   | TextType
   | CheckboxType
   | SelectType
   | MultiSelectType
   | DateType
-)[];
+  | NumberType;
 
 export type Row = {
   _id: string;
-  data: RowData;
+  data: Grid[];
   tableId: string;
 };
