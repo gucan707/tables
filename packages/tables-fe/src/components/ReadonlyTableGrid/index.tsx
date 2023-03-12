@@ -1,3 +1,5 @@
+import "./index.less";
+
 import { FC } from "react";
 
 import { Tag } from "@arco-design/web-react";
@@ -29,7 +31,7 @@ export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
         <div
           className={`readonly_grid-checkbox ${grid.checked ? "checked" : ""}`}
         >
-          <IconCheck />
+          {grid.checked && <IconCheck />}
         </div>
       );
       break;
