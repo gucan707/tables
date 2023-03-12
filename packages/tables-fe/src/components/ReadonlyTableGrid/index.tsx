@@ -1,5 +1,6 @@
 import "./index.less";
 
+import dayjs from "dayjs";
 import { FC } from "react";
 
 import { Tag } from "@arco-design/web-react";
@@ -36,7 +37,7 @@ export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
       );
       break;
     case TableColumnTypes.Date:
-      content = <>{getFormattedDate(grid.date, grid.format)}</>;
+      content = <>{dayjs(grid.date).format(grid.format)}</>;
       break;
     case TableColumnTypes.MultiSelect:
       content = (
@@ -51,7 +52,9 @@ export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
       break;
     case TableColumnTypes.Number:
       content = (
-        <>{getFormattedNumber(grid.content, grid.decimal, grid.percent)}</>
+        <div className="readonly_grid-num">
+          {getFormattedNumber(grid.content, grid.decimal, grid.percent)}
+        </div>
       );
       break;
     case TableColumnTypes.Select:
@@ -68,30 +71,6 @@ export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
 
   return <td className="readonly_grid grid_common">{content}</td>;
 };
-
-function getFormattedDate(time: number, format: DateFormatOptions) {
-  const date = new Date(time);
-  const year = date.getFullYear(),
-    month = date.getMonth() + 1,
-    day = date.getDate(),
-    hour = date.getHours(),
-    minute = date.getMinutes();
-
-  console.log({ date, year, month, day, hour, minute });
-
-  switch (format) {
-    case DateFormatOptions.MD:
-      return `${month}/${day}`;
-    case DateFormatOptions.MDT:
-      return `${month}/${day} ${hour}:${minute}`;
-    case DateFormatOptions.YMD:
-      return `${year}/${month}/${day}`;
-    case DateFormatOptions.YMDT:
-      return `${year}/${month}/${day} ${hour}:${minute}`;
-    default:
-      return "";
-  }
-}
 
 function getFormattedNumber(
   num: number,

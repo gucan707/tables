@@ -51,13 +51,13 @@ export type DateType = {
 /** 日期格式化方式 */
 export enum DateFormatOptions {
   /** 年月日, 例如: 2023/01/01 */
-  YMD,
+  YMD = "YYYY/MM/DD",
   /** 年月日时间, 例如: 2023/01/01 11:00 */
-  YMDT,
+  YMDT = "YYYY/MM/DD HH:mm",
   /** 月日, 例如: 01/01 */
-  MD,
+  MD = "MM/DD",
   /** 月日时间, 例如: 01/01 11:00 */
-  MDT,
+  MDT = "MM/DD HH:mm",
 }
 
 /** 数字 */

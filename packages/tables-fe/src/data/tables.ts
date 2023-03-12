@@ -1,4 +1,10 @@
-import { DateFormatOptions, Table, TableColumnTypes } from "@tables/types";
+import {
+  DateFormatOptions,
+  NumberFormatDecimal,
+  NumberFormatPercent,
+  Table,
+  TableColumnTypes,
+} from "@tables/types";
 
 export const fakeTables: Table[] = [
   {
@@ -55,6 +61,15 @@ export const fakeTables: Table[] = [
             date: 1678610596662,
             format: DateFormatOptions.YMDT,
             headId: "640c4048a72793f4e8e7656d",
+            version: 1,
+          },
+          {
+            type: TableColumnTypes.Number,
+            _id: "5",
+            content: 123,
+            decimal: NumberFormatDecimal.None,
+            percent: NumberFormatPercent.None,
+            headId: "640c4048a72793f4e8e7656e",
             version: 1,
           },
         ],

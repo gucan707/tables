@@ -1,11 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import "./index.css";
+
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+
+dayjs.extend(timezone);
+dayjs.tz.setDefault(dayjs.tz.guess());
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
