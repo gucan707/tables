@@ -7,3 +7,9 @@ export type ReqAddCollaborators = {
   /** 表格id */
   tableId: string;
 };
+
+export type ReqGetTables = {
+  page: number;
+};
+
+export type ResGetTables = Table[];
