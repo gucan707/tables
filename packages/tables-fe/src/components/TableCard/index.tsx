@@ -22,9 +22,9 @@ export const TableCard: FC = () => {
       <Meta
         title="Card Title"
         description={
-          <>
-            Card content <br /> Card content
-          </>
+          <div>
+            上次修改：2022/01/01 <br /> 创建于：2020/01/01
+          </div>
         }
       />
     </Card>

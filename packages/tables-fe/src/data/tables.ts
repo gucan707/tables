@@ -10,6 +10,7 @@ import {
 
 export const fakeTables: Table[] = [
   {
+    title: "test",
     owner: "640c3c26a72793f4e8e76567",
     _id: "640c4048a72793f4e8e76568",
     collaborators: [],
