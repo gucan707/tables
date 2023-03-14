@@ -43,7 +43,7 @@ export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
       break;
     case TableColumnTypes.MultiSelect:
       content = (
-        <div>
+        <div className="readonly_grid-tags">
           {grid.contents.map((tagId) => (
             <Tag
               key={tagId}
