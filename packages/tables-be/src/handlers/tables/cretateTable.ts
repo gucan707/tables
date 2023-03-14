@@ -15,7 +15,6 @@ import { checkToken } from "../../utils/checkToken";
 
 export const createTable: IMiddleware = async (ctx) => {
   const userInfo = checkToken(ctx);
-  console.log("1");
 
   const tableId = new ObjectId().toString();
   const initialTable = getInitialTable(userInfo._id, tableId);

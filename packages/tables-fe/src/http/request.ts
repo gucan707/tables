@@ -14,7 +14,7 @@ export function request<T = {}, D = {}>(config: AxiosRequestConfig<D>) {
     (config) => {
       const token = window.localStorage.getItem("GCTables-token");
       config.headers = config.headers || {};
-      config.headers.Authorization = token || "";
+      config.headers.Authorization = `Bearer ${token || ""}`;
       return config;
     },
     (err) => {
