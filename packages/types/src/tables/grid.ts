@@ -23,7 +23,8 @@ export type CheckboxType = {
 /** 单选 */
 export type SelectType = {
   type: TableColumnTypes.Select;
-  content: SelectOptionType;
+  /** SelectOptionType 的 id */
+  content: string;
 } & CommonAtrributes;
 
 /** 选项 tab 类型，用于单多选 */
@@ -31,12 +32,14 @@ export type SelectOptionType = {
   _id: string;
   text: string;
   color: TableTagColors;
+  headId: string;
 };
 
 /** 多选 */
 export type MultiSelectType = {
   type: TableColumnTypes.MultiSelect;
-  contents: SelectOptionType[];
+  /** SelectOptionType 的 id 数组 */
+  contents: string[];
 } & CommonAtrributes;
 
 /** 日期 */

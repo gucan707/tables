@@ -2,8 +2,10 @@ import {
   DateFormatOptions,
   NumberFormatDecimal,
   NumberFormatPercent,
+  SelectOptionType,
   Table,
   TableColumnTypes,
+  TableTagColors,
 } from "@tables/types";
 
 export const fakeTables: Table[] = [
@@ -79,8 +81,24 @@ export const fakeTables: Table[] = [
             headId: "640c4048a72793f4e8e76569",
             version: 1,
           },
+          {
+            type: TableColumnTypes.Select,
+            _id: "9",
+            content: "tag1",
+            headId: "640c4048a72793f4e8e7656b",
+            version: 1,
+          },
         ],
       },
     ],
+  },
+];
+
+export const fakeTags: SelectOptionType[] = [
+  {
+    _id: "tag1",
+    headId: "640c4048a72793f4e8e7656b",
+    text: "test",
+    color: TableTagColors.Blue,
   },
 ];

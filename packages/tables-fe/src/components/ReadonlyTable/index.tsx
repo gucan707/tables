@@ -2,12 +2,16 @@ import "./index.less";
 
 import { FC } from "react";
 
-import { fakeTables } from "../../data/tables";
+import { SelectOptionType } from "@tables/types";
+
+import { fakeTables, fakeTags } from "../../data/tables";
 import { ReadonlyTableRow } from "../ReadonlyTableRow";
 import { TableIcon } from "../TableIcon";
 
 export const ReadonlyTable: FC = () => {
   const { heads, body } = fakeTables[0];
+  const tags = getMapTags(fakeTags);
+  console.log(tags);
 
   return (
     <div className="readonly_table-container">
@@ -30,10 +34,23 @@ export const ReadonlyTable: FC = () => {
         </thead>
         <tbody>
           {body.map((row) => (
-            <ReadonlyTableRow heads={heads} row={row} key={row._id} />
+            <ReadonlyTableRow
+              heads={heads}
+              row={row}
+              key={row._id}
+              tags={tags}
+            />
           ))}
         </tbody>
       </table>
     </div>
   );
 };
+
+function getMapTags(tags: SelectOptionType[]) {
+  const mapTags = new Map<string, SelectOptionType>();
+  tags.forEach((tag) => {
+    mapTags.set(tag._id, tag);
+  });
+  return mapTags;
+}

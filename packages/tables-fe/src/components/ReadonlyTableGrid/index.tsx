@@ -6,19 +6,21 @@ import { FC } from "react";
 import { Tag } from "@arco-design/web-react";
 import { IconCheck } from "@arco-design/web-react/icon";
 import {
-  DateFormatOptions,
   Grid,
   NumberFormatDecimal,
   NumberFormatPercent,
+  SelectOptionType,
   TableColumnTypes,
+  TableTagColors,
 } from "@tables/types";
 
 export type ReadonlyTableGridProps = {
   grid: Grid | undefined;
+  tags: Map<string, SelectOptionType>;
 };
 
 export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
-  const { grid } = props;
+  const { grid, tags } = props;
 
   if (!grid) return <td></td>;
 
@@ -42,9 +44,13 @@ export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
     case TableColumnTypes.MultiSelect:
       content = (
         <div>
-          {grid.contents.map((item) => (
-            <Tag key={item._id} closable color={item.color}>
-              {item.text}
+          {grid.contents.map((tagId) => (
+            <Tag
+              key={tagId}
+              closable
+              color={tags.get(tagId)?.color || TableTagColors.Blue}
+            >
+              {tags.get(tagId)?.text || ""}
             </Tag>
           ))}
         </div>
@@ -59,8 +65,11 @@ export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
       break;
     case TableColumnTypes.Select:
       content = (
-        <Tag closable color={grid.content.color}>
-          {grid.content.text}
+        <Tag
+          closable
+          color={tags.get(grid.content)?.color || TableTagColors.Blue}
+        >
+          {tags.get(grid.content)?.text || ""}
         </Tag>
       );
       break;
