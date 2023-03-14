@@ -15,3 +15,9 @@ export class TErrorTablePermission extends TError {
     super("您无权限对该表格做此操作", 401);
   }
 }
+
+export class TErrorPageError extends TError {
+  constructor() {
+    super("page 格式不正确", 400);
+  }
+}

@@ -4,16 +4,20 @@ import { ReqGetTables, ResCommon, ResGetTables, Table } from "@tables/types";
 
 import { rows, tables } from "../../db";
 import { checkToken } from "../../utils/checkToken";
+import { TErrorPageError } from "../../utils/errors";
 
 const LIMIT_TABLES = 24;
 const LIMIT_ROWS = 3;
 
 export const getTables: IMiddleware = async (ctx) => {
   const userInfo = checkToken(ctx);
-  const req = ctx.request.body as ReqGetTables;
+  const req = ctx.request.query as { [K in keyof ReqGetTables]: string };
+  if (isNaN(Number(req.page))) {
+    throw new TErrorPageError();
+  }
   const tablesCursor = tables.find({ owner: userInfo._id });
   const tablesRes = await tablesCursor
-    .skip(req.page * LIMIT_TABLES)
+    .skip(Number(req.page) * LIMIT_TABLES)
     .limit(LIMIT_TABLES)
     .toArray();
 
