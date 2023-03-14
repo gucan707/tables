@@ -2,7 +2,7 @@ import "./index.less";
 
 import { FC } from "react";
 
-import { SelectOptionType } from "@tables/types";
+import { SelectOptionType, Table } from "@tables/types";
 
 import { fakeTables, fakeTags } from "../../data/tables";
 import { ReadonlyTableRow } from "../ReadonlyTableRow";
@@ -10,11 +10,12 @@ import { TableIcon } from "../TableIcon";
 
 export type ReadonlyTableProps = {
   className?: string;
+  tables: Table[];
 };
 
 export const ReadonlyTable: FC<ReadonlyTableProps> = (props) => {
-  const { className = "" } = props;
-  const { heads, body } = fakeTables[0];
+  const { className = "", tables = [] } = props;
+  const { heads, body } = tables[0];
   const tags = getMapTags(fakeTags);
 
   return (

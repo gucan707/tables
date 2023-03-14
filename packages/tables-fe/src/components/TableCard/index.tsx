@@ -3,19 +3,28 @@ import "./index.less";
 import { FC } from "react";
 
 import { Card } from "@arco-design/web-react";
+import { Table } from "@tables/types";
 
 import { ReadonlyTable } from "../ReadonlyTable";
 
 const Meta = Card.Meta;
 
-export const TableCard: FC = () => {
+export type TableCardProps = {
+  tables: Table[];
+};
+
+export const TableCard: FC<TableCardProps> = (props) => {
+  const { tables } = props;
   return (
     <Card
       hoverable
       className="table_card"
       cover={
         <div className="table_card-cover">
-          <ReadonlyTable className="table_card-cover-mini_table" />
+          <ReadonlyTable
+            className="table_card-cover-mini_table"
+            tables={tables}
+          />
         </div>
       }
     >
