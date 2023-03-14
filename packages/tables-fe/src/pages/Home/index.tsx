@@ -25,11 +25,11 @@ export const Home: FC = () => {
         <h2>表格总览</h2>
         <div className="home-content-cards">
           {tables?.map((table) => (
-            <TableCard key={table._id} tables={tables} />
+            <TableCard key={table._id} table={table} />
           ))}
         </div>
         {tables?.map((table) => (
-          <ReadonlyTable key={table._id} tables={tables} />
+          <ReadonlyTable key={table._id} table={table} />
         ))}
       </div>
     </div>

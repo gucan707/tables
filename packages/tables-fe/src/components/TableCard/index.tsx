@@ -10,11 +10,11 @@ import { ReadonlyTable } from "../ReadonlyTable";
 const Meta = Card.Meta;
 
 export type TableCardProps = {
-  tables: Table[];
+  table: Table;
 };
 
 export const TableCard: FC<TableCardProps> = (props) => {
-  const { tables } = props;
+  const { table } = props;
   return (
     <Card
       hoverable
@@ -23,7 +23,7 @@ export const TableCard: FC<TableCardProps> = (props) => {
         <div className="table_card-cover">
           <ReadonlyTable
             className="table_card-cover-mini_table"
-            tables={tables}
+            table={table}
           />
         </div>
       }

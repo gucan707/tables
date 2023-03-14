@@ -10,12 +10,13 @@ import { TableIcon } from "../TableIcon";
 
 export type ReadonlyTableProps = {
   className?: string;
-  tables: Table[];
+  table: Table;
 };
 
 export const ReadonlyTable: FC<ReadonlyTableProps> = (props) => {
-  const { className = "", tables = [] } = props;
-  const { heads, body } = tables[0];
+  const { className = "", table } = props;
+  const { heads, body } = table;
+
   const tags = getMapTags(fakeTags);
 
   return (

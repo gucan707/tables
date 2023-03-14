@@ -39,7 +39,7 @@ export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
       );
       break;
     case TableColumnTypes.Date:
-      content = <>{dayjs(grid.date).format(grid.format)}</>;
+      content = <>{grid.date > 0 && dayjs(grid.date).format(grid.format)}</>;
       break;
     case TableColumnTypes.MultiSelect:
       content = (
@@ -64,13 +64,15 @@ export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
       );
       break;
     case TableColumnTypes.Select:
-      content = (
+      content = tags.get(grid.content) ? (
         <Tag
           closable
           color={tags.get(grid.content)?.color || TableTagColors.Blue}
         >
           {tags.get(grid.content)?.text || ""}
         </Tag>
+      ) : (
+        <></>
       );
       break;
     default:
