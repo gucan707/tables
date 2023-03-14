@@ -8,13 +8,17 @@ import { fakeTables, fakeTags } from "../../data/tables";
 import { ReadonlyTableRow } from "../ReadonlyTableRow";
 import { TableIcon } from "../TableIcon";
 
-export const ReadonlyTable: FC = () => {
+export type ReadonlyTableProps = {
+  className?: string;
+};
+
+export const ReadonlyTable: FC<ReadonlyTableProps> = (props) => {
+  const { className = "" } = props;
   const { heads, body } = fakeTables[0];
   const tags = getMapTags(fakeTags);
-  console.log(tags);
 
   return (
-    <div className="readonly_table-container">
+    <div className={`readonly_table-container ${className}`}>
       <table className="readonly_table">
         <thead className="readonly_table-heads">
           <tr>
