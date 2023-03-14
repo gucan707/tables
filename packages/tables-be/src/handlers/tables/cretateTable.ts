@@ -1,3 +1,6 @@
+import { IMiddleware } from "koa-router";
+import { ObjectId } from "mongodb";
+
 import {
   ResCommon,
   ResCreateTable,
@@ -6,8 +9,7 @@ import {
   TableColumnTypes,
   TableHeads,
 } from "@tables/types";
-import { IMiddleware } from "koa-router";
-import { ObjectId } from "mongodb";
+
 import { tables } from "../../db";
 import { checkToken } from "../../utils/checkToken";
 
@@ -30,6 +32,7 @@ export const createTable: IMiddleware = async (ctx) => {
 
 function getInitialTable(owner: string, tableId: string): Omit<Table, "body"> {
   return {
+    title: "Untitled",
     owner,
     _id: tableId,
     collaborators: [],
