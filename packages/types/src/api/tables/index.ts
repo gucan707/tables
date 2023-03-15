@@ -13,3 +13,9 @@ export type ReqGetTables = {
 };
 
 export type ResGetTables = Table[];
+
+export type ReqGetTableDetail = {
+  tableId: string;
+};
+
+export type ResGetTableDetail = Table;

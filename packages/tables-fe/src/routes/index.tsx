@@ -10,7 +10,7 @@ export const router = createBrowserRouter([
     element: <SignIn />,
   },
   {
-    path: "/table/:id",
+    path: "/table/:tableId",
     element: <Table />,
   },
   {
