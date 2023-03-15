@@ -16,8 +16,20 @@ export class TErrorTablePermission extends TError {
   }
 }
 
+export class TErrorTableReadPermission extends TError {
+  constructor() {
+    super("您没有查看此表格的权限", 401);
+  }
+}
+
 export class TErrorPageError extends TError {
   constructor() {
     super("page 格式不正确", 400);
+  }
+}
+
+export class TErrorTableIdNotFound extends TError {
+  constructor() {
+    super("表格不存在", 404);
   }
 }
