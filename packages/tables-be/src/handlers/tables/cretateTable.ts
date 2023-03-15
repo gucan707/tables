@@ -36,14 +36,14 @@ export const createTable: IMiddleware = async (ctx) => {
 
   const res: ResCommon<ResCreateTable> = {
     status: 200,
-    data: { ...initialTable, body: initialRows },
+    data: { ...initialTable, rows: initialRows },
     msg: "ok",
   };
 
   ctx.body = res;
 };
 
-function getInitialTable(owner: string, tableId: string): Omit<Table, "body"> {
+function getInitialTable(owner: string, tableId: string): Omit<Table, "rows"> {
   return {
     title: "Untitled",
     owner,

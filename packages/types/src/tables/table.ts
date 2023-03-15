@@ -5,7 +5,7 @@ export type Table = {
   _id: string;
   title: string;
   heads: TableHeads;
-  body: Row[];
+  rows: Row[];
   owner: string;
   collaborators: string[];
 };

@@ -15,7 +15,7 @@ export type ReadonlyTableProps = {
 
 export const ReadonlyTable: FC<ReadonlyTableProps> = (props) => {
   const { className = "", table } = props;
-  const { heads, body } = table;
+  const { heads, rows } = table;
 
   const tags = getMapTags(fakeTags);
 
@@ -39,7 +39,7 @@ export const ReadonlyTable: FC<ReadonlyTableProps> = (props) => {
           </tr>
         </thead>
         <tbody>
-          {body.map((row) => (
+          {rows.map((row) => (
             <ReadonlyTableRow
               heads={heads}
               row={row}

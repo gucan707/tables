@@ -46,7 +46,7 @@ export const fakeTables: Table[] = [
         type: TableColumnTypes.Number,
       },
     ],
-    body: [
+    rows: [
       {
         _id: "1",
         tableId: "640c4048a72793f4e8e76568",
