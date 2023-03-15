@@ -28,9 +28,6 @@ export const Home: FC = () => {
             <TableCard key={table._id} table={table} />
           ))}
         </div>
-        {tables?.map((table) => (
-          <ReadonlyTable key={table._id} table={table} />
-        ))}
       </div>
     </div>
   );
