@@ -4,7 +4,7 @@ import { Table } from "@tables/types";
 
 import { fakeTables, fakeTags } from "../../data/tables";
 import { getMapTags } from "../../utils/getMapTags";
-import { ReadonlyTableRow } from "../ReadonlyTableRow";
+import { EditableTableRow } from "../EditableTableRow";
 import { TableIcon } from "../TableIcon";
 
 export type EditableTableProps = {
@@ -39,7 +39,7 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
         </thead>
         <tbody>
           {rows.map((row) => (
-            <ReadonlyTableRow
+            <EditableTableRow
               heads={heads}
               row={row}
               key={row._id}

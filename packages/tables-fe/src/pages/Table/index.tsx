@@ -1,11 +1,11 @@
 import "./index.less";
 
 import { FC } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { Avatar, Button, Spin } from "@arco-design/web-react";
 
-import { ReadonlyTable } from "../../components/ReadonlyTable";
+import { EditableTable } from "../../components/EditableTable";
 import { useTableDetail } from "../../http/table/useTableDetail";
 
 const AvatarGroup = Avatar.Group;
@@ -29,7 +29,7 @@ export const Table: FC = () => {
       </header>
       <div className="table-content">
         <div className="table-content-title">学习计划</div>
-        {tableDetail ? <ReadonlyTable table={tableDetail} /> : <Spin />}
+        {tableDetail ? <EditableTable table={tableDetail} /> : <Spin />}
       </div>
     </div>
   );
