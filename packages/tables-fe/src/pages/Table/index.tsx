@@ -27,7 +27,10 @@ export const Table: FC = () => {
         </AvatarGroup>
         <Avatar>A</Avatar>
       </header>
-      {tableDetail ? <ReadonlyTable table={tableDetail} /> : <Spin />}
+      <div className="table-content">
+        <div className="table-content-title">学习计划</div>
+        {tableDetail ? <ReadonlyTable table={tableDetail} /> : <Spin />}
+      </div>
     </div>
   );
 };

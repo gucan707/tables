@@ -25,3 +25,29 @@
     border-left: none;
   }
 }
+
+.table-container {
+  max-width: 90vw;
+  margin: auto;
+  overflow-x: auto;
+  background-color: white;
+}
+
+.table {
+  border-spacing: 0;
+
+  &-heads {
+    color: var(--font-gray);
+
+    &-item {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      &-icon {
+        padding-right: 5px;
+        display: inline-block;
+      }
+    }
+  }
+}

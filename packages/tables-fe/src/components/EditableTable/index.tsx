@@ -1,39 +1,36 @@
-import "./index.less";
-
 import { FC } from "react";
 
-import { SelectOptionType, Table } from "@tables/types";
+import { Table } from "@tables/types";
 
 import { fakeTables, fakeTags } from "../../data/tables";
 import { getMapTags } from "../../utils/getMapTags";
 import { ReadonlyTableRow } from "../ReadonlyTableRow";
 import { TableIcon } from "../TableIcon";
 
-export type ReadonlyTableProps = {
+export type EditableTableProps = {
   className?: string;
   table: Table;
 };
 
-export const ReadonlyTable: FC<ReadonlyTableProps> = (props) => {
+export const EditableTable: FC<EditableTableProps> = (props) => {
   const { className = "", table } = props;
   const { heads, rows } = table;
 
-  // TODO
   const tags = getMapTags(fakeTags);
 
   return (
-    <div className={`readonly table-container ${className}`}>
-      <table className="readonly table">
-        <thead className="readonly table-heads">
+    <div className={`editable table-container ${className}`}>
+      <table className="editable table">
+        <thead className="editable table-heads">
           <tr>
             {heads.map((head) => (
               <th
                 key={head._id}
-                className="readonly table-heads-item grid_common"
+                className="editable table-heads-item grid_common"
               >
                 <TableIcon
                   type={head.type}
-                  className="readonly table-heads-item-icon"
+                  className="editable table-heads-item-icon"
                 />
                 {head.name}
               </th>
