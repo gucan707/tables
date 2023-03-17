@@ -9,7 +9,7 @@ export function useTableDetail(req: ReqGetTableDetail) {
   const GET_TABLE_DETAIL_URL = `/${TABLE_BASE_URL}/${req.tableId}`;
 
   const { data } = useSWR(GET_TABLE_DETAIL_URL, () =>
-    getTableDetail(GET_TABLE_DETAIL_URL)
+    getTableDetail(GET_TABLE_DETAIL_URL, req)
   );
 
   return {
@@ -18,7 +18,8 @@ export function useTableDetail(req: ReqGetTableDetail) {
   };
 }
 
-export async function getTableDetail(url: string) {
+export async function getTableDetail(url: string, req: ReqGetTableDetail) {
+  if (!req.tableId) return;
   const res = await request<ResGetTableDetail>({
     url,
     method: "GET",
