@@ -5,6 +5,8 @@ import { ResCommon } from "@tables/types";
 
 import { SERVER_BASE_URL } from "./url";
 
+export const JWT_KEY = "GCTables-token";
+
 export function request<T = {}, D = {}>(config: AxiosRequestConfig<D>) {
   const instance = axios.create({
     baseURL: SERVER_BASE_URL,
@@ -12,7 +14,7 @@ export function request<T = {}, D = {}>(config: AxiosRequestConfig<D>) {
 
   instance.interceptors.request.use(
     (config) => {
-      const token = window.localStorage.getItem("GCTables-token");
+      const token = window.localStorage.getItem(JWT_KEY);
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token || ""}`;
       return config;
