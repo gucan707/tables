@@ -25,8 +25,4 @@ export function setup(roomNumber: string) {
     roomNumber,
     jwt: `Bearer ${token || ""}`,
   });
-
-  socket.on(Events.JoinRoom, (arg) => {
-    console.log({ arg });
-  });
 }

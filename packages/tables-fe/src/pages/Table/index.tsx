@@ -1,25 +1,32 @@
 import "./index.less";
 
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Avatar, Button, Spin } from "@arco-design/web-react";
+import { Events, User, UserToken } from "@tables/types";
 
 import { EditableTable } from "../../components/EditableTable";
 import { useTableDetail } from "../../http/table/useTableDetail";
-import { setup } from "../../socket";
+import { setup, socket } from "../../socket";
 
 const AvatarGroup = Avatar.Group;
 
 export const Table: FC = () => {
   const { tableId } = useParams();
   const { tableDetail } = useTableDetail({ tableId: tableId || "" });
+  const [onlineUsers, setOnlineUsers] = useState<UserToken[]>([]);
+  console.log({ onlineUsers });
 
   useEffect(() => {
     if (!tableId) return;
     console.log({ tableId });
 
     setup(tableId);
+    // TODO 从后端获取在线用户列表
+    socket.on(Events.JoinRoom, (userInfo: UserToken) => {
+      setOnlineUsers((oldUsers) => [...oldUsers, userInfo]);
+    });
   }, [tableId]);
 
   return (
@@ -27,11 +34,11 @@ export const Table: FC = () => {
       <header className="table-header">
         <Button type="outline">管理协作者</Button>
         <AvatarGroup size={32} style={{ margin: 10 }}>
-          <Avatar style={{ backgroundColor: "#7BC616" }}>A</Avatar>
-          <Avatar style={{ backgroundColor: "#14C9C9" }}>B</Avatar>
-          <Avatar style={{ backgroundColor: "#168CFF" }}>C</Avatar>
-          <Avatar style={{ backgroundColor: "#FF7D00" }}>Arco</Avatar>
-          <Avatar style={{ backgroundColor: "#FFC72E" }}>Design</Avatar>
+          {onlineUsers.map((user) => (
+            <Avatar key={user._id} style={{ backgroundColor: "#7BC616" }}>
+              {user.name.slice(0, 1)}
+            </Avatar>
+          ))}
         </AvatarGroup>
         <Avatar>A</Avatar>
       </header>
