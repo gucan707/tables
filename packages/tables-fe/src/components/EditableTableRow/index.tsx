@@ -3,7 +3,7 @@ import { FC } from "react";
 import { Row, SelectOptionType, TableHeads } from "@tables/types";
 
 import { getMapRow } from "../../utils/getMapRow";
-import { ReadonlyTableGrid } from "../ReadonlyTableGrid";
+import { EditableTableGrid } from "../EditableTableGrid";
 
 export type EditableTableRowProps = {
   row: Row;
@@ -18,7 +18,7 @@ export const EditableTableRow: FC<EditableTableRowProps> = (props) => {
   return (
     <tr>
       {heads.map((head) => (
-        <ReadonlyTableGrid
+        <EditableTableGrid
           key={head._id}
           grid={mapRow.get(head._id)}
           tags={tags}

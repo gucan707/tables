@@ -1,5 +1,3 @@
-import "./index.less";
-
 import dayjs from "dayjs";
 import { FC } from "react";
 
@@ -14,12 +12,12 @@ import {
 
 import { getFormattedNumber } from "../../utils/getFormattedNumber";
 
-export type ReadonlyTableGridProps = {
+export type EditableTableGridProps = {
   grid: Grid | undefined;
   tags: Map<string, SelectOptionType>;
 };
 
-export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
+export const EditableTableGrid: FC<EditableTableGridProps> = (props) => {
   const { grid, tags } = props;
 
   if (!grid) return <td></td>;
@@ -32,7 +30,7 @@ export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
     case TableColumnTypes.Checkbox:
       content = (
         <div
-          className={`readonly grid-checkbox ${grid.checked ? "checked" : ""}`}
+          className={`editable grid-checkbox ${grid.checked ? "checked" : ""}`}
         >
           {grid.checked && <IconCheck />}
         </div>
@@ -43,7 +41,7 @@ export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
       break;
     case TableColumnTypes.MultiSelect:
       content = (
-        <div className="readonly grid-tags">
+        <div className="editable grid-tags">
           {grid.contents.map((tagId) => (
             <Tag
               key={tagId}
@@ -58,7 +56,7 @@ export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
       break;
     case TableColumnTypes.Number:
       content = (
-        <div className="readonly grid-num">
+        <div className="editable grid-num">
           {getFormattedNumber(grid.content, grid.decimal, grid.percent)}
         </div>
       );
@@ -80,5 +78,5 @@ export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
       break;
   }
 
-  return <td className="readonly grid grid_common">{content}</td>;
+  return <td className="editable grid grid_common">{content}</td>;
 };
