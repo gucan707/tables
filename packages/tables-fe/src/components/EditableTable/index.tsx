@@ -16,7 +16,7 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
   const { className = "", table } = props;
   const { heads, rows } = table;
 
-  const tags = getMapTags(fakeTags);
+  const tags = getMapTags(heads);
 
   return (
     <div className={`editable table-container ${className}`}>

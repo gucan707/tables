@@ -10,6 +10,7 @@ import {
   Row,
   Table,
   TableColumnTypes,
+  TableHead,
   TableHeads,
 } from "@tables/types";
 
@@ -57,11 +58,48 @@ function getInitialTableHeads(): TableHeads {
   const heads: TableHeads = [];
   for (let i in TableColumnTypes) {
     const value = TableColumnTypes[i as keyof typeof TableColumnTypes];
-    heads.push({
-      _id: new ObjectId().toString(),
-      name: value,
-      type: value,
-    });
+    let head: TableHead;
+    const _id = new ObjectId().toString();
+    switch (value) {
+      case TableColumnTypes.Text:
+      case TableColumnTypes.Checkbox:
+        head = {
+          type: value,
+          name: value,
+          _id,
+        };
+        break;
+      case TableColumnTypes.Date:
+        head = {
+          type: value,
+          _id,
+          name: value,
+          format: DateFormatOptions.YMD,
+        };
+        break;
+      case TableColumnTypes.MultiSelect:
+      case TableColumnTypes.Select:
+        head = {
+          type: value,
+          _id,
+          name: value,
+          tags: [],
+        };
+        break;
+      case TableColumnTypes.Number:
+        head = {
+          type: value,
+          _id,
+          name: value,
+          decimal: NumberFormatDecimal.None,
+          percent: NumberFormatPercent.None,
+        };
+        break;
+      default:
+        break;
+    }
+
+    head && heads.push(head);
   }
 
   return heads;

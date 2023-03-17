@@ -18,8 +18,7 @@ export const ReadonlyTable: FC<ReadonlyTableProps> = (props) => {
   const { className = "", table } = props;
   const { heads, rows } = table;
 
-  // TODO
-  const tags = getMapTags(fakeTags);
+  const tags = getMapTags(heads);
 
   return (
     <div className={`readonly table-container ${className}`}>
