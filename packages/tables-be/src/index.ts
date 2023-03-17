@@ -5,23 +5,30 @@ import logger from "koa-logger";
 import { Server } from "socket.io";
 
 import cors from "@koa/cors";
-import router from "./router";
+
 import { handleError } from "./middleware/handleError";
+import router from "./router";
+import { setup } from "./socket";
 
 const app = new Koa();
 
 const httpServer = createServer(app.callback());
 
-const io = new Server(httpServer, {
+export const io = new Server(httpServer, {
   cors: {
     origin: "http://127.0.0.1:5173",
     methods: ["GET", "POST"],
   },
-  path: "foo",
+  path: "/socket",
 });
 
+// io.on("connection", (socket) => {
+//   socket.broadcast.emit("hello", "world");
+// });
+setup(io);
+
 app
-  .use(logger())
+  // .use(logger())
   .use(handleError)
   .use(cors({ credentials: true, origin: "http://127.0.0.1:5173" }))
   .use(KoaBody())
@@ -31,5 +38,3 @@ app
 httpServer.listen(8080);
 
 console.log("listen on 8080");
-
-export default io;

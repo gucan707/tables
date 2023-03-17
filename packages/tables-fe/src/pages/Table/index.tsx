@@ -1,18 +1,26 @@
 import "./index.less";
 
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import { Avatar, Button, Spin } from "@arco-design/web-react";
 
 import { EditableTable } from "../../components/EditableTable";
 import { useTableDetail } from "../../http/table/useTableDetail";
+import { setup } from "../../socket";
 
 const AvatarGroup = Avatar.Group;
 
 export const Table: FC = () => {
   const { tableId } = useParams();
   const { tableDetail } = useTableDetail({ tableId: tableId || "" });
+
+  useEffect(() => {
+    if (!tableId) return;
+    console.log({ tableId });
+
+    setup(tableId);
+  }, [tableId]);
 
   return (
     <div className="table">
