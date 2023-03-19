@@ -1,4 +1,5 @@
 import { Operator, OperatorType } from "@tables/types";
+
 export abstract class OT1D<T> {
   ops: Operator<T>[] = [];
   baseLength: number = 0;
@@ -180,6 +181,118 @@ export abstract class OT1D<T> {
           op1 = { ...ops1[i1++] };
         }
         ot2Prime.addOp({ type: OperatorType.Delete, count: min });
+        continue;
+      }
+    }
+  }
+
+  compose<OT extends new () => OT1D<T>>(ot2: OT1D<T>, OT: OT) {
+    const ot1 = this;
+    if (ot1.targetLength !== ot2.baseLength) {
+      console.error("ot compose error: 相邻两个 ot 长度不匹配");
+      return;
+    }
+    const composedOt = new OT();
+    const ops1 = ot1.ops,
+      ops2 = ot2.ops;
+    let i1 = 0,
+      i2 = 0;
+    let op1 = { ...ops1[i1++] },
+      op2 = { ...ops2[i2++] };
+    while (1) {
+      if (!op1 && !op2) {
+        break;
+      }
+
+      if (op1.type === OperatorType.Delete) {
+        composedOt.addOp({ type: OperatorType.Delete, count: op1.count });
+        op1 = { ...ops1[i1++] };
+        continue;
+      }
+
+      if (op2.type === OperatorType.Insert) {
+        composedOt.addOp({ type: OperatorType.Insert, data: op2.data });
+        op2 = { ...ops2[i2++] };
+        continue;
+      }
+
+      if (
+        op1.type === OperatorType.Retain &&
+        op2.type === OperatorType.Retain
+      ) {
+        if (op1.count > op2.count) {
+          composedOt.addOp({ type: OperatorType.Retain, count: op2.count });
+          op1.count -= op2.count;
+          op2 = { ...ops2[i2++] };
+        } else if (op1.count < op2.count) {
+          composedOt.addOp({ type: OperatorType.Retain, count: op1.count });
+          op2.count -= op1.count;
+          op1 = { ...ops1[i1++] };
+        } else {
+          composedOt.addOp({ type: OperatorType.Retain, count: op1.count });
+          op1 = { ...ops1[i1++] };
+          op2 = { ...ops2[i2++] };
+        }
+        continue;
+      }
+
+      if (
+        op1.type === OperatorType.Retain &&
+        op2.type === OperatorType.Delete
+      ) {
+        if (op1.count > op2.count) {
+          composedOt.addOp({ type: OperatorType.Delete, count: op2.count });
+          op1.count -= op2.count;
+          op2 = { ...ops2[i2++] };
+        } else if (op1.count < op2.count) {
+          composedOt.addOp({ type: OperatorType.Delete, count: op1.count });
+          op2.count -= op1.count;
+          op1 = { ...ops1[i1++] };
+        } else {
+          composedOt.addOp({ type: OperatorType.Delete, count: op2.count });
+          op1 = { ...ops1[i1++] };
+          op2 = { ...ops2[i2++] };
+        }
+        continue;
+      }
+
+      if (
+        op1.type === OperatorType.Insert &&
+        op2.type === OperatorType.Retain
+      ) {
+        if (op1.data.length > op2.count) {
+          composedOt.addOp({
+            type: OperatorType.Insert,
+            data: op1.data.slice(0, op2.count) as any,
+          });
+          op1.data = op1.data.slice(op2.count) as any;
+          op2 = { ...ops2[i2++] };
+        } else if (op1.data.length < op2.count) {
+          composedOt.addOp({ type: OperatorType.Insert, data: op1.data });
+          op2.count -= op1.data.length;
+          op1 = { ...ops1[i1++] };
+        } else {
+          composedOt.addOp({ type: OperatorType.Insert, data: op1.data });
+          op1 = { ...ops1[i1++] };
+          op2 = { ...ops2[i2++] };
+        }
+        continue;
+      }
+
+      if (
+        op1.type === OperatorType.Insert &&
+        op2.type === OperatorType.Delete
+      ) {
+        if (op1.data.length > op2.count) {
+          op1.data = op1.data.slice(op2.count) as any;
+          op2 = { ...ops2[i2++] };
+        } else if (op1.data.length < op2.count) {
+          op2.count -= op1.data.length;
+          op1 = { ...ops1[i1++] };
+        } else {
+          op1 = { ...ops1[i1++] };
+          op2 = { ...ops2[i2++] };
+        }
         continue;
       }
     }
