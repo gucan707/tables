@@ -4,7 +4,8 @@ import { Events, ReqJoinRoom, UserToken } from "@tables/types";
 
 import { checkToken } from "../utils/checkToken";
 
-export const roomToUsers: Record<string, UserToken[]> = {};
+export const roomToUsers: Record<string, ({ socketId: string } & UserToken)[]> =
+  {};
 
 export async function joinRoom(req: ReqJoinRoom, socket: Socket, io: Server) {
   try {
@@ -15,7 +16,15 @@ export async function joinRoom(req: ReqJoinRoom, socket: Socket, io: Server) {
     if (!roomToUsers[req.roomNumber]) {
       roomToUsers[req.roomNumber] = [];
     }
-    roomToUsers[req.roomNumber].push(userInfo);
+
+    const room = roomToUsers[req.roomNumber];
+    const user = room.find((user) => user._id === userInfo._id);
+    if (user) {
+      user.socketId = socket.id;
+    } else {
+      room.push({ ...userInfo, socketId: socket.id });
+    }
+
     io.to(req.roomNumber).emit(
       Events.EmitOnlineUsers,
       roomToUsers[req.roomNumber]
