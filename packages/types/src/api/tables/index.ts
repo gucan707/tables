@@ -1,4 +1,5 @@
 import { Table } from "../../tables";
+import { UserToken } from "../../users";
 
 export type ResCreateTable = Table;
 export type ReqAddCollaborators = {
@@ -19,3 +20,9 @@ export type ReqGetTableDetail = {
 };
 
 export type ResGetTableDetail = Table;
+
+export type ReqGetOnlineUsers = {
+  tableId: string;
+};
+
+export type ResGetOnlineUsers = UserToken[];

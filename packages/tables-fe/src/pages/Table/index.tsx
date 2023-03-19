@@ -16,16 +16,14 @@ export const Table: FC = () => {
   const { tableId } = useParams();
   const { tableDetail } = useTableDetail({ tableId: tableId || "" });
   const [onlineUsers, setOnlineUsers] = useState<UserToken[]>([]);
-  console.log({ onlineUsers });
 
   useEffect(() => {
     if (!tableId) return;
     console.log({ tableId });
 
     setup(tableId);
-    // TODO 从后端获取在线用户列表
-    socket.on(Events.JoinRoom, (userInfo: UserToken) => {
-      setOnlineUsers((oldUsers) => [...oldUsers, userInfo]);
+    socket.on(Events.EmitOnlineUsers, (users: UserToken[]) => {
+      setOnlineUsers(users);
     });
   }, [tableId]);
 
