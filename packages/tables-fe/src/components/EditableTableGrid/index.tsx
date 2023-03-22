@@ -11,6 +11,11 @@ import {
 } from "@tables/types";
 
 import { getFormattedNumber } from "../../utils/getFormattedNumber";
+import { TextGrid } from "./components/TextGrid";
+
+export type CommonGridProps = {
+  isActive: boolean;
+};
 
 export type EditableTableGridProps = {
   grid: Grid | undefined;
@@ -25,7 +30,12 @@ export const EditableTableGrid: FC<EditableTableGridProps> = (props) => {
   let content: JSX.Element;
   switch (grid.type) {
     case TableColumnTypes.Text:
-      content = <>{grid.text}</>;
+      content = (
+        <TextGrid
+          grid={grid}
+          isActive={grid._id === "64140d6bb605cf84cc317dcc"}
+        />
+      );
       break;
     case TableColumnTypes.Checkbox:
       content = (

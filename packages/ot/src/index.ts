@@ -4,6 +4,7 @@ export abstract class OT1D<T> {
   ops: Operator<T>[] = [];
   baseLength: number = 0;
   targetLength: number = 0;
+  abstract baseData: T extends string ? T : T[];
 
   /**
    * 合并自己的 insert op
@@ -18,10 +19,16 @@ export abstract class OT1D<T> {
    */
   abstract checkInsertedDataValiable(op: Operator<T>): boolean;
 
-  addOp(op: Operator<T>) {
-    if (op.count === 0) return;
+  init() {
+    this.baseLength = 0;
+    this.targetLength = 0;
+    this.ops = [];
+  }
+
+  addOp(op: Operator<T>): this {
+    if (op.count === 0) return this;
     if (op.type === OperatorType.Insert && !this.checkInsertedDataValiable(op))
-      return;
+      return this;
 
     const lastIndex = this.ops.length - 1;
     const last = this.ops[lastIndex];
@@ -36,14 +43,18 @@ export abstract class OT1D<T> {
         }
         break;
       case OperatorType.Insert:
-        if (last.type === OperatorType.Insert) {
+        if (last && last.type === OperatorType.Insert) {
           this.mergeInsert(last, op);
-        } else if (last.type === OperatorType.Retain) {
-          this.ops.push(op);
-        } else {
+        } else if (last && last.type === OperatorType.Delete) {
+          // delete 和 insert 的先后顺序不影响最终结果，但是规范一下
           if (this.ops[lastIndex - 1]?.type === OperatorType.Insert) {
             this.mergeInsert(this.ops[lastIndex - 1], op);
+          } else {
+            this.ops.push(last);
+            this.ops[this.ops.length - 2] = op;
           }
+        } else {
+          this.ops.push(op);
         }
         break;
       case OperatorType.Delete:
@@ -57,6 +68,8 @@ export abstract class OT1D<T> {
       default:
         break;
     }
+
+    return this;
   }
 
   /** 两个用户的操作转换，具体逻辑见笔记：https://www.notion.so/gcc707/ot-js-5fa6c4eaaea9464084856ed9af1984c9 */
