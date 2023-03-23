@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { FC } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Tag } from "@arco-design/web-react";
 import { IconCheck } from "@arco-design/web-react/icon";
@@ -10,6 +11,9 @@ import {
   TableTagColors,
 } from "@tables/types";
 
+import { changeActiveGridId } from "../../redux/activeGridSlice";
+import { store, useAppDispatch, useAppSelector } from "../../redux/store";
+// import { activeGridId } from "../../signal";
 import { getFormattedNumber } from "../../utils/getFormattedNumber";
 import { TextGrid } from "./components/TextGrid";
 
@@ -21,21 +25,17 @@ export type EditableTableGridProps = {
   grid: Grid | undefined;
   tags: Map<string, SelectOptionType>;
 };
-
 export const EditableTableGrid: FC<EditableTableGridProps> = (props) => {
   const { grid, tags } = props;
+  const dispatch = useAppDispatch();
+  const activeGridId = useAppSelector((state) => state.activeGrid).id;
 
   if (!grid) return <td></td>;
 
   let content: JSX.Element;
   switch (grid.type) {
     case TableColumnTypes.Text:
-      content = (
-        <TextGrid
-          grid={grid}
-          isActive={grid._id === "64140d6bb605cf84cc317dcc"}
-        />
-      );
+      content = <TextGrid grid={grid} isActive={activeGridId === grid._id} />;
       break;
     case TableColumnTypes.Checkbox:
       content = (
@@ -88,5 +88,14 @@ export const EditableTableGrid: FC<EditableTableGridProps> = (props) => {
       break;
   }
 
-  return <td className="editable grid grid_common">{content}</td>;
+  return (
+    <td
+      className="editable grid grid_common"
+      onClick={() => {
+        dispatch(changeActiveGridId(grid._id));
+      }}
+    >
+      {content}
+    </td>
+  );
 };

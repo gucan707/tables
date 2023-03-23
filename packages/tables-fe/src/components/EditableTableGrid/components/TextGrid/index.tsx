@@ -4,6 +4,8 @@ import { TextOT } from "@tables/ot";
 import { Operator, OperatorType, TextType } from "@tables/types";
 
 import { CommonGridProps } from "../..";
+import { changeActiveGridId } from "../../../../redux/activeGridSlice";
+import { useAppDispatch } from "../../../../redux/store";
 import { checkMoveCursorKey, KeyStr } from "../../../../utils/keyStr";
 import { OTController, OTReason } from "../../../../utils/OTsController";
 
@@ -21,8 +23,9 @@ export const TextGrid: FC<TextGridProps> = (props) => {
   const { grid, isActive } = props;
   const [text, setText] = useState(grid.text);
   const isInputZh = useRef(false);
+  const dispatch = useAppDispatch();
   const otRef = useRef<TextOT>();
-  console.log("OTController.current", OTController.current);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!isActive) return;
@@ -34,17 +37,20 @@ export const TextGrid: FC<TextGridProps> = (props) => {
     otRef.current = ot.OT;
   }, [isActive]);
 
+  useEffect(() => {
+    if (!inputRef.current || !isActive) return;
+    inputRef.current.focus();
+  }, [inputRef.current, isActive]);
+
   return isActive ? (
     <input
       type="text"
       value={text}
+      ref={inputRef}
       onChange={(e) => {
         console.log("change");
         if (!isInputZh.current) {
-          console.log(isInputZh.current);
-
           otRef.current && diffStr(e.target.value, otRef.current);
-          console.log(otRef.current);
         }
         setText(e.target.value);
       }}
@@ -83,6 +89,9 @@ export const TextGrid: FC<TextGridProps> = (props) => {
         otRef.current &&
           diffStr((e.target as HTMLInputElement).value, otRef.current);
         isInputZh.current = false;
+      }}
+      onBlur={() => {
+        dispatch(changeActiveGridId(""));
       }}
     />
   ) : (
