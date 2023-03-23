@@ -4,6 +4,8 @@ import { TextOT } from "@tables/ot";
 import { Operator, OperatorType, TextType } from "@tables/types";
 
 import { CommonGridProps } from "../..";
+import { checkMoveCursorKey, KeyStr } from "../../../../utils/keyStr";
+import { OTController, OTReason } from "../../../../utils/OTsController";
 
 export type TextGridProps = {
   grid: TextType;
@@ -20,44 +22,68 @@ export const TextGrid: FC<TextGridProps> = (props) => {
   const [text, setText] = useState(grid.text);
   const isInputZh = useRef(false);
   const otRef = useRef<TextOT>();
+  console.log("OTController.current", OTController.current);
 
   useEffect(() => {
-    otRef.current = new TextOT();
-    otRef.current.baseData = grid.text;
-  }, []);
+    if (!isActive) return;
+    const ot = OTController.current.createOT(
+      grid._id,
+      grid.text,
+      OTReason.Init
+    );
+    otRef.current = ot.OT;
+  }, [isActive]);
 
   return isActive ? (
     <input
       type="text"
       value={text}
       onChange={(e) => {
-        otRef.current && diffStr(e.target.value, otRef.current);
-        console.log(otRef.current);
+        console.log("change");
+        if (!isInputZh.current) {
+          console.log(isInputZh.current);
 
+          otRef.current && diffStr(e.target.value, otRef.current);
+          console.log(otRef.current);
+        }
         setText(e.target.value);
       }}
-      // onInput={(e) => {
-      //   if (isInputZh.current) return;
-      //   const target = e.target as HTMLInputElement;
-      //   console.log(e, target.selectionStart, target.selectionEnd);
-      // }}
-      // onCompositionStart={() => {
-      //   console.log("onCompositionStart");
-      //   isInputZh.current = true;
-      // }}
-      // onCompositionEnd={(e) => {
-      //   console.log("onCompositionEnd", e);
-      //   isInputZh.current = false;
-      // }}
-      // onClick={(e) => {
-      //   console.log("click", e);
-      // }}
-      // onSelect={(e) => {
-      //   console.log("onSelect");
-      // }}
-      // onKeyDown={(e) => {
-      //   console.log("on key down", e);
-      // }}
+      onKeyDown={(e) => {
+        if (e.key === KeyStr.Delete || e.key === KeyStr.Backspace) {
+          const ot = OTController.current.createOT(
+            grid._id,
+            text,
+            OTReason.Delete
+          );
+          otRef.current = ot.OT;
+        }
+        if (checkMoveCursorKey(e.key)) {
+          const ot = OTController.current.createOT(
+            grid._id,
+            text,
+            OTReason.CursorMove
+          );
+          otRef.current = ot.OT;
+        }
+      }}
+      onClick={(e) => {
+        const ot = OTController.current.createOT(
+          grid._id,
+          text,
+          OTReason.CursorMove
+        );
+        otRef.current = ot.OT;
+      }}
+      onCompositionStart={() => {
+        console.log("onCompositionStart");
+        isInputZh.current = true;
+      }}
+      onCompositionEnd={(e) => {
+        console.log("onCompositionEnd", e);
+        otRef.current &&
+          diffStr((e.target as HTMLInputElement).value, otRef.current);
+        isInputZh.current = false;
+      }}
     />
   ) : (
     <div>{text}</div>

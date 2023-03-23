@@ -9,6 +9,7 @@ import { Events, User, UserToken } from "@tables/types";
 import { EditableTable } from "../../components/EditableTable";
 import { useTableDetail } from "../../http/table/useTableDetail";
 import { setup, socket } from "../../socket";
+import { OTController } from "../../utils/OTsController";
 
 const AvatarGroup = Avatar.Group;
 
@@ -19,8 +20,7 @@ export const Table: FC = () => {
 
   useEffect(() => {
     if (!tableId) return;
-    console.log({ tableId });
-
+    OTController.current = new OTController();
     setup(tableId);
     socket.on(Events.EmitOnlineUsers, (users: UserToken[]) => {
       setOnlineUsers(users);

@@ -5,6 +5,11 @@ import { OT1D } from "./";
 export class TextOT extends OT1D<string> {
   baseData: string = "";
 
+  constructor(baseData: string) {
+    super();
+    this.baseData = baseData;
+  }
+
   checkInsertedDataValiable(op: Operator<string>) {
     return op.data !== "";
   }
