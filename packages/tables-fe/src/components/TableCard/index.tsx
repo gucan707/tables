@@ -1,6 +1,7 @@
 import "./index.less";
 
 import { FC } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Card } from "@arco-design/web-react";
 import { Table } from "@tables/types";
@@ -15,9 +16,11 @@ export type TableCardProps = {
 
 export const TableCard: FC<TableCardProps> = (props) => {
   const { table } = props;
+  const navigate = useNavigate();
   return (
     <Card
       hoverable
+      onClick={() => navigate(`/table/${table._id}`)}
       className="table_card"
       cover={
         <div className="table_card-cover">
