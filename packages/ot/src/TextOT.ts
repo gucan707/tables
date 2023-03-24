@@ -34,6 +34,8 @@ export class TextOT extends OT1D<string> {
     const ops = ot.ops;
     let newStr = "";
     let strIndex = 0;
+    console.log(ops);
+
     ops.forEach((op, index) => {
       if (op.type === OperatorType.Retain) {
         if (strIndex + op.count > orignal.length) {

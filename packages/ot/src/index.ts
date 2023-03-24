@@ -208,7 +208,7 @@ export abstract class OT1D<T> {
     const ot1 = this;
     if (ot1.targetLength !== ot2.baseLength) {
       console.error("ot compose error: 相邻两个 ot 长度不匹配");
-      return;
+      throw new Error();
     }
     const composedOt = new OT();
     const ops1 = ot1.ops,
@@ -314,6 +314,8 @@ export abstract class OT1D<T> {
         continue;
       }
     }
+
+    return composedOt;
   }
 
   /**

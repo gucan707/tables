@@ -56,8 +56,7 @@ export const addOps: IMiddleware = async (ctx) => {
       if (curIndex === 0) return pre;
       const ot = new TextOT();
       cur.ops.forEach((op) => ot.addOp(op));
-      pre.compose(ot, TextOT);
-      return pre;
+      return pre.compose(ot, TextOT);
     }, initialOT);
 
     const reqOt = new TextOT();
@@ -103,9 +102,23 @@ export const addOps: IMiddleware = async (ctx) => {
     feId: req.feId,
   };
 
+  // console.log({ resText });
+
   io.to(tableId).emit(Events.OpsEmitedFromBe, emitedOps);
 
-  await changes.insertOne(newChange);
+  await Promise.all([
+    changes.insertOne(newChange),
+    rows.updateOne(
+      { _id: req.rowId },
+      {
+        $set: {
+          "data.$[element].text": resText,
+          "data.$[element].version": curGrid.version + 1,
+        },
+      },
+      { arrayFilters: [{ "element._id": curGrid._id }] }
+    ),
+  ]);
 
   const res: ResCommon<string> = {
     status: 200,

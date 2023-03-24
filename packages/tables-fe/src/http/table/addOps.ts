@@ -24,10 +24,9 @@ export async function addOps(
     type: OperatorType.Retain,
     count: ots[0].OT.baseLength,
   });
-  debugger;
+  // debugger;
   const composed = ots.reduce((pre, cur) => {
-    pre.compose(cur.OT, TextOT);
-    return pre;
+    return pre.compose(cur.OT, TextOT);
   }, initialOT);
   console.log({ ots, composed });
 
