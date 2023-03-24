@@ -1,3 +1,4 @@
+import { Operator } from "../../ot";
 import { Table } from "../../tables";
 import { UserToken } from "../../users";
 
@@ -26,3 +27,13 @@ export type ReqGetOnlineUsers = {
 };
 
 export type ResGetOnlineUsers = UserToken[];
+
+// TODO 多选协同类型复用
+export type ReqAddOps = {
+  feId: string;
+  tableId: string;
+  rowId: string;
+  gridId: string;
+  basedVersion: number;
+  ops: Operator<string>[];
+};

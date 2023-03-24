@@ -24,6 +24,7 @@ importers:
   packages/tables-be:
     specifiers:
       '@koa/cors': ^4.0.0
+      '@tables/ot': workspace:^
       '@tables/types': workspace:^
       '@tables/utils': workspace:^
       '@types/koa': ^2.13.5
@@ -42,6 +43,7 @@ importers:
       tsconfig-paths: ^4.1.0
     dependencies:
       '@koa/cors': 4.0.0
+      '@tables/ot': link:../ot
       '@tables/types': link:../types
       '@tables/utils': link:../utils
       koa: 2.14.1

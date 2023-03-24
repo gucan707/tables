@@ -1,10 +1,11 @@
 import { Operator, OperatorType } from "@tables/types";
 
+type DataType<T> = T extends string ? T : T[];
 export abstract class OT1D<T> {
   ops: Operator<T>[] = [];
   baseLength: number = 0;
   targetLength: number = 0;
-  abstract baseData: T extends string ? T : T[];
+  abstract baseData: DataType<T>;
 
   /**
    * 合并自己的 insert op
@@ -197,6 +198,8 @@ export abstract class OT1D<T> {
         continue;
       }
     }
+
+    return [ot1Prime, ot2Prime];
   }
 
   compose<OT extends new () => OT1D<T>>(ot2: OT1D<T>, OT: OT) {
@@ -310,4 +313,10 @@ export abstract class OT1D<T> {
       }
     }
   }
+
+  /**
+   * 对数据应用 ops，内部含有很多 throw error，一定要 catch
+   * @param orignal 需要被应用 ops 的原始数据
+   */
+  abstract apply(orignal: DataType<T>): DataType<T>;
 }

@@ -13,12 +13,6 @@ export type TextGridProps = {
   grid: TextType;
 } & CommonGridProps;
 
-type InputInfo = {
-  ops: Operator<string>[];
-  selectionStart: number;
-  selectionEnd: number;
-};
-
 export const TextGrid: FC<TextGridProps> = (props) => {
   const { grid, isActive } = props;
   const [text, setText] = useState(grid.text);

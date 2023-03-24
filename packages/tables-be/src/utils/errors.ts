@@ -4,6 +4,12 @@ export class TError extends Error {
   }
 }
 
+export class TErrorCommon extends TError {
+  constructor() {
+    super("内部错误", 500);
+  }
+}
+
 export class TErrorToken extends TError {
   constructor() {
     super("未登录或登录状态异常，请重新登录", 401);

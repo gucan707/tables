@@ -25,6 +25,7 @@
     "@koa/cors": "^4.0.0",
     "@tables/types": "workspace:^",
     "@tables/utils": "workspace:^",
+    "@tables/ot": "workspace:^",
     "koa": "^2.13.4",
     "koa-body": "^6.0.1",
     "koa-logger": "^3.2.1",
