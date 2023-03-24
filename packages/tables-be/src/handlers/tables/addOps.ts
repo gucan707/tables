@@ -23,7 +23,8 @@ import {
 export const addOps: IMiddleware = async (ctx) => {
   const userInfo = checkToken(ctx);
   const req = ctx.request.body as ReqAddOps;
-  const tableInfo = await tables.findOne({ _id: req.tableId });
+  const { tableId } = ctx.params;
+  const tableInfo = await tables.findOne({ _id: tableId });
   if (
     tableInfo.owner !== userInfo._id &&
     !tableInfo.collaborators.includes(userInfo._id)
@@ -81,7 +82,7 @@ export const addOps: IMiddleware = async (ctx) => {
     oldVersion: curGrid.version,
     newVersion: curGrid.version + 1,
     ops: emitedOT.ops,
-    tableId: req.tableId,
+    tableId,
     rowId: req.rowId,
     time: Date.now(),
   };
@@ -91,12 +92,12 @@ export const addOps: IMiddleware = async (ctx) => {
     oldVersion: newChange.oldVersion,
     gridId: newChange.gridId,
     rowId: newChange.rowId,
-    tableId: newChange.tableId,
+    tableId: tableId,
     author: newChange.author,
     feId: req.feId,
   };
 
-  io.emit(Events.OpsEmitedFromBe, emitedOps);
+  io.to(tableId).emit(Events.OpsEmitedFromBe, emitedOps);
 
   await changes.insertOne(newChange);
 
