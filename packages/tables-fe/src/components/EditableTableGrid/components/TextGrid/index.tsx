@@ -45,7 +45,6 @@ export const TextGrid: FC<TextGridProps> = (props) => {
       value={text}
       ref={inputRef}
       onChange={(e) => {
-        console.log("change");
         if (!isInputZh.current) {
           otRef.current && diffStr(e.target.value, otRef.current);
         }
@@ -78,11 +77,9 @@ export const TextGrid: FC<TextGridProps> = (props) => {
         otRef.current = ot.OT;
       }}
       onCompositionStart={() => {
-        console.log("onCompositionStart");
         isInputZh.current = true;
       }}
       onCompositionEnd={(e) => {
-        console.log("onCompositionEnd", e);
         otRef.current &&
           diffStr((e.target as HTMLInputElement).value, otRef.current);
         isInputZh.current = false;
@@ -100,7 +97,7 @@ export const TextGrid: FC<TextGridProps> = (props) => {
 function diffStr(s2: string, ot: TextOT) {
   const s1 = ot.baseData;
   // debugger;
-  console.log({ s2 });
+  console.log({ s1, s2 });
 
   if (s1 === s2) return;
   ot.init();

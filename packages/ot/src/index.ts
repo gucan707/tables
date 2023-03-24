@@ -45,6 +45,7 @@ export abstract class OT1D<T> {
         }
         break;
       case OperatorType.Insert:
+        this.targetLength += op.data.length;
         if (last && last.type === OperatorType.Insert) {
           this.mergeInsert(last, op);
         } else if (last && last.type === OperatorType.Delete) {
@@ -204,9 +205,11 @@ export abstract class OT1D<T> {
   }
 
   compose<OT extends new () => OT1D<T>>(ot2: OT1D<T>, OT: OT) {
-    // debugger;
     const ot1 = this;
+    console.log({ ot1, ot2 });
+
     if (ot1.targetLength !== ot2.baseLength) {
+      debugger;
       console.error("ot compose error: 相邻两个 ot 长度不匹配");
       throw new Error();
     }

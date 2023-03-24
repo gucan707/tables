@@ -20,15 +20,13 @@ export async function addOps(
   if (!ots[0].OT.ops.length) return;
 
   const initialOT = new TextOT();
-  initialOT.addOp({
-    type: OperatorType.Retain,
-    count: ots[0].OT.baseLength,
-  });
+  ots[0].OT.ops.forEach((op) => initialOT.addOp(op));
   // debugger;
-  const composed = ots.reduce((pre, cur) => {
+  const composed = ots.reduce((pre, cur, curIndex) => {
+    if (curIndex === 0) return pre;
+    if (!cur.OT.ops.length) return pre;
     return pre.compose(cur.OT, TextOT);
   }, initialOT);
-  console.log({ ots, composed });
 
   const ADD_OPS_URL = `/${TABLE_BASE_URL}/${tableId}/addOps`;
 

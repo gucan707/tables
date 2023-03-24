@@ -29,7 +29,7 @@ export const Table: FC = () => {
     // TODO 类型
     socket.on(Events.OpsEmitedFromBe, (args: OpsEmitedFromBeArgs<string>) => {
       OTController.unAppliedOT.push(args);
-      console.log(OTController.unAppliedOT);
+      // console.log(OTController.unAppliedOT);
     });
   }, [tableId]);
 
