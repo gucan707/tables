@@ -21,6 +21,7 @@ export const EditableTableRow: FC<EditableTableRowProps> = (props) => {
         <EditableTableGrid
           key={head._id}
           grid={mapRow.get(head._id)}
+          rowId={row._id}
           tags={tags}
         />
       ))}

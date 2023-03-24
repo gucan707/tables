@@ -25,7 +25,9 @@ export class TextOT extends OT1D<string> {
 
   apply(orignal: string): string {
     const ot = this;
+
     if (orignal.length !== ot.baseLength) {
+      console.log("apply", orignal, ot);
       console.error("TextOT apply error: baselength !== orignal.length");
       throw new Error();
     }

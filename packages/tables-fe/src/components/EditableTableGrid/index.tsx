@@ -19,14 +19,16 @@ import { TextGrid } from "./components/TextGrid";
 
 export type CommonGridProps = {
   isActive: boolean;
+  rowId: string;
 };
 
 export type EditableTableGridProps = {
   grid: Grid | undefined;
+  rowId: string;
   tags: Map<string, SelectOptionType>;
 };
 export const EditableTableGrid: FC<EditableTableGridProps> = (props) => {
-  const { grid, tags } = props;
+  const { grid, tags, rowId } = props;
   const dispatch = useAppDispatch();
   const activeGridId = useAppSelector((state) => state.activeGrid).id;
 
@@ -35,7 +37,13 @@ export const EditableTableGrid: FC<EditableTableGridProps> = (props) => {
   let content: JSX.Element;
   switch (grid.type) {
     case TableColumnTypes.Text:
-      content = <TextGrid grid={grid} isActive={activeGridId === grid._id} />;
+      content = (
+        <TextGrid
+          grid={grid}
+          isActive={activeGridId === grid._id}
+          rowId={rowId}
+        />
+      );
       break;
     case TableColumnTypes.Checkbox:
       content = (

@@ -10,7 +10,7 @@ export const tableRouter = new Router();
 
 tableRouter
   .post("/collaborator", addCollaborators)
-  .get("/:tableId/addOps", addOps)
+  .post("/:tableId/addOps", addOps)
   .get("/:tableId", getTableDetail)
   .post("/", createTable)
   .get("/", getTables);

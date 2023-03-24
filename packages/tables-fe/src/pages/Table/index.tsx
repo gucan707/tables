@@ -4,7 +4,7 @@ import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Avatar, Button, Spin } from "@arco-design/web-react";
-import { Events, User, UserToken } from "@tables/types";
+import { Events, OpsEmitedFromBeArgs, User, UserToken } from "@tables/types";
 
 import { EditableTable } from "../../components/EditableTable";
 import { useTableDetail } from "../../http/table/useTableDetail";
@@ -16,6 +16,7 @@ const AvatarGroup = Avatar.Group;
 export const Table: FC = () => {
   const { tableId } = useParams();
   const { tableDetail } = useTableDetail({ tableId: tableId || "" });
+  const [rows, setRows] = useState(tableDetail?.rows || []);
   const [onlineUsers, setOnlineUsers] = useState<UserToken[]>([]);
 
   useEffect(() => {
@@ -25,7 +26,17 @@ export const Table: FC = () => {
     socket.on(Events.EmitOnlineUsers, (users: UserToken[]) => {
       setOnlineUsers(users);
     });
+    // TODO 类型
+    socket.on(Events.OpsEmitedFromBe, (args: OpsEmitedFromBeArgs<string>) => {
+      OTController.unAppliedOT.push(args);
+      console.log(OTController.unAppliedOT);
+    });
   }, [tableId]);
+
+  useEffect(() => {
+    if (!tableDetail) return;
+    setRows(tableDetail.rows);
+  }, [tableDetail]);
 
   return (
     <div className="table">

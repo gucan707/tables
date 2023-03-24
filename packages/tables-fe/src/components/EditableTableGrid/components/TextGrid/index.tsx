@@ -1,9 +1,11 @@
 import { FC, useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import { TextOT } from "@tables/ot";
 import { Operator, OperatorType, TextType } from "@tables/types";
 
 import { CommonGridProps } from "../..";
+import { addOps } from "../../../../http/table/addOps";
 import { changeActiveGridId } from "../../../../redux/activeGridSlice";
 import { useAppDispatch } from "../../../../redux/store";
 import { checkMoveCursorKey, KeyStr } from "../../../../utils/keyStr";
@@ -14,7 +16,8 @@ export type TextGridProps = {
 } & CommonGridProps;
 
 export const TextGrid: FC<TextGridProps> = (props) => {
-  const { grid, isActive } = props;
+  const { grid, isActive, rowId } = props;
+  const { tableId } = useParams();
   const [text, setText] = useState(grid.text);
   const isInputZh = useRef(false);
   const dispatch = useAppDispatch();
@@ -86,6 +89,7 @@ export const TextGrid: FC<TextGridProps> = (props) => {
       }}
       onBlur={() => {
         dispatch(changeActiveGridId(""));
+        addOps(grid._id, tableId || "", grid.version, rowId);
       }}
     />
   ) : (

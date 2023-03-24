@@ -1,9 +1,11 @@
 import { TextOT } from "@tables/ot";
+import { OpsEmitedFromBeArgs } from "@tables/types";
 
 export type OTInfo = {
   OT: TextOT;
   gridId: string;
   reason: OTReason;
+  hasSendToBe: boolean;
 };
 
 export enum OTReason {
@@ -15,6 +17,7 @@ export class OTController {
   otInfo: OTInfo[] = [];
 
   static current: OTController;
+  static unAppliedOT: OpsEmitedFromBeArgs<string>[] = [];
 
   getLast(): OTInfo | undefined {
     const len = this.otInfo.length;
@@ -28,6 +31,7 @@ export class OTController {
       gridId,
       OT: new TextOT(baseData),
       reason,
+      hasSendToBe: false,
     };
 
     if (lastOt && !lastOt.OT.ops.length) {

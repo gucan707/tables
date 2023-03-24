@@ -1,4 +1,5 @@
 import { Operator, OperatorType } from "@tables/types";
+import { checkIsEmptyObj } from "@tables/utils";
 
 type DataType<T> = T extends string ? T : T[];
 export abstract class OT1D<T> {
@@ -90,7 +91,7 @@ export abstract class OT1D<T> {
     let op1 = { ...ops1[i1++] },
       op2 = { ...ops2[i2++] };
     while (1) {
-      if (op1 === undefined && op2 === undefined) {
+      if (checkIsEmptyObj(op1) && checkIsEmptyObj(op2)) {
         break;
       }
 
@@ -203,6 +204,7 @@ export abstract class OT1D<T> {
   }
 
   compose<OT extends new () => OT1D<T>>(ot2: OT1D<T>, OT: OT) {
+    // debugger;
     const ot1 = this;
     if (ot1.targetLength !== ot2.baseLength) {
       console.error("ot compose error: 相邻两个 ot 长度不匹配");
@@ -216,7 +218,7 @@ export abstract class OT1D<T> {
     let op1 = { ...ops1[i1++] },
       op2 = { ...ops2[i2++] };
     while (1) {
-      if (!op1 && !op2) {
+      if (checkIsEmptyObj(op1) && checkIsEmptyObj(op2)) {
         break;
       }
 

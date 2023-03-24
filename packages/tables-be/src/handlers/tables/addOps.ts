@@ -5,6 +5,7 @@ import { OT1D, TextOT } from "@tables/ot";
 import {
   Changes,
   Events,
+  OperatorType,
   OpsEmitedFromBeArgs,
   ReqAddOps,
   ResCommon,
@@ -47,12 +48,17 @@ export const addOps: IMiddleware = async (ctx) => {
       oldVersion: { $gte: req.basedVersion },
     });
     const gapChanges = await gapChangesCursor.toArray();
-    const composedChange = gapChanges.reduce((pre, cur) => {
+
+    const initialOT = new TextOT();
+    gapChanges[0].ops.forEach((op) => initialOT.addOp(op));
+
+    const composedChange = gapChanges.reduce((pre, cur, curIndex) => {
+      if (curIndex === 0) return pre;
       const ot = new TextOT();
-      ot.ops = cur.ops;
+      cur.ops.forEach((op) => ot.addOp(op));
       pre.compose(ot, TextOT);
       return pre;
-    }, new TextOT());
+    }, initialOT);
 
     const reqOt = new TextOT();
     req.ops.forEach((op) => reqOt.addOp(op));
