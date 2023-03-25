@@ -81,6 +81,12 @@ export abstract class OT1D<T> {
     ot2: OT1D<U>,
     OT: OT
   ) {
+    if (ot1.baseLength !== ot2.baseLength) {
+      console.log({ ot1, ot2 });
+
+      console.error("transform error: ot1.baseLength !== ot2.baseLength");
+      throw new Error();
+    }
     /** 转换后被应用到用户2的 ot1 */
     const ot1Prime = new OT();
     /** 转换后被应用到用户1的 ot2 */
@@ -319,6 +325,51 @@ export abstract class OT1D<T> {
     }
 
     return composedOt;
+  }
+
+  static createOTByOps<T, OT extends new () => OT1D<T>>(
+    ops: Operator<T>[],
+    OT: OT
+  ) {
+    if (!ops.length) return;
+    const initialOT = new OT();
+    ops.forEach((op) => initialOT.addOp(op));
+    return initialOT;
+  }
+
+  static composeOts<T, OT extends new () => OT1D<T>>(ots: OT1D<T>[], OT: OT) {
+    if (!ots.length || !ots[0].ops.length) {
+      return;
+    }
+
+    const initialOT = new OT();
+    ots[0].ops.forEach((op) => initialOT.addOp(op));
+    const composed = ots.reduce((pre, cur, curIndex) => {
+      if (curIndex === 0) return pre;
+      if (!cur.ops.length) return pre;
+      return pre.compose(cur, OT);
+    }, initialOT);
+
+    return composed;
+  }
+
+  static composeByOps<T, OT extends new () => OT1D<T>>(
+    opsArr: Operator<T>[][],
+    OT: OT
+  ) {
+    if (!opsArr.length) {
+      return;
+    }
+
+    const initialOT = OT1D.createOTByOps(opsArr[0], OT);
+    if (!initialOT) return;
+
+    return opsArr.reduce((pre, cur, curIndex) => {
+      if (curIndex === 0) return pre;
+      const ot = OT1D.createOTByOps(cur, OT);
+      if (!ot) return pre;
+      return pre.compose(ot, OT);
+    }, initialOT);
   }
 
   /**

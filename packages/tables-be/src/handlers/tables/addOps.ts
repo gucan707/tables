@@ -48,6 +48,7 @@ export const addOps: IMiddleware = async (ctx) => {
       oldVersion: { $gte: req.basedVersion },
     });
     const gapChanges = await gapChangesCursor.toArray();
+    console.log({ gapChanges });
 
     const initialOT = new TextOT();
     gapChanges[0].ops.forEach((op) => initialOT.addOp(op));
@@ -61,6 +62,7 @@ export const addOps: IMiddleware = async (ctx) => {
 
     const reqOt = new TextOT();
     req.ops.forEach((op) => reqOt.addOp(op));
+    console.log({ composedChange, reqOt });
     const [_, reqPrime] = OT1D.transform(composedChange, reqOt, TextOT);
     try {
       resText = reqPrime.apply(curGrid.text);

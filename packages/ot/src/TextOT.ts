@@ -20,6 +20,8 @@ export class TextOT extends OT1D<string> {
       return;
     }
 
+    console.log({ op1, op2 });
+
     op1.data += op2.data;
   }
 

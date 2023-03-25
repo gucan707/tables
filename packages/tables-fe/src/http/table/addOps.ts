@@ -30,6 +30,9 @@ export async function addOps(
 
   const ADD_OPS_URL = `/${TABLE_BASE_URL}/${tableId}/addOps`;
 
+  ots.forEach((ot) => (ot.hasSendToBe = true));
+  console.log(OTController.current);
+
   const ot: ReqAddOps = {
     basedVersion: gridVer,
     gridId,

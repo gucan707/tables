@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { TextOT } from "@tables/ot";
+import { OT1D, TextOT } from "@tables/ot";
 import { Operator, OperatorType, TextType } from "@tables/types";
 
 import { CommonGridProps } from "../..";
@@ -16,9 +16,10 @@ export type TextGridProps = {
 } & CommonGridProps;
 
 export const TextGrid: FC<TextGridProps> = (props) => {
-  const { grid, isActive, rowId } = props;
+  const { grid, isActive, rowId, shouldAppliedOT } = props;
   const { tableId } = useParams();
   const [text, setText] = useState(grid.text);
+  const versionRef = useRef<number>(grid.version);
   const isInputZh = useRef(false);
   const dispatch = useAppDispatch();
   const otRef = useRef<TextOT>();
@@ -38,6 +39,41 @@ export const TextGrid: FC<TextGridProps> = (props) => {
     if (!inputRef.current || !isActive) return;
     inputRef.current.focus();
   }, [inputRef.current, isActive]);
+
+  useEffect(() => {
+    if (!shouldAppliedOT) return;
+    const localOT = OTController.current.otInfo.filter(
+      (ot) => ot.gridId === grid._id
+    );
+
+    if (!localOT.length || !localOT[0].OT.ops.length) {
+      shouldAppliedOT.forEach((otInfo) => {
+        const ot = new TextOT();
+        otInfo.ops.forEach((op) => ot.addOp(op));
+        setText((text) => ot.apply(text));
+        versionRef.current = otInfo.oldVersion + 1;
+      });
+    } else {
+      const localComposedOT = OT1D.composeOts(
+        localOT.map((ot) => ot.OT),
+        TextOT
+      );
+
+      if (!localComposedOT) return;
+      let localOTPrime = localComposedOT;
+      shouldAppliedOT.forEach((otInfo) => {
+        const ot = OT1D.createOTByOps(otInfo.ops, TextOT);
+        if (ot) {
+          const [localP, otPrime] = OT1D.transform(localOTPrime, ot, TextOT);
+          localOTPrime = localP;
+          setText((text) => otPrime.apply(text));
+          versionRef.current = otInfo.oldVersion + 1;
+        }
+      });
+    }
+
+    console.log(versionRef.current);
+  }, [shouldAppliedOT]);
 
   return isActive ? (
     <input
@@ -86,7 +122,7 @@ export const TextGrid: FC<TextGridProps> = (props) => {
       }}
       onBlur={() => {
         dispatch(changeActiveGridId(""));
-        addOps(grid._id, tableId || "", grid.version, rowId);
+        addOps(grid._id, tableId || "", versionRef.current, rowId);
       }}
     />
   ) : (

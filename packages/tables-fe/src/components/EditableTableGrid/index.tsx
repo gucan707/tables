@@ -6,6 +6,7 @@ import { Tag } from "@arco-design/web-react";
 import { IconCheck } from "@arco-design/web-react/icon";
 import {
   Grid,
+  OpsEmitedFromBeArgs,
   SelectOptionType,
   TableColumnTypes,
   TableTagColors,
@@ -20,6 +21,7 @@ import { TextGrid } from "./components/TextGrid";
 export type CommonGridProps = {
   isActive: boolean;
   rowId: string;
+  shouldAppliedOT?: OpsEmitedFromBeArgs<string>[];
 };
 
 export type EditableTableGridProps = {
@@ -31,6 +33,8 @@ export const EditableTableGrid: FC<EditableTableGridProps> = (props) => {
   const { grid, tags, rowId } = props;
   const dispatch = useAppDispatch();
   const activeGridId = useAppSelector((state) => state.activeGrid).id;
+  const shouldAppliedOT = useAppSelector((state) => state.shouldAppliedOT)
+    .shouldAppliedOT[grid?._id ?? ""];
 
   if (!grid) return <td></td>;
 
@@ -42,6 +46,7 @@ export const EditableTableGrid: FC<EditableTableGridProps> = (props) => {
           grid={grid}
           isActive={activeGridId === grid._id}
           rowId={rowId}
+          shouldAppliedOT={shouldAppliedOT}
         />
       );
       break;

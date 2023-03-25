@@ -17,7 +17,7 @@ export class OTController {
   otInfo: OTInfo[] = [];
 
   static current: OTController;
-  static unAppliedOT: OpsEmitedFromBeArgs<string>[] = [];
+  static unAppliedOT: Record<string, OpsEmitedFromBeArgs<string>[]> = {};
 
   getLast(): OTInfo | undefined {
     const len = this.otInfo.length;

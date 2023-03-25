@@ -2,11 +2,13 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 import { configureStore } from "@reduxjs/toolkit";
 
-import activeGridReducer from "./ActiveGridSlice";
+import activeGridReducer from "./activeGridSlice";
+import shouldAppliedOTReducer from "./shouldAppliedOTSlice";
 
 export const store = configureStore({
   reducer: {
     activeGrid: activeGridReducer,
+    shouldAppliedOT: shouldAppliedOTReducer,
   },
 });
 
