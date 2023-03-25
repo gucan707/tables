@@ -17,7 +17,9 @@ const AvatarGroup = Avatar.Group;
 
 export const Table: FC = () => {
   const { tableId } = useParams();
-  const { tableDetail } = useTableDetail({ tableId: tableId || "" });
+  const { tableDetail, tableDetailCopyRef } = useTableDetail({
+    tableId: tableId || "",
+  });
   const [onlineUsers, setOnlineUsers] = useState<UserToken[]>([]);
   const dispatch = useAppDispatch();
 
@@ -33,13 +35,13 @@ export const Table: FC = () => {
   useEffect(() => {
     // TODO 类型
     const OpsEmitedFromBeFn = (args: OpsEmitedFromBeArgs<string>) => {
-      console.log("Events.OpsEmitedFromBe");
+      console.log("Events.OpsEmitedFromBe", args);
 
       const { unAppliedOT } = OTController;
       if (!unAppliedOT[args.gridId]) {
         unAppliedOT[args.gridId] = [];
       }
-      const curGrid = tableDetail?.rows
+      const curGrid = tableDetailCopyRef?.current?.rows
         .find((row) => row._id === args.rowId)
         ?.data.find((grid) => grid._id === args.gridId);
 
@@ -54,6 +56,8 @@ export const Table: FC = () => {
       ots.push(args);
       ots.sort((a, b) => a.oldVersion - b.oldVersion);
       if (ots[0].oldVersion !== curGrid.version) {
+        console.log(ots[0].oldVersion, curGrid.version);
+
         // 版本不连续，缺少了一些修改
         console.warn(
           "Events.OpsEmitedFromBe: ots[0].oldVersion !== curGrid.version"
@@ -70,9 +74,8 @@ export const Table: FC = () => {
           break;
         }
       }
-
+      curGrid.version = ots[index - 1].oldVersion + 1;
       const shouldAppliedOT = ots.splice(0, index);
-      console.log({ shouldAppliedOT });
 
       dispatch(
         pushOT({

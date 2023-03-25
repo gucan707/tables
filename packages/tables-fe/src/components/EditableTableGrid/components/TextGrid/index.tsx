@@ -6,6 +6,7 @@ import { Operator, OperatorType, TextType } from "@tables/types";
 
 import { CommonGridProps } from "../..";
 import { addOps } from "../../../../http/table/addOps";
+import { useUserInfo } from "../../../../http/user/useUserInfo";
 import { changeActiveGridId } from "../../../../redux/activeGridSlice";
 import { useAppDispatch } from "../../../../redux/store";
 import { checkMoveCursorKey, KeyStr } from "../../../../utils/keyStr";
@@ -24,6 +25,7 @@ export const TextGrid: FC<TextGridProps> = (props) => {
   const dispatch = useAppDispatch();
   const otRef = useRef<TextOT>();
   const inputRef = useRef<HTMLInputElement>(null);
+  const { userInfo } = useUserInfo();
 
   useEffect(() => {
     if (!isActive) return;
@@ -36,44 +38,46 @@ export const TextGrid: FC<TextGridProps> = (props) => {
   }, [isActive]);
 
   useEffect(() => {
+    grid.text = text;
+  }, [text]);
+
+  useEffect(() => {
     if (!inputRef.current || !isActive) return;
     inputRef.current.focus();
   }, [inputRef.current, isActive]);
 
   useEffect(() => {
-    if (!shouldAppliedOT) return;
-    const localOT = OTController.current.otInfo.filter(
-      (ot) => ot.gridId === grid._id
-    );
-
-    if (!localOT.length || !localOT[0].OT.ops.length) {
-      shouldAppliedOT.forEach((otInfo) => {
-        const ot = new TextOT();
-        otInfo.ops.forEach((op) => ot.addOp(op));
+    if (!shouldAppliedOT || !userInfo) return;
+    const unEmitedOT = OTController.unEmitedOT[grid._id];
+    shouldAppliedOT.forEach((otInfo) => {
+      const ot = OT1D.createOTByOps(otInfo.ops, TextOT);
+      if (!ot) return;
+      if (!unEmitedOT || !unEmitedOT.length) {
+        // 本地没有对该格子进行修改，直接应用
         setText((text) => ot.apply(text));
         versionRef.current = otInfo.oldVersion + 1;
-      });
-    } else {
-      const localComposedOT = OT1D.composeOts(
-        localOT.map((ot) => ot.OT),
-        TextOT
-      );
+        return;
+      }
+      const exitedIndex = unEmitedOT.findIndex((o) => o.feId === otInfo.feId);
+      if (exitedIndex !== -1) {
+        // 收到了后端对该 OT 的广播，版本暂时与后端达成一致，直接 continue
+        unEmitedOT.splice(exitedIndex, 1);
+        versionRef.current = otInfo.oldVersion + 1;
+        return;
+      }
 
-      if (!localComposedOT) return;
-      let localOTPrime = localComposedOT;
-      shouldAppliedOT.forEach((otInfo) => {
-        const ot = OT1D.createOTByOps(otInfo.ops, TextOT);
-        if (ot) {
-          const [localP, otPrime] = OT1D.transform(localOTPrime, ot, TextOT);
-          localOTPrime = localP;
-          setText((text) => otPrime.apply(text));
-          versionRef.current = otInfo.oldVersion + 1;
-        }
+      // 是其他人的修改，需要与本地 unEmitedOT 依次 transform 后再 apply
+      let transformedOt: TextOT = ot;
+      unEmitedOT.forEach((o) => {
+        const localOT = OT1D.createOTByOps(o.ops, TextOT);
+        if (!localOT) return;
+        const [otPrime, _] = OT1D.transform(transformedOt, localOT, TextOT);
+        transformedOt = otPrime;
       });
-    }
-
-    console.log(versionRef.current);
-  }, [shouldAppliedOT]);
+      setText((text) => transformedOt.apply(text));
+      versionRef.current = otInfo.oldVersion + 1;
+    });
+  }, [shouldAppliedOT, userInfo]);
 
   return isActive ? (
     <input

@@ -41,6 +41,11 @@ export async function addOps(
     feId: nanoid(),
   };
 
+  if (!OTController.unEmitedOT[gridId]) {
+    OTController.unEmitedOT[gridId] = [];
+  }
+  OTController.unEmitedOT[gridId]!.push(ot);
+
   await request<string, ReqAddOps>({
     url: ADD_OPS_URL,
     method: "POST",

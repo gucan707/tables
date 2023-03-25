@@ -1,5 +1,5 @@
 import { TextOT } from "@tables/ot";
-import { OpsEmitedFromBeArgs } from "@tables/types";
+import { OpsEmitedFromBeArgs, ReqAddOps } from "@tables/types";
 
 export type OTInfo = {
   OT: TextOT;
@@ -17,7 +17,10 @@ export class OTController {
   otInfo: OTInfo[] = [];
 
   static current: OTController;
+  /** 后端发来的还未被前端应用的 OT */
   static unAppliedOT: Record<string, OpsEmitedFromBeArgs<string>[]> = {};
+  /** 前端已完成，但是后端还未广播给前端的 OT */
+  static unEmitedOT: Record<string, ReqAddOps[] | undefined> = {};
 
   getLast(): OTInfo | undefined {
     const len = this.otInfo.length;

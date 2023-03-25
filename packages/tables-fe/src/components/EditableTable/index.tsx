@@ -2,7 +2,6 @@ import { FC } from "react";
 
 import { Table } from "@tables/types";
 
-import { fakeTables, fakeTags } from "../../data/tables";
 import { getMapTags } from "../../utils/getMapTags";
 import { EditableTableRow } from "../EditableTableRow";
 import { TableIcon } from "../TableIcon";
