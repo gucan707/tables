@@ -12,7 +12,7 @@ import { rows, tables } from "../../db";
 import { checkToken } from "../../utils/checkToken";
 import { TErrorTablePermission } from "../../utils/errors";
 
-export const putGridData: IMiddleware = async (ctx) => {
+export const putGridContent: IMiddleware = async (ctx) => {
   const req = ctx.request.body as ReqPutGridContent;
   const userInfo = checkToken(ctx);
 
