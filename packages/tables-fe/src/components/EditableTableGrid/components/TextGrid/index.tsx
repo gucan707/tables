@@ -1,6 +1,9 @@
+import "./index.less";
+
 import { FC, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import { Input } from "@arco-design/web-react";
 import { OT1D, TextOT } from "@tables/ot";
 import { Operator, OperatorType, TextType } from "@tables/types";
 
@@ -24,7 +27,7 @@ export const TextGrid: FC<TextGridProps> = (props) => {
   const isInputZh = useRef(false);
   const dispatch = useAppDispatch();
   const otRef = useRef<TextOT>();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const { userInfo } = useUserInfo();
 
   useEffect(() => {
@@ -44,6 +47,8 @@ export const TextGrid: FC<TextGridProps> = (props) => {
   useEffect(() => {
     if (!inputRef.current || !isActive) return;
     inputRef.current.focus();
+    inputRef.current.selectionStart = grid.text.length;
+    inputRef.current.selectionEnd = grid.text.length;
   }, [inputRef.current, isActive]);
 
   useEffect(() => {
@@ -80,11 +85,12 @@ export const TextGrid: FC<TextGridProps> = (props) => {
   }, [shouldAppliedOT, userInfo]);
 
   return isActive ? (
-    <input
-      type="text"
+    <Input.TextArea
+      className="text_grid_input"
       value={text}
+      autoSize
       ref={inputRef}
-      onChange={(e) => {
+      onChange={(_, e) => {
         if (!isInputZh.current) {
           otRef.current && diffStr(e.target.value, otRef.current);
         }
