@@ -20,8 +20,10 @@ import {
   TErrorCommon,
   TErrorTablePermission,
 } from "../../utils/errors";
+import { sleep } from "../../utils/sleep";
 
 export const addOps: IMiddleware = async (ctx) => {
+  await sleep(5000);
   const userInfo = checkToken(ctx);
   const req = ctx.request.body as ReqAddOps;
   const { tableId } = ctx.params;

@@ -108,11 +108,13 @@ export abstract class OT1D<T> {
       if (op1.type === OperatorType.Insert) {
         ot1Prime.addOp(op1);
         ot2Prime.addOp({ type: OperatorType.Retain, count: op1.data.length });
+        op1 = { ...ops1[i1++] };
         continue;
       }
       if (op2.type === OperatorType.Insert) {
         ot1Prime.addOp({ type: OperatorType.Retain, count: op2.data.length });
         ot2Prime.addOp(op2);
+        op2 = { ...ops2[i2++] };
         continue;
       }
 
