@@ -7,7 +7,7 @@ import { SERVER_BASE_URL } from "./url";
 
 export const JWT_KEY = "GCTables-token";
 
-export function request<T = {}, D = {}>(config: AxiosRequestConfig<D>) {
+export function request<Res = {}, Req = {}>(config: AxiosRequestConfig<Req>) {
   const instance = axios.create({
     baseURL: SERVER_BASE_URL,
   });
@@ -24,9 +24,9 @@ export function request<T = {}, D = {}>(config: AxiosRequestConfig<D>) {
     }
   );
 
-  return new Promise<T | null>(async (resolve) => {
+  return new Promise<Res | null>(async (resolve) => {
     try {
-      const res = await instance.request<ResCommon<T>>(config);
+      const res = await instance.request<ResCommon<Res>>(config);
       if (res.data && res.data.status === 200) {
         resolve(res.data.data ?? null);
       } else if (!res.data) {
