@@ -3,7 +3,6 @@ import "./index.less";
 import { FC, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { Input } from "@arco-design/web-react";
 import { OT1D, TextOT } from "@tables/ot";
 import { Operator, OperatorType, TextType } from "@tables/types";
 
@@ -46,6 +45,8 @@ export const TextGrid: FC<TextGridProps> = (props) => {
 
   useEffect(() => {
     if (!inputRef.current || !isActive) return;
+    if (inputRef.current === document.activeElement) return;
+
     inputRef.current.focus();
     inputRef.current.selectionStart = grid.text.length;
     inputRef.current.selectionEnd = grid.text.length;
@@ -85,15 +86,20 @@ export const TextGrid: FC<TextGridProps> = (props) => {
   }, [shouldAppliedOT, userInfo]);
 
   return isActive ? (
-    <Input.TextArea
+    <textarea
       className="text_grid_input"
       value={text}
-      autoSize
       ref={inputRef}
-      onChange={(_, e) => {
+      onFocus={(e) => {
+        e.target.style.height = `inherit`;
+        e.target.style.height = `${e.target.scrollHeight}px`;
+      }}
+      onChange={(e) => {
         if (!isInputZh.current) {
           otRef.current && diffStr(e.target.value, otRef.current);
         }
+        e.target.style.height = `inherit`;
+        e.target.style.height = `${e.target.scrollHeight}px`;
         setText(e.target.value);
       }}
       onKeyDown={(e) => {
