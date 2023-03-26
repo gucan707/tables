@@ -1,7 +1,7 @@
 import { TableTagColors } from "./color";
 import { TableColumnTypes } from "./tableHead";
 
-type CommonAtrributes = {
+export type CommonAtrributes = {
   _id: string;
   /** 对应的列表头的 _id */
   headId: string;

@@ -1,5 +1,13 @@
 import { Operator } from "../../ot";
-import { Table } from "../../tables";
+import {
+  CheckboxType,
+  CommonAtrributes,
+  DateType,
+  Grid,
+  NumberType,
+  SelectType,
+  Table,
+} from "../../tables";
 import { UserToken } from "../../users";
 
 export type ResCreateTable = Table;
@@ -36,3 +44,13 @@ export type ReqAddOps = {
   basedVersion: number;
   ops: Operator<string>[];
 };
+
+export type ReqPutGridContent = {
+  tableId: string;
+  rowId: string;
+  gridId: string;
+} & GetOmitCommon<CheckboxType | SelectType | DateType | NumberType>;
+
+type GetOmitCommon<T extends Grid> = T extends Grid
+  ? Omit<T, keyof CommonAtrributes>
+  : never;
