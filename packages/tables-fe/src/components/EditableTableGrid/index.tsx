@@ -16,10 +16,11 @@ import { changeActiveGridId } from "../../redux/activeGridSlice";
 import { store, useAppDispatch, useAppSelector } from "../../redux/store";
 // import { activeGridId } from "../../signal";
 import { getFormattedNumber } from "../../utils/getFormattedNumber";
+import { CheckboxGrid } from "./components/CheckboxGrid";
 import { TextGrid } from "./components/TextGrid";
 
 export type CommonGridProps = {
-  isActive: boolean;
+  isActive?: boolean;
   rowId: string;
   shouldAppliedOT?: OpsEmitedFromBeArgs<string>[];
 };
@@ -51,13 +52,7 @@ export const EditableTableGrid: FC<EditableTableGridProps> = (props) => {
       );
       break;
     case TableColumnTypes.Checkbox:
-      content = (
-        <div
-          className={`editable grid-checkbox ${grid.checked ? "checked" : ""}`}
-        >
-          {grid.checked && <IconCheck />}
-        </div>
-      );
+      content = <CheckboxGrid grid={grid} rowId={rowId} />;
       break;
     case TableColumnTypes.Date:
       content = <>{grid.date > 0 && dayjs(grid.date).format(grid.format)}</>;
