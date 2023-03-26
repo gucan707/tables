@@ -7,6 +7,9 @@ export enum KeyStr {
   Home = "Home",
   Delete = "Delete",
   Backspace = "Backspace",
+  A = "a",
+  C = "c",
+  V = "v",
 }
 
 /**

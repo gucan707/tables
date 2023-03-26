@@ -13,6 +13,7 @@ import { changeActiveGridId } from "../../../../redux/activeGridSlice";
 import { useAppDispatch } from "../../../../redux/store";
 import { checkMoveCursorKey, KeyStr } from "../../../../utils/keyStr";
 import { OTController, OTReason } from "../../../../utils/OTsController";
+import { setupShortcut } from "../../../../utils/setupShortcut";
 
 export type TextGridProps = {
   grid: TextType;
@@ -103,6 +104,8 @@ export const TextGrid: FC<TextGridProps> = (props) => {
         setText(e.target.value);
       }}
       onKeyDown={(e) => {
+        setupShortcut({ e, setText });
+
         if (e.key === KeyStr.Delete || e.key === KeyStr.Backspace) {
           const ot = OTController.current.createOT(
             grid._id,
