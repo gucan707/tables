@@ -35,7 +35,7 @@ export const CheckboxGrid: FC<CheckboxGrid> = (props) => {
       onClick={() => {
         setChecked(!checked);
         putGridContent({
-          type: grid.type,
+          type: TableColumnTypes.Checkbox,
           checked: !checked,
           gridId: grid._id,
           rowId,
