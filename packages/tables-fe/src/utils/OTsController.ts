@@ -1,5 +1,9 @@
 import { TextOT } from "@tables/ot";
-import { OpsEmitedFromBeArgs, ReqAddOps } from "@tables/types";
+import {
+  OpsEmitedFromBeArgs,
+  ReplaceGridContentArgs,
+  ReqAddOps,
+} from "@tables/types";
 
 export type OTInfo = {
   OT: TextOT;

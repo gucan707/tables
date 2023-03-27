@@ -4,11 +4,18 @@ import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Avatar, Button, Spin } from "@arco-design/web-react";
-import { Events, OpsEmitedFromBeArgs, User, UserToken } from "@tables/types";
+import {
+  Events,
+  OpsEmitedFromBeArgs,
+  ReplaceGridContentArgs,
+  User,
+  UserToken,
+} from "@tables/types";
 
 import { EditableTable } from "../../components/EditableTable";
 import { useTableDetail } from "../../http/table/useTableDetail";
 import { pushOT } from "../../redux/shouldAppliedOTSlice";
+import { addContent } from "../../redux/shouldReplacedContentSlice";
 import { useAppDispatch } from "../../redux/store";
 import { setup, socket } from "../../socket";
 import { OTController } from "../../utils/OTsController";
@@ -33,6 +40,7 @@ export const Table: FC = () => {
   }, [tableId]);
 
   useEffect(() => {
+    // 监听 OpsEmitedFromBe
     // TODO 类型
     const OpsEmitedFromBeFn = (args: OpsEmitedFromBeArgs<string>) => {
       console.log("Events.OpsEmitedFromBe", args);
@@ -48,21 +56,19 @@ export const Table: FC = () => {
       if (!curGrid) {
         // TODO 可能是新增的格子，表格层面协同时需要再修改
         console.error("Events.OpsEmitedFromBe: !curGrid");
-
         return;
       }
 
       const ots = unAppliedOT[args.gridId];
+
       ots.push(args);
       ots.sort((a, b) => a.oldVersion - b.oldVersion);
       if (ots[0].oldVersion !== curGrid.version) {
         console.log(ots[0].oldVersion, curGrid.version);
-
         // 版本不连续，缺少了一些修改
         console.warn(
           "Events.OpsEmitedFromBe: ots[0].oldVersion !== curGrid.version"
         );
-
         return;
       }
 
@@ -84,10 +90,17 @@ export const Table: FC = () => {
         })
       );
     };
-    socket.on(Events.OpsEmitedFromBe, OpsEmitedFromBeFn);
+    const ReplaceGridContentFn = (args: ReplaceGridContentArgs) => {
+      dispatch(addContent(args));
+    };
 
-    return () =>
-      socket.off(Events.OpsEmitedFromBe, OpsEmitedFromBeFn) && undefined;
+    socket.on(Events.OpsEmitedFromBe, OpsEmitedFromBeFn);
+    socket.on(Events.ReplaceGridContent, ReplaceGridContentFn);
+
+    return () => {
+      socket.off(Events.OpsEmitedFromBe, OpsEmitedFromBeFn);
+      socket.off(Events.ReplaceGridContent, ReplaceGridContentFn);
+    };
   }, [tableDetail, socket]);
 
   return (

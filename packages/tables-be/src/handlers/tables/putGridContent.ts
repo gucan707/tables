@@ -2,12 +2,14 @@ import { IMiddleware } from "koa-router";
 import { UpdateFilter } from "mongodb";
 
 import {
+  Events,
   ReqPutGridContent,
   ResCommon,
   Row,
   TableColumnTypes,
 } from "@tables/types";
 
+import { io } from "../..";
 import { rows, tables } from "../../db";
 import { checkToken } from "../../utils/checkToken";
 import { TErrorTablePermission } from "../../utils/errors";
@@ -65,6 +67,8 @@ export const putGridContent: IMiddleware = async (ctx) => {
   await rows.updateOne({ _id: req.rowId }, update, {
     arrayFilters: [{ "element._id": req.gridId }],
   });
+
+  io.to(tableInfo._id).emit(Events.ReplaceGridContent, req);
 
   const res: ResCommon<string> = {
     status: 200,
