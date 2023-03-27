@@ -3,7 +3,7 @@ import "./index.less";
 import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { InputNumber } from "@arco-design/web-react";
+import { Input } from "@arco-design/web-react";
 import { NumberType, TableColumnTypes } from "@tables/types";
 
 import { CommonGridProps } from "../..";
@@ -41,10 +41,10 @@ export const NumberGrid: FC<NumberGridProps> = (props) => {
 
   const numStr = getFormattedNumber(num, decimal, percent);
   return isActive ? (
-    <InputNumber
+    <Input
+      type={"number"}
       className="number_grid"
       autoFocus
-      hideControl
       defaultValue={numStr}
       onBlur={(e) => {
         setNum(Number(e.target.value));
