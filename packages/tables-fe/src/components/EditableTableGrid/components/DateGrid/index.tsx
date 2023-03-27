@@ -6,13 +6,13 @@ import { useParams } from "react-router-dom";
 import { DatePicker } from "@arco-design/web-react";
 import { DateType, TableColumnTypes } from "@tables/types";
 
+import { CommonGridProps } from "../..";
 import { putGridContent } from "../../../../http/table/putGridContent";
 import { useAppSelector } from "../../../../redux/store";
 
 export type DateGridProps = {
   grid: DateType;
-  rowId: string;
-};
+} & CommonGridProps;
 
 export const DateGrid: FC<DateGridProps> = (props) => {
   const { grid, rowId } = props;
