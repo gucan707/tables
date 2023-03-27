@@ -17,6 +17,7 @@ import { store, useAppDispatch, useAppSelector } from "../../redux/store";
 // import { activeGridId } from "../../signal";
 import { getFormattedNumber } from "../../utils/getFormattedNumber";
 import { CheckboxGrid } from "./components/CheckboxGrid";
+import { DateGrid } from "./components/DateGrid";
 import { TextGrid } from "./components/TextGrid";
 
 export type CommonGridProps = {
@@ -55,7 +56,8 @@ export const EditableTableGrid: FC<EditableTableGridProps> = (props) => {
       content = <CheckboxGrid grid={grid} rowId={rowId} />;
       break;
     case TableColumnTypes.Date:
-      content = <>{grid.date > 0 && dayjs(grid.date).format(grid.format)}</>;
+      content = <DateGrid grid={grid} rowId={rowId} />;
+      // content = <>{grid.date > 0 && dayjs(grid.date).format(grid.format)}</>;
       break;
     case TableColumnTypes.MultiSelect:
       content = (
