@@ -1,9 +1,9 @@
+import "./index.less";
+
 import dayjs from "dayjs";
 import { FC } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 import { Tag } from "@arco-design/web-react";
-import { IconCheck } from "@arco-design/web-react/icon";
 import {
   Grid,
   OpsEmitedFromBeArgs,
