@@ -44,8 +44,8 @@ export const TableIcon: FC<TableIconProps> = (props) => {
   }
 
   return (
-    <div className={className} onClick={onClick}>
+    <span className={className} onClick={onClick}>
       {icon}
-    </div>
+    </span>
   );
 };

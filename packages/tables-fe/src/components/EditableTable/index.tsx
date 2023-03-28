@@ -1,9 +1,11 @@
 import { FC } from "react";
 
+import { Trigger } from "@arco-design/web-react";
 import { Table } from "@tables/types";
 
 import { getMapTags } from "../../utils/getMapTags";
 import { EditableTableRow } from "../EditableTableRow";
+import { HeadAttributes } from "../HeadAttributes";
 import { TableIcon } from "../TableIcon";
 
 export type EditableTableProps = {
@@ -23,16 +25,21 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
         <thead className="editable table-heads">
           <tr>
             {heads.map((head) => (
-              <th
+              <Trigger
+                popup={() => <HeadAttributes head={head} />}
+                trigger="click"
+                position="bottom"
+                classNames="zoomInTop"
                 key={head._id}
-                className="editable table-heads-item grid_common"
               >
-                <TableIcon
-                  type={head.type}
-                  className="editable table-heads-item-icon"
-                />
-                {head.name}
-              </th>
+                <th className="editable table-heads-item grid_common">
+                  <TableIcon
+                    type={head.type}
+                    className="editable table-heads-item-icon"
+                  />
+                  {head.name}
+                </th>
+              </Trigger>
             ))}
           </tr>
         </thead>
