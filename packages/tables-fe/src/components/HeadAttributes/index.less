@@ -3,6 +3,11 @@
   color: var(--font-color);
   width: 200px;
 
+  .arco-menu-light,
+  .arco-menu-item.arco-menu-selected {
+    color: var(--font-color) !important;
+  }
+
   &-item {
     display: flex;
     align-items: center;
@@ -20,6 +25,7 @@
   &-menu_item {
     display: flex;
     justify-content: space-between;
+    color: var(--font-color) !important;
 
     &-description {
       color: var(--font-gray);
