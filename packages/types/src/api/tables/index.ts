@@ -7,6 +7,7 @@ import {
   NumberType,
   SelectType,
   Table,
+  TableHead,
 } from "../../tables";
 import { UserToken } from "../../users";
 
@@ -54,3 +55,10 @@ export type ReqPutGridContent = {
 type GetOmitCommon<T extends Grid> = T extends Grid
   ? Omit<T, keyof CommonAtrributes>
   : never;
+
+type GetHeadOmitId<T> = T extends TableHead ? Omit<T, "_id" | "tags"> : never;
+
+export type ReqPutHeadAttributes = {
+  tableId: string;
+  headId: string;
+} & GetHeadOmitId<TableHead>;
