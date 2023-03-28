@@ -7,6 +7,7 @@ import { Avatar, Button, Spin } from "@arco-design/web-react";
 import {
   Events,
   OpsEmitedFromBeArgs,
+  PutHeadAttributesArgs,
   ReplaceGridContentArgs,
   User,
   UserToken,
@@ -14,6 +15,7 @@ import {
 
 import { EditableTable } from "../../components/EditableTable";
 import { useTableDetail } from "../../http/table/useTableDetail";
+import { setHeadAttribute } from "../../redux/headsSlice";
 import { pushOT } from "../../redux/shouldAppliedOTSlice";
 import { addContent } from "../../redux/shouldReplacedContentSlice";
 import { useAppDispatch } from "../../redux/store";
@@ -90,16 +92,23 @@ export const Table: FC = () => {
         })
       );
     };
+
     const ReplaceGridContentFn = (args: ReplaceGridContentArgs) => {
       dispatch(addContent(args));
     };
 
+    const putHeadAttributeFn = (args: PutHeadAttributesArgs) => {
+      dispatch(setHeadAttribute(args));
+    };
+
     socket.on(Events.OpsEmitedFromBe, OpsEmitedFromBeFn);
     socket.on(Events.ReplaceGridContent, ReplaceGridContentFn);
+    socket.on(Events.PutHeadAttributes, putHeadAttributeFn);
 
     return () => {
       socket.off(Events.OpsEmitedFromBe, OpsEmitedFromBeFn);
       socket.off(Events.ReplaceGridContent, ReplaceGridContentFn);
+      socket.off(Events.PutHeadAttributes, putHeadAttributeFn);
     };
   }, [tableDetail, socket]);
 

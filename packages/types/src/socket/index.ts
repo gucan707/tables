@@ -1,4 +1,4 @@
-import { ReqPutGridContent } from "../api";
+import { ReqPutGridContent, ReqPutHeadAttributes } from "../api";
 import { Operator } from "../ot";
 
 export enum Events {
@@ -6,6 +6,7 @@ export enum Events {
   EmitOnlineUsers = "emit online users",
   OpsEmitedFromBe = "ops emited from be",
   ReplaceGridContent = "replace grid content",
+  PutHeadAttributes = "put head attributes",
 }
 
 export type ReqJoinRoom = {
@@ -25,3 +26,4 @@ export type OpsEmitedFromBeArgs<T> = {
 };
 
 export type ReplaceGridContentArgs = ReqPutGridContent;
+export type PutHeadAttributesArgs = ReqPutHeadAttributes;

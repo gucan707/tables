@@ -7,6 +7,7 @@ import { Input, Menu } from "@arco-design/web-react";
 import { IconBranch, IconDelete, IconEdit } from "@arco-design/web-react/icon";
 import { TableColumnTypes, TableHead } from "@tables/types";
 
+import { putHeadAttributes } from "../../http/table/putHeadAttributes";
 import { setHeadAttribute } from "../../redux/headsSlice";
 import { useAppDispatch } from "../../redux/store";
 import { TableIcon } from "../TableIcon";
@@ -46,6 +47,12 @@ export const HeadAttributes: FC<HeadAttributesProps> = (props) => {
                 tableId,
               })
             );
+            putHeadAttributes({
+              ...head,
+              headId: head._id,
+              name: headName,
+              tableId,
+            });
           }}
           className="head_attributes-item-input"
         />

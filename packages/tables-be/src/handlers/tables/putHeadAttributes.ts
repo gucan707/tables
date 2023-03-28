@@ -2,21 +2,29 @@ import { IMiddleware } from "koa-router";
 import { UpdateFilter } from "mongodb";
 
 import {
+  Events,
   ReqPutHeadAttributes,
   ResCommon,
   Table,
   TableColumnTypes,
 } from "@tables/types";
 
+import { io } from "../..";
 import { tables } from "../../db";
 import { checkToken } from "../../utils/checkToken";
-import { TErrorTablePermission } from "../../utils/errors";
+import {
+  TErrorTableIdNotFound,
+  TErrorTablePermission,
+} from "../../utils/errors";
 
 export const putHeadAttributes: IMiddleware = async (ctx) => {
   const userInfo = checkToken(ctx);
   const req = ctx.request.body as ReqPutHeadAttributes;
   const tableInfo = await tables.findOne({ _id: req.tableId });
 
+  if (!tableInfo) {
+    throw new TErrorTableIdNotFound();
+  }
   if (userInfo._id !== tableInfo.owner) {
     throw new TErrorTablePermission();
   }
@@ -65,6 +73,8 @@ export const putHeadAttributes: IMiddleware = async (ctx) => {
   await tables.updateOne({ _id: req.tableId }, update, {
     arrayFilters: [{ "element._id": req.headId }],
   });
+
+  io.to(tableInfo._id).emit(Events.PutHeadAttributes, req);
 
   const res: ResCommon<string> = {
     status: 200,
