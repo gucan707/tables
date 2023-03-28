@@ -1,11 +1,14 @@
 import "./index.less";
 
 import { FC, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import { Input, Menu } from "@arco-design/web-react";
 import { IconBranch, IconDelete, IconEdit } from "@arco-design/web-react/icon";
 import { TableColumnTypes, TableHead } from "@tables/types";
 
+import { setHeadAttribute } from "../../redux/headsSlice";
+import { useAppDispatch } from "../../redux/store";
 import { TableIcon } from "../TableIcon";
 
 export type HeadAttributesProps = {
@@ -24,6 +27,8 @@ const dropList = (
 export const HeadAttributes: FC<HeadAttributesProps> = (props) => {
   const { head } = props;
   const [headName, setHeadName] = useState(head.name);
+  const dispatch = useAppDispatch();
+  const { tableId = "" } = useParams();
 
   return (
     <Menu className="head_attributes" mode="pop">
@@ -32,6 +37,16 @@ export const HeadAttributes: FC<HeadAttributesProps> = (props) => {
         <Input
           value={headName}
           onChange={(str) => setHeadName(str)}
+          onBlur={() => {
+            dispatch(
+              setHeadAttribute({
+                ...head,
+                headId: head._id,
+                name: headName,
+                tableId,
+              })
+            );
+          }}
           className="head_attributes-item-input"
         />
       </div>

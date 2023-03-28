@@ -1,8 +1,10 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 import { Trigger } from "@arco-design/web-react";
 import { Table } from "@tables/types";
 
+import { setHeads } from "../../redux/headsSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { getMapTags } from "../../utils/getMapTags";
 import { EditableTableRow } from "../EditableTableRow";
 import { HeadAttributes } from "../HeadAttributes";
@@ -16,6 +18,11 @@ export type EditableTableProps = {
 export const EditableTable: FC<EditableTableProps> = (props) => {
   const { className = "", table } = props;
   const { heads, rows } = table;
+  const dispatch = useAppDispatch();
+  const headsRedux = useAppSelector((state) => state.headsReducer.heads);
+  useEffect(() => {
+    dispatch(setHeads(heads));
+  }, [heads]);
 
   const tags = getMapTags(heads);
 
@@ -24,7 +31,7 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
       <table className="editable table">
         <thead className="editable table-heads">
           <tr>
-            {heads.map((head) => (
+            {headsRedux.map((head) => (
               <Trigger
                 popup={() => <HeadAttributes head={head} />}
                 trigger="click"
@@ -46,7 +53,7 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
         <tbody>
           {rows.map((row) => (
             <EditableTableRow
-              heads={heads}
+              heads={headsRedux}
               row={row}
               key={row._id}
               tags={tags}

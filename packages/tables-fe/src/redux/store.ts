@@ -3,6 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 
 import activeGridReducer from "./activeGridSlice";
+import headsReducer from "./headsSlice";
 import shouldAppliedOTReducer from "./shouldAppliedOTSlice";
 import shouldReplacedContentReducer from "./shouldReplacedContentSlice";
 
@@ -11,6 +12,7 @@ export const store = configureStore({
     activeGrid: activeGridReducer,
     shouldAppliedOT: shouldAppliedOTReducer,
     shouldReplacedContent: shouldReplacedContentReducer,
+    headsReducer: headsReducer,
   },
 });
 
