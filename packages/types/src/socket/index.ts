@@ -1,5 +1,6 @@
 import { ReqPutGridContent, ReqPutHeadAttributes } from "../api";
 import { Operator } from "../ot";
+import { SelectOptionType } from "../tables";
 
 export enum Events {
   JoinRoom = "join room",
@@ -7,6 +8,7 @@ export enum Events {
   OpsEmitedFromBe = "ops emited from be",
   ReplaceGridContent = "replace grid content",
   PutHeadAttributes = "put head attributes",
+  AddTag = "add tag",
 }
 
 export type ReqJoinRoom = {
@@ -27,3 +29,4 @@ export type OpsEmitedFromBeArgs<T> = {
 
 export type ReplaceGridContentArgs = ReqPutGridContent;
 export type PutHeadAttributesArgs = ReqPutHeadAttributes;
+export type AddTagArgs = SelectOptionType;

@@ -1,8 +1,15 @@
 import { IMiddleware } from "koa-router";
 import { ObjectId } from "mongodb";
 
-import { ReqPostTag, ResCommon, TableColumnTypes } from "@tables/types";
+import {
+  AddTagArgs,
+  Events,
+  ReqPostTag,
+  ResCommon,
+  TableColumnTypes,
+} from "@tables/types";
 
+import { io } from "../..";
 import { tables } from "../../db";
 import { checkToken } from "../../utils/checkToken";
 import {
@@ -33,12 +40,14 @@ export const postTag: IMiddleware = async (ctx) => {
     return;
   }
 
+  const newId = new ObjectId().toString();
+
   await tables.updateOne(
     { _id: req.tableId },
     {
       $addToSet: {
         "heads.$[elements].tags": {
-          _id: new ObjectId().toString(),
+          _id: newId,
           text: req.text,
           color: req.color,
         },
@@ -48,6 +57,15 @@ export const postTag: IMiddleware = async (ctx) => {
       arrayFilters: [{ "elements._id": req.headId }],
     }
   );
+
+  const addTagArgs: AddTagArgs = {
+    _id: newId,
+    color: req.color,
+    text: req.text,
+    headId: req.headId,
+  };
+
+  io.to(req.tableId).emit(Events.AddTag, addTagArgs);
 
   const res: ResCommon<string> = {
     status: 200,

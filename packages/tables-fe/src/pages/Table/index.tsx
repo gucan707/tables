@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 
 import { Avatar, Button, Spin } from "@arco-design/web-react";
 import {
+  AddTagArgs,
   Events,
   OpsEmitedFromBeArgs,
   PutHeadAttributesArgs,
@@ -15,7 +16,7 @@ import {
 
 import { EditableTable } from "../../components/EditableTable";
 import { useTableDetail } from "../../http/table/useTableDetail";
-import { setHeadAttribute } from "../../redux/headsSlice";
+import { addTag, setHeadAttribute } from "../../redux/headsSlice";
 import { pushOT } from "../../redux/shouldAppliedOTSlice";
 import { addContent } from "../../redux/shouldReplacedContentSlice";
 import { useAppDispatch } from "../../redux/store";
@@ -101,14 +102,20 @@ export const Table: FC = () => {
       dispatch(setHeadAttribute(args));
     };
 
+    const addTagFn = (args: AddTagArgs) => {
+      dispatch(addTag(args));
+    };
+
     socket.on(Events.OpsEmitedFromBe, OpsEmitedFromBeFn);
     socket.on(Events.ReplaceGridContent, ReplaceGridContentFn);
     socket.on(Events.PutHeadAttributes, putHeadAttributeFn);
+    socket.on(Events.AddTag, addTagFn);
 
     return () => {
       socket.off(Events.OpsEmitedFromBe, OpsEmitedFromBeFn);
       socket.off(Events.ReplaceGridContent, ReplaceGridContentFn);
       socket.off(Events.PutHeadAttributes, putHeadAttributeFn);
+      socket.off(Events.AddTag, addTagFn);
     };
   }, [tableDetail, socket]);
 
