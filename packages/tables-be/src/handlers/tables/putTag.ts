@@ -1,7 +1,14 @@
 import { IMiddleware } from "koa-router";
 
-import { ReqPutTag, ResCommon, TableColumnTypes } from "@tables/types";
+import {
+  Events,
+  ReqPutTag,
+  ResCommon,
+  TableColumnTypes,
+  UpdateTagArgs,
+} from "@tables/types";
 
+import { io } from "../..";
 import { tables } from "../../db";
 import { checkToken } from "../../utils/checkToken";
 import {
@@ -39,16 +46,26 @@ export const putTag: IMiddleware = async (ctx) => {
     { _id: req.tableId },
     {
       $set: {
-        "heads.$[element1].tags.$[elements2].text": req.text,
-        "heads.$[element1].tags.$[elements2].color": req.color,
+        "heads.$[element1].tags.$[element2].text": req.text,
+        "heads.$[element1].tags.$[element2].color": req.color,
       },
     },
     {
       arrayFilters: [
-        { "elements1._id": req.headId, "elements2._id": req.tagId },
+        { "element1._id": req.headId },
+        { "element2._id": req.tagId },
       ],
     }
   );
+
+  const updateTagArgs: UpdateTagArgs = {
+    color: req.color,
+    headId: req.headId,
+    tagId: req.tagId,
+    text: req.text,
+  };
+
+  io.to(req.tableId).emit(Events.UpdateTag, updateTagArgs);
 
   const res: ResCommon<string> = {
     status: 200,

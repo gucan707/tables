@@ -5,6 +5,7 @@ import {
   ReqPutHeadAttributes,
   TableColumnTypes,
   TableHeads,
+  UpdateTagArgs,
 } from "@tables/types";
 
 export const headsSlice = createSlice({
@@ -56,8 +57,24 @@ export const headsSlice = createSlice({
 
       head.tags.push(payload);
     },
+    updateTag: (state, action: PayloadAction<UpdateTagArgs>) => {
+      const { payload } = action;
+      const head = state.heads.find((h) => h._id === payload.headId);
+      if (
+        !head ||
+        (head.type !== TableColumnTypes.MultiSelect &&
+          head.type !== TableColumnTypes.Select)
+      )
+        return;
+
+      const tag = head.tags.find((t) => t._id === payload.tagId);
+      if (!tag) return;
+      tag.color = payload.color;
+      tag.text = payload.text;
+    },
   },
 });
 
-export const { setHeadAttribute, setHeads, addTag } = headsSlice.actions;
+export const { setHeadAttribute, setHeads, addTag, updateTag } =
+  headsSlice.actions;
 export default headsSlice.reducer;

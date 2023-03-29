@@ -10,13 +10,14 @@ import {
   OpsEmitedFromBeArgs,
   PutHeadAttributesArgs,
   ReplaceGridContentArgs,
+  UpdateTagArgs,
   User,
   UserToken,
 } from "@tables/types";
 
 import { EditableTable } from "../../components/EditableTable";
 import { useTableDetail } from "../../http/table/useTableDetail";
-import { addTag, setHeadAttribute } from "../../redux/headsSlice";
+import { addTag, setHeadAttribute, updateTag } from "../../redux/headsSlice";
 import { pushOT } from "../../redux/shouldAppliedOTSlice";
 import { addContent } from "../../redux/shouldReplacedContentSlice";
 import { useAppDispatch } from "../../redux/store";
@@ -106,16 +107,22 @@ export const Table: FC = () => {
       dispatch(addTag(args));
     };
 
+    const updateTagFn = (args: UpdateTagArgs) => {
+      dispatch(updateTag(args));
+    };
+
     socket.on(Events.OpsEmitedFromBe, OpsEmitedFromBeFn);
     socket.on(Events.ReplaceGridContent, ReplaceGridContentFn);
     socket.on(Events.PutHeadAttributes, putHeadAttributeFn);
     socket.on(Events.AddTag, addTagFn);
+    socket.on(Events.UpdateTag, updateTagFn);
 
     return () => {
       socket.off(Events.OpsEmitedFromBe, OpsEmitedFromBeFn);
       socket.off(Events.ReplaceGridContent, ReplaceGridContentFn);
       socket.off(Events.PutHeadAttributes, putHeadAttributeFn);
       socket.off(Events.AddTag, addTagFn);
+      socket.off(Events.UpdateTag, updateTagFn);
     };
   }, [tableDetail, socket]);
 

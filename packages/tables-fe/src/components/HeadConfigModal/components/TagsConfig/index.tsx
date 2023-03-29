@@ -12,6 +12,7 @@ import {
 } from "@tables/types";
 
 import { postTag } from "../../../../http/table/postTag";
+import { putTag } from "../../../../http/table/putTag";
 
 type TagsConfigProps = {
   curHead: SelectHead | MultiSelectHead;
@@ -112,7 +113,14 @@ export const TagsConfig: FC<TagsConfigProps> = (props) => {
           </Trigger>
           <Button
             type="text"
-            onClick={() => {
+            onClick={async () => {
+              await putTag({
+                color: curUpdatingTag.color,
+                headId: curHead._id,
+                tableId,
+                tagId: curUpdatingTag._id,
+                text: curUpdatingTag.text,
+              });
               setCurUpdatingTag(undefined);
             }}
           >
