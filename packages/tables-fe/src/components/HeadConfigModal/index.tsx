@@ -1,6 +1,7 @@
 import "./index.less";
 
 import { FC, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import {
   Button,
@@ -16,6 +17,7 @@ import {
   TableTagColors,
 } from "@tables/types";
 
+import { postTag } from "../../http/table/postTag";
 import { useAppSelector } from "../../redux/store";
 
 export type HeadConfigModalProps = {
@@ -28,6 +30,8 @@ export const HeadConfigModal: FC<HeadConfigModalProps> = (props) => {
   const heads = useAppSelector((state) => state.headsReducer.heads);
   const curHead = heads.find((head) => head._id === activeHead);
   const [newTagColor, setNewTagColor] = useState(TableTagColors.Yellow);
+  const [tagText, setTagText] = useState("");
+  const { tableId = "" } = useParams();
 
   if (!curHead) return null;
 
@@ -56,6 +60,7 @@ export const HeadConfigModal: FC<HeadConfigModalProps> = (props) => {
         <div className="head_config-select-add-all_colors">
           {Object.values(TableTagColors).map((color) => (
             <Tag
+              key={color}
               className="head_config-select-add-all_colors-tag"
               color={color}
               onClick={() => {
@@ -71,7 +76,13 @@ export const HeadConfigModal: FC<HeadConfigModalProps> = (props) => {
         <div className="head_config-select">
           <div className="head_config-select-add">
             新增标签
-            <Input className="head_config-select-add-input" />
+            <Input
+              value={tagText}
+              onChange={(str) => {
+                setTagText(str);
+              }}
+              className="head_config-select-add-input"
+            />
             <Trigger
               popup={() => colors}
               trigger="click"
@@ -82,13 +93,31 @@ export const HeadConfigModal: FC<HeadConfigModalProps> = (props) => {
                 color
               </Tag>
             </Trigger>
-            <Button type="text">新增</Button>
+            <Button
+              type="text"
+              onClick={() => {
+                postTag({
+                  color: newTagColor,
+                  headId: curHead._id,
+                  text: tagText,
+                  tableId,
+                });
+              }}
+            >
+              新增
+            </Button>
           </div>
           <div>
             当前标签：
-            {curHead.tags.length
-              ? curHead.tags.map(() => <Tag>1</Tag>)
-              : "暂无标签"}
+            <div className="head_config-select-tags">
+              {curHead.tags.length
+                ? curHead.tags.map((tag) => (
+                    <Tag key={tag._id} color={tag.color} closable>
+                      {tag.text}
+                    </Tag>
+                  ))
+                : "暂无标签"}
+            </div>
           </div>
         </div>
       );
