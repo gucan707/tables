@@ -37,7 +37,7 @@ export const postTag: IMiddleware = async (ctx) => {
     { _id: req.tableId },
     {
       $addToSet: {
-        "heads[elements].tags": {
+        "heads.$[elements].tags": {
           _id: new ObjectId().toString(),
           text: req.text,
           color: req.color,

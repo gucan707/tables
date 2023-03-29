@@ -39,8 +39,8 @@ export const putTag: IMiddleware = async (ctx) => {
     { _id: req.tableId },
     {
       $set: {
-        "heads[element1].tags[elements2].text": req.text,
-        "heads[element1].tags[elements2].color": req.color,
+        "heads.$[element1].tags.$[elements2].text": req.text,
+        "heads.$[element1].tags.$[elements2].color": req.color,
       },
     },
     {
