@@ -1,0 +1,43 @@
+.head_config {
+  &-date {
+    display: flex;
+    align-items: center;
+
+    &-select {
+      flex: 1;
+      margin-left: 10px;
+    }
+  }
+
+  &-select {
+    &-add {
+      display: flex;
+      align-items: center;
+
+      &-input {
+        flex: 1;
+        margin-left: 10px;
+      }
+
+      &-color {
+        height: 2em;
+        margin: 0 5px 0 10px;
+        cursor: pointer;
+      }
+
+      &-all_colors {
+        display: flex;
+        gap: 7px;
+        padding: 7px;
+        width: 170px;
+        flex-wrap: wrap;
+        background: white;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+        &-tag {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

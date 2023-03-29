@@ -14,6 +14,7 @@ import { TableIcon } from "../TableIcon";
 
 export type HeadAttributesProps = {
   head: TableHead;
+  setActiveHead: (id: string) => void;
 };
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
@@ -26,7 +27,7 @@ const dropList = (
 );
 
 export const HeadAttributes: FC<HeadAttributesProps> = (props) => {
-  const { head } = props;
+  const { head, setActiveHead } = props;
   const [headName, setHeadName] = useState(head.name);
   const dispatch = useAppDispatch();
   const { tableId = "" } = useParams();
@@ -73,7 +74,7 @@ export const HeadAttributes: FC<HeadAttributesProps> = (props) => {
       >
         {dropList}
       </SubMenu>
-      <MenuItem key="2">
+      <MenuItem key="2" onClick={() => setActiveHead(head._id)}>
         <IconBranch />
         属性配置
       </MenuItem>
