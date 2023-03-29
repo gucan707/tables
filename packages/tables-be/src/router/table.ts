@@ -5,8 +5,10 @@ import { addOps } from "../handlers/tables/addOps";
 import { createTable } from "../handlers/tables/cretateTable";
 import { getTableDetail } from "../handlers/tables/getTableDetail";
 import { getTables } from "../handlers/tables/getTables";
+import { postTag } from "../handlers/tables/postTag";
 import { putGridContent } from "../handlers/tables/putGridContent";
 import { putHeadAttributes } from "../handlers/tables/putHeadAttributes";
+import { putTag } from "../handlers/tables/putTag";
 
 export const tableRouter = new Router();
 
@@ -15,6 +17,8 @@ tableRouter
   .post("/:tableId/addOps", addOps)
   .put("/:tableId/putGridContent", putGridContent)
   .put("/:tableId/putHeadAttributes", putHeadAttributes)
+  .put("/:tableId/tags", putTag)
+  .post("/:tableId/tags", postTag)
   .get("/:tableId", getTableDetail)
   .post("/", createTable)
   .get("/", getTables);

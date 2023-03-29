@@ -8,6 +8,7 @@ import {
   SelectType,
   Table,
   TableHead,
+  TableTagColors,
 } from "../../tables";
 import { UserToken } from "../../users";
 
@@ -62,3 +63,13 @@ export type ReqPutHeadAttributes = {
   tableId: string;
   headId: string;
 } & GetHeadOmitId<TableHead>;
+
+export type ReqPutTag = {
+  tableId: string;
+  tagId: string;
+  headId: string;
+  text: string;
+  color: TableTagColors;
+};
+
+export type ReqPostTag = Omit<ReqPutTag, "tagId">;
