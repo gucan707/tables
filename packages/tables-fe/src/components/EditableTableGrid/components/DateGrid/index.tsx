@@ -18,10 +18,14 @@ export const DateGrid: FC<DateGridProps> = (props) => {
   const { grid, rowId } = props;
   const { tableId = "" } = useParams();
   const [date, setDate] = useState(grid.date);
-  const [format, setFormat] = useState(grid.format);
+  const heads = useAppSelector((state) => state.headsReducer.heads);
+  const head = heads.find((h) => h._id === grid.headId);
+
   const replacedContent = useAppSelector(
     (state) => state.shouldReplacedContent.shouldReplacedContent[grid._id]
   );
+
+  if (head?.type !== TableColumnTypes.Date) return null;
 
   useEffect(() => {
     if (!replacedContent) return;
@@ -32,14 +36,13 @@ export const DateGrid: FC<DateGridProps> = (props) => {
       return;
     }
     setDate(replacedContent.date);
-    setFormat(replacedContent.format);
   }, [replacedContent]);
 
   return (
     <DatePicker
       className="date_grid"
       showTime
-      format={format}
+      format={head.format}
       value={date === -1 ? undefined : date}
       onChange={(_, datejs) => {
         const milliseconds = datejs ? datejs.valueOf() : -1;
@@ -47,7 +50,6 @@ export const DateGrid: FC<DateGridProps> = (props) => {
         putGridContent({
           type: TableColumnTypes.Date,
           date: milliseconds,
-          format,
           gridId: grid._id,
           rowId,
           tableId,

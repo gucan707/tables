@@ -18,13 +18,14 @@ export const HeadConfigModal: FC<HeadConfigModalProps> = (props) => {
   const { activeHead, setActiveHead } = props;
   const heads = useAppSelector((state) => state.headsReducer.heads);
   const curHead = heads.find((head) => head._id === activeHead);
+  const closeModal = () => setActiveHead("");
 
   if (!curHead) return null;
 
   let content: JSX.Element;
   switch (curHead.type) {
     case TableColumnTypes.Date:
-      content = <DateConfig curHead={curHead} />;
+      content = <DateConfig curHead={curHead} closeModal={closeModal} />;
       break;
     case TableColumnTypes.Select:
       content = <TagsConfig curHead={curHead} />;
@@ -38,10 +39,10 @@ export const HeadConfigModal: FC<HeadConfigModalProps> = (props) => {
     <Modal
       title="属性配置"
       visible
-      onOk={() => setActiveHead("")}
-      onCancel={() => setActiveHead("")}
+      onCancel={closeModal}
       autoFocus={false}
-      focusLock={true}
+      focusLock
+      footer={null}
     >
       {content}
     </Modal>

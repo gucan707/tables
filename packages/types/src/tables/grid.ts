@@ -47,8 +47,8 @@ export type DateType = {
   type: TableColumnTypes.Date;
   /** 日期时间戳，单位：毫秒 */
   date: number;
-  /** 日期格式化方式 */
-  format: DateFormatOptions;
+  // /** 日期格式化方式 */
+  // format: DateFormatOptions;
 } & CommonAtrributes;
 
 /** 日期格式化方式 */
