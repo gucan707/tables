@@ -18,6 +18,7 @@ import { store, useAppDispatch, useAppSelector } from "../../redux/store";
 import { getFormattedNumber } from "../../utils/getFormattedNumber";
 import { CheckboxGrid } from "./components/CheckboxGrid";
 import { DateGrid } from "./components/DateGrid";
+import { MultiSelectGrid } from "./components/MultiSelectGrid";
 import { NumberGrid } from "./components/NumberGrid";
 import { SelectGrid } from "./components/SelectGrid";
 import { TextGrid } from "./components/TextGrid";
@@ -61,19 +62,7 @@ export const EditableTableGrid: FC<EditableTableGridProps> = (props) => {
       content = <DateGrid grid={grid} rowId={rowId} />;
       break;
     case TableColumnTypes.MultiSelect:
-      content = (
-        <div className="editable grid-tags">
-          {grid.contents.map((tagId) => (
-            <Tag
-              key={tagId}
-              closable
-              color={tags.get(tagId)?.color || TableTagColors.Blue}
-            >
-              {tags.get(tagId)?.text || ""}
-            </Tag>
-          ))}
-        </div>
-      );
+      content = <MultiSelectGrid grid={grid} rowId={rowId} />;
       break;
     case TableColumnTypes.Number:
       content = (

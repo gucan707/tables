@@ -28,6 +28,7 @@ export const HeadConfigModal: FC<HeadConfigModalProps> = (props) => {
       content = <DateConfig curHead={curHead} closeModal={closeModal} />;
       break;
     case TableColumnTypes.Select:
+    case TableColumnTypes.MultiSelect:
       content = <TagsConfig curHead={curHead} />;
       break;
     default:
