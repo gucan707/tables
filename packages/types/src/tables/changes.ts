@@ -1,4 +1,4 @@
-import { Operator } from "../ot";
+import { MultiSelectOTData, Operator } from "../ot";
 
 export type Changes = {
   _id: string;
@@ -6,7 +6,8 @@ export type Changes = {
   rowId: string;
   gridId: string;
   // TODO 多选类型
-  ops: Operator<string>[];
+  ops?: Operator<string>[];
+  tagsOps?: Operator<MultiSelectOTData>[];
   author: string;
   /** 修改应用前后的版本 */
   oldVersion: number;

@@ -1,8 +1,6 @@
-import { Operator, OperatorType } from "@tables/types";
+import { MultiSelectOTData, Operator, OperatorType } from "@tables/types";
 
 import { OT1D } from "./";
-
-type MultiSelectOTData = { tagId: string };
 
 export class MultiSelectOT extends OT1D<MultiSelectOTData> {
   baseData: MultiSelectOTData[];

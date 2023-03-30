@@ -14,3 +14,5 @@ export type Operator<T> =
       count?: never;
       data: T extends string ? T : T[];
     };
+
+export type MultiSelectOTData = { tagId: string };

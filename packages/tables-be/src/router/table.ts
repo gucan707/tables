@@ -2,6 +2,7 @@ import Router from "koa-router";
 
 import { addCollaborators } from "../handlers/tables/addCollaborators";
 import { addOps } from "../handlers/tables/addOps";
+import { addTagsOps } from "../handlers/tables/addTagsOps";
 import { createTable } from "../handlers/tables/cretateTable";
 import { getTableDetail } from "../handlers/tables/getTableDetail";
 import { getTables } from "../handlers/tables/getTables";
@@ -15,6 +16,7 @@ export const tableRouter = new Router();
 tableRouter
   .post("/collaborator", addCollaborators)
   .post("/:tableId/addOps", addOps)
+  .post("/:tableId/addTagsOps", addTagsOps)
   .put("/:tableId/putGridContent", putGridContent)
   .put("/:tableId/putHeadAttributes", putHeadAttributes)
   .put("/:tableId/tags", putTag)
