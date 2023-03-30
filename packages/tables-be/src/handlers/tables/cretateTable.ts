@@ -130,7 +130,6 @@ function getInitialTableRow(tableId: string, heads: TableHeads): Row {
           ...common,
           type: head.type,
           date: -1,
-          format: DateFormatOptions.YMD,
         });
         break;
       case TableColumnTypes.MultiSelect:
