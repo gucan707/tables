@@ -85,7 +85,7 @@ export const EditableTableGrid: FC<EditableTableGridProps> = (props) => {
       );
       break;
     case TableColumnTypes.Select:
-      content = <SelectGrid grid={grid} />;
+      content = <SelectGrid grid={grid} rowId={rowId} />;
       break;
     default:
       content = <></>;
