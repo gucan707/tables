@@ -19,6 +19,7 @@ import { getFormattedNumber } from "../../utils/getFormattedNumber";
 import { CheckboxGrid } from "./components/CheckboxGrid";
 import { DateGrid } from "./components/DateGrid";
 import { NumberGrid } from "./components/NumberGrid";
+import { SelectGrid } from "./components/SelectGrid";
 import { TextGrid } from "./components/TextGrid";
 
 export type CommonGridProps = {
@@ -84,16 +85,7 @@ export const EditableTableGrid: FC<EditableTableGridProps> = (props) => {
       );
       break;
     case TableColumnTypes.Select:
-      content = tags.get(grid.content) ? (
-        <Tag
-          closable
-          color={tags.get(grid.content)?.color || TableTagColors.Blue}
-        >
-          {tags.get(grid.content)?.text || ""}
-        </Tag>
-      ) : (
-        <></>
-      );
+      content = <SelectGrid grid={grid} />;
       break;
     default:
       content = <></>;
