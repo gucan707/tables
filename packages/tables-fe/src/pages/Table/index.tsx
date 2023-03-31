@@ -4,24 +4,16 @@ import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Avatar, Button, Spin } from "@arco-design/web-react";
-import {
-  AddTagArgs,
-  Events,
-  OpsEmitedFromBeArgs,
-  PutHeadAttributesArgs,
-  ReplaceGridContentArgs,
-  UpdateTagArgs,
-  User,
-  UserToken,
-} from "@tables/types";
+import { Events, OpsEmitedFromBeArgs, UserToken } from "@tables/types";
 
 import { EditableTable } from "../../components/EditableTable";
 import { useTableDetail } from "../../http/table/useTableDetail";
-import { addTag, setHeadAttribute, updateTag } from "../../redux/headsSlice";
-import { pushOT } from "../../redux/shouldAppliedOTSlice";
-import { addContent } from "../../redux/shouldReplacedContentSlice";
-import { useAppDispatch } from "../../redux/store";
 import { setup, socket } from "../../socket";
+import { addTagFn } from "../../socket/addTagFn";
+import { opsEmitedFromBeFn } from "../../socket/opsEmitedFromBeFn";
+import { putHeadAttributeFn } from "../../socket/putHeadAttributeFn";
+import { replaceGridContentFn } from "../../socket/replaceGridContentFn";
+import { updateTagFn } from "../../socket/updateTagFn";
 import { OTController } from "../../utils/OTsController";
 import { TagsOTController } from "../../utils/tagsOTController";
 
@@ -33,7 +25,6 @@ export const Table: FC = () => {
     tableId: tableId || "",
   });
   const [onlineUsers, setOnlineUsers] = useState<UserToken[]>([]);
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!tableId) return;
@@ -46,82 +37,18 @@ export const Table: FC = () => {
   }, [tableId]);
 
   useEffect(() => {
-    // 监听 OpsEmitedFromBe
-    // TODO 类型
-    const OpsEmitedFromBeFn = (args: OpsEmitedFromBeArgs<string>) => {
-      console.log("Events.OpsEmitedFromBe", args);
+    const opsEmitedFromBeTempFn = (args: OpsEmitedFromBeArgs<string>) =>
+      opsEmitedFromBeFn(args, tableDetailCopyRef);
 
-      const { unAppliedOT } = OTController;
-      if (!unAppliedOT[args.gridId]) {
-        unAppliedOT[args.gridId] = [];
-      }
-      const curGrid = tableDetailCopyRef?.current?.rows
-        .find((row) => row._id === args.rowId)
-        ?.data.find((grid) => grid._id === args.gridId);
-
-      if (!curGrid) {
-        // TODO 可能是新增的格子，表格层面协同时需要再修改
-        console.error("Events.OpsEmitedFromBe: !curGrid");
-        return;
-      }
-
-      const ots = unAppliedOT[args.gridId];
-
-      ots.push(args);
-      ots.sort((a, b) => a.oldVersion - b.oldVersion);
-      if (ots[0].oldVersion !== curGrid.version) {
-        console.log(ots[0].oldVersion, curGrid.version);
-        // 版本不连续，缺少了一些修改
-        console.warn(
-          "Events.OpsEmitedFromBe: ots[0].oldVersion !== curGrid.version"
-        );
-        return;
-      }
-
-      let index = 1;
-      while (index < ots.length) {
-        if (ots[index].oldVersion === ots[index - 1].oldVersion + 1) {
-          index++;
-        } else {
-          break;
-        }
-      }
-      curGrid.version = ots[index - 1].oldVersion + 1;
-      const shouldAppliedOT = ots.splice(0, index);
-
-      dispatch(
-        pushOT({
-          gridId: curGrid._id,
-          ots: shouldAppliedOT,
-        })
-      );
-    };
-
-    const ReplaceGridContentFn = (args: ReplaceGridContentArgs) => {
-      dispatch(addContent(args));
-    };
-
-    const putHeadAttributeFn = (args: PutHeadAttributesArgs) => {
-      dispatch(setHeadAttribute(args));
-    };
-
-    const addTagFn = (args: AddTagArgs) => {
-      dispatch(addTag(args));
-    };
-
-    const updateTagFn = (args: UpdateTagArgs) => {
-      dispatch(updateTag(args));
-    };
-
-    socket.on(Events.OpsEmitedFromBe, OpsEmitedFromBeFn);
-    socket.on(Events.ReplaceGridContent, ReplaceGridContentFn);
+    socket.on(Events.OpsEmitedFromBe, opsEmitedFromBeTempFn);
+    socket.on(Events.ReplaceGridContent, replaceGridContentFn);
     socket.on(Events.PutHeadAttributes, putHeadAttributeFn);
     socket.on(Events.AddTag, addTagFn);
     socket.on(Events.UpdateTag, updateTagFn);
 
     return () => {
-      socket.off(Events.OpsEmitedFromBe, OpsEmitedFromBeFn);
-      socket.off(Events.ReplaceGridContent, ReplaceGridContentFn);
+      socket.off(Events.OpsEmitedFromBe, opsEmitedFromBeTempFn);
+      socket.off(Events.ReplaceGridContent, replaceGridContentFn);
       socket.off(Events.PutHeadAttributes, putHeadAttributeFn);
       socket.off(Events.AddTag, addTagFn);
       socket.off(Events.UpdateTag, updateTagFn);
