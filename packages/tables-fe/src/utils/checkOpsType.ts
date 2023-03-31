@@ -3,28 +3,19 @@ import {
   Operator,
   OperatorType,
   OpsEmitedFromBeArgs,
+  OpsTypeEmitedFromBe,
 } from "@tables/types";
-
-export function isStringOps(
-  ops: Operator<string | MultiSelectOTData>[]
-): ops is Operator<string>[] {
-  return ops.every((op) => {
-    if (op.type !== OperatorType.Insert) return true;
-    if (typeof op.data === "string") return true;
-    else return false;
-  });
-}
 
 export function isStringOpsEmited(
   args: OpsEmitedFromBeArgs<string | MultiSelectOTData>
 ): args is OpsEmitedFromBeArgs<string> {
-  return isStringOps(args.ops);
+  return args.type === OpsTypeEmitedFromBe.Text;
 }
 
 export function isTagsOpsEmited(
   args: OpsEmitedFromBeArgs<string | MultiSelectOTData>
 ): args is OpsEmitedFromBeArgs<MultiSelectOTData> {
-  return !isStringOpsEmited(args);
+  return args.type === OpsTypeEmitedFromBe.MultiSelect;
 }
 
 export function isStringOtsEmited(

@@ -7,6 +7,7 @@ import {
   Events,
   OperatorType,
   OpsEmitedFromBeArgs,
+  OpsTypeEmitedFromBe,
   ReqAddOps,
   ResCommon,
   TableColumnTypes,
@@ -97,6 +98,7 @@ export const addOps: IMiddleware = async (ctx) => {
   };
 
   const emitedOps: OpsEmitedFromBeArgs<string> = {
+    type: OpsTypeEmitedFromBe.Text,
     ops: newChange.ops,
     oldVersion: newChange.oldVersion,
     gridId: newChange.gridId,

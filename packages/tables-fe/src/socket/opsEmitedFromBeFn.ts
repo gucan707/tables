@@ -5,7 +5,6 @@ import { MultiSelectOTData, OpsEmitedFromBeArgs, Table } from "@tables/types";
 import { pushOT, pushTagsOT } from "../redux/shouldAppliedOTSlice";
 import { store } from "../redux/store";
 import {
-  isStringOps,
   isStringOpsEmited,
   isStringOtsEmited,
   isTagsOpsEmited,
@@ -18,7 +17,6 @@ export const opsEmitedFromBeFn = (
   tableDetailCopyRef: MutableRefObject<Table | undefined> | null | undefined
 ) => {
   console.log("Events.OpsEmitedFromBe", args);
-
   const curGrid = tableDetailCopyRef?.current?.rows
     .find((row) => row._id === args.rowId)
     ?.data.find((grid) => grid._id === args.gridId);
@@ -45,7 +43,7 @@ export const opsEmitedFromBeFn = (
     ots.push(args);
   }
 
-  const { unAppliedOT } = isStringOps(args.ops)
+  const { unAppliedOT } = isStringOpsEmited(args)
     ? OTController
     : TagsOTController;
 

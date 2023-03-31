@@ -4,7 +4,7 @@ import { FC, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Select, Tag } from "@arco-design/web-react";
-import { MultiSelectOT } from "@tables/ot";
+import { MultiSelectOT, OT1D } from "@tables/ot";
 import {
   MultiSelectOTData,
   MultiSelectType,
@@ -17,9 +17,14 @@ import {
 
 import { CommonGridProps } from "../..";
 import { addTagsOps } from "../../../../http/table/addTagsOps";
+import { useUserInfo } from "../../../../http/user/useUserInfo";
 import { changeActiveGridId } from "../../../../redux/activeGridSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/store";
 import { getMapTags } from "../../../../utils/getMapTags";
+import {
+  multiSelectDataArrToStrArr,
+  strArrToMultiSelectDataArr,
+} from "../../../../utils/multiSelectDataTransform";
 import { OTReason, TagsOTController } from "../../../../utils/tagsOTController";
 
 export type MultiSelectGridProps = {
@@ -29,6 +34,7 @@ const Option = Select.Option;
 
 export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
   const { grid, rowId, isActive } = props;
+  const { userInfo } = useUserInfo();
   const heads = useAppSelector((state) => state.headsReducer.heads);
   const head = heads.find((h) => h._id === grid.headId);
   const versionRef = useRef<number>(grid.version);
@@ -36,7 +42,9 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
   const { tableId = "" } = useParams();
   const tagsOtRef = useRef<MultiSelectOT>();
   const tags = getMapTags(heads);
-
+  const shouldAppliedTagsOt = useAppSelector(
+    (state) => state.shouldAppliedOT.shouldAppliedTagsOt[grid?._id ?? ""]
+  );
   const dispatch = useAppDispatch();
 
   const curTagIdsObj: MultiSelectOTData[] = curTagIds.map((id) => ({
@@ -54,6 +62,56 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
   useEffect(() => {
     grid.contents = curTagIds;
   }, [curTagIds]);
+
+  useEffect(() => {
+    if (!shouldAppliedTagsOt || !userInfo) return;
+    const unEmitedOT = TagsOTController.unEmitedOT[grid._id];
+    console.log("shouldAppliedTagsOt", shouldAppliedTagsOt);
+    shouldAppliedTagsOt.forEach((otInfo) => {
+      const ot = OT1D.createOTByOps(otInfo.ops, MultiSelectOT);
+      console.log("shouldAppliedTagsOt ot", ot);
+
+      if (!ot) return;
+      if (!unEmitedOT || !unEmitedOT.length) {
+        // 本地没有对该格子进行修改，直接应用
+        setCurTagIds((ids) => {
+          const idObjs = strArrToMultiSelectDataArr(ids);
+          const res = ot.apply(idObjs);
+          return multiSelectDataArrToStrArr(res);
+        });
+        versionRef.current = otInfo.oldVersion + 1;
+        return;
+      }
+
+      const exitedIndex = unEmitedOT.findIndex((o) => o.feId === otInfo.feId);
+      if (exitedIndex !== -1) {
+        // 收到了后端对该 OT 的广播，版本暂时与后端达成一致，直接 continue
+        unEmitedOT.splice(exitedIndex, 1);
+        versionRef.current = otInfo.oldVersion + 1;
+        return;
+      }
+
+      // 是其他人的修改，需要与本地 unEmitedOT 依次 transform 后再 apply
+      let transformedOt: MultiSelectOT = ot;
+      unEmitedOT.forEach((o) => {
+        const localOT = OT1D.createOTByOps(o.tagsOps, MultiSelectOT);
+        if (!localOT) return;
+        const [otPrime, _] = OT1D.transform(
+          transformedOt,
+          localOT,
+          MultiSelectOT
+        );
+        transformedOt = otPrime;
+      });
+
+      setCurTagIds((ids) => {
+        const idObjs = strArrToMultiSelectDataArr(ids);
+        const res = transformedOt.apply(idObjs);
+        return multiSelectDataArrToStrArr(res);
+      });
+      versionRef.current = otInfo.oldVersion + 1;
+    });
+  }, [shouldAppliedTagsOt, userInfo]);
 
   return isActive ? (
     <Select
@@ -143,7 +201,7 @@ export function diffTags(curTags: string[], ot: MultiSelectOT) {
   }
 
   let start1 = 0;
-  for (; start1 < tags1.length; start1++) {
+  for (; start1 < tags1.length && start1 < tags2.length; start1++) {
     if (tags1[start1].tagId !== tags2[start1].tagId) break;
   }
   start1--;

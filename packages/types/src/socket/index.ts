@@ -18,7 +18,13 @@ export type ReqJoinRoom = {
   jwt: string;
 };
 
+export enum OpsTypeEmitedFromBe {
+  Text,
+  MultiSelect,
+}
+
 export type OpsEmitedFromBeArgs<T> = {
+  type: OpsTypeEmitedFromBe;
   feId: string;
   ops: Operator<T>[];
   oldVersion: number;

@@ -7,6 +7,7 @@ import {
   Events,
   MultiSelectOTData,
   OpsEmitedFromBeArgs,
+  OpsTypeEmitedFromBe,
   ReqAddTagsOps,
   ResCommon,
   TableColumnTypes,
@@ -23,7 +24,7 @@ import {
 import { sleep } from "../../utils/sleep";
 
 export const addTagsOps: IMiddleware = async (ctx) => {
-  // await sleep(5000);
+  await sleep(5000);
   const userInfo = checkToken(ctx);
   const req = ctx.request.body as ReqAddTagsOps;
   const { tableId } = ctx.params;
@@ -104,6 +105,7 @@ export const addTagsOps: IMiddleware = async (ctx) => {
   };
 
   const emitedOps: OpsEmitedFromBeArgs<MultiSelectOTData> = {
+    type: OpsTypeEmitedFromBe.MultiSelect,
     ops: newChange.tagsOps,
     oldVersion: newChange.oldVersion,
     gridId: newChange.gridId,
