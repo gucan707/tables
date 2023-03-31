@@ -52,7 +52,7 @@ export class MultiSelectOT extends OT1D<MultiSelectOTData> {
         index += op.count;
       }
     });
-    if (result.length !== orignal.length) {
+    if (index !== orignal.length) {
       throw new Error(
         "MultiSelectOT apply error: the ot can't operate on the whole data"
       );

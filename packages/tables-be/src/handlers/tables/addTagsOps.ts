@@ -1,14 +1,12 @@
 import { IMiddleware } from "koa-router";
 import { ObjectId } from "mongodb";
 
-import { MultiSelectOT, OT1D, TextOT } from "@tables/ot";
+import { MultiSelectOT, OT1D } from "@tables/ot";
 import {
   Changes,
   Events,
   MultiSelectOTData,
-  OperatorType,
   OpsEmitedFromBeArgs,
-  ReqAddOps,
   ReqAddTagsOps,
   ResCommon,
   TableColumnTypes,
@@ -25,7 +23,7 @@ import {
 import { sleep } from "../../utils/sleep";
 
 export const addTagsOps: IMiddleware = async (ctx) => {
-  await sleep(5000);
+  // await sleep(5000);
   const userInfo = checkToken(ctx);
   const req = ctx.request.body as ReqAddTagsOps;
   const { tableId } = ctx.params;
@@ -72,8 +70,10 @@ export const addTagsOps: IMiddleware = async (ctx) => {
     console.log({ composedChange, reqOt });
     const [_, reqPrime] = OT1D.transform(composedChange, reqOt, MultiSelectOT);
     try {
+      console.log("try reqPrime.apply(curTags)");
       result = reqPrime.apply(curTags);
     } catch (error) {
+      console.error(error);
       throw new TErrorCommon();
     }
     emitedOT = reqPrime;
@@ -82,8 +82,10 @@ export const addTagsOps: IMiddleware = async (ctx) => {
     const reqOt = new MultiSelectOT();
     req.tagsOps.forEach((op) => reqOt.addOp(op));
     try {
+      console.log("try reqOt.apply(curTags)");
       result = reqOt.apply(curTags);
     } catch (error) {
+      console.error(error);
       throw new TErrorCommon();
     }
     emitedOT = reqOt;
@@ -115,13 +117,14 @@ export const addTagsOps: IMiddleware = async (ctx) => {
 
   io.to(tableId).emit(Events.OpsEmitedFromBe, emitedOps);
 
+  const strArrResult = result.map((r) => r.tagId);
   await Promise.all([
     changes.insertOne(newChange),
     rows.updateOne(
       { _id: req.rowId },
       {
         $set: {
-          "data.$[element].contents": result,
+          "data.$[element].contents": strArrResult,
           "data.$[element].version": curGrid.version + 1,
         },
       },

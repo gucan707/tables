@@ -4,18 +4,22 @@ import { FC, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Select, Tag } from "@arco-design/web-react";
+import { LabeledValue } from "@arco-design/web-react/es/Select/interface";
 import { MultiSelectOT } from "@tables/ot";
 import {
   MultiSelectOTData,
   MultiSelectType,
   Operator,
   OperatorType,
+  SelectOptionType,
   TableColumnTypes,
   TableTagColors,
 } from "@tables/types";
 
 import { CommonGridProps } from "../..";
-import { useAppSelector } from "../../../../redux/store";
+import { addTagsOps } from "../../../../http/table/addTagsOps";
+import { changeActiveGridId } from "../../../../redux/activeGridSlice";
+import { useAppDispatch, useAppSelector } from "../../../../redux/store";
 import { getMapTags } from "../../../../utils/getMapTags";
 import { OTReason, TagsOTController } from "../../../../utils/tagsOTController";
 
@@ -28,16 +32,20 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
   const { grid, rowId, isActive } = props;
   const heads = useAppSelector((state) => state.headsReducer.heads);
   const head = heads.find((h) => h._id === grid.headId);
+  const versionRef = useRef<number>(grid.version);
+
   const [curTagIds, setCurTagIds] = useState<string[]>(grid.contents);
+  console.log({ curTagIds });
   const { tableId = "" } = useParams();
   const tagsOtRef = useRef<MultiSelectOT>();
   const tags = getMapTags(heads);
+
+  const dispatch = useAppDispatch();
+
   const curTagIdsObj: MultiSelectOTData[] = curTagIds.map((id) => ({
     tagId: id,
   }));
   if (!head || head.type !== TableColumnTypes.MultiSelect) return null;
-
-  console.log(TagsOTController.current);
 
   useEffect(() => {
     if (!isActive) return;
@@ -53,11 +61,13 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
   return isActive ? (
     <Select
       mode="multiple"
-      renderTag={tagRender}
+      renderTag={getTagRender(tags)}
       className="multi_select_grid"
       arrowIcon={null}
       value={curTagIds}
       onChange={(val: string[]) => {
+        console.log({ val });
+
         setCurTagIds(val);
 
         const ot = TagsOTController.current.createOT(
@@ -68,6 +78,11 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
         tagsOtRef.current = ot.OT;
 
         tagsOtRef.current && diffTags(val, tagsOtRef.current);
+      }}
+      onBlur={() => {
+        console.log("blur");
+        dispatch(changeActiveGridId(""));
+        addTagsOps(grid._id, tableId, versionRef.current, rowId);
       }}
     >
       {head.tags.map((tag) => (
@@ -82,23 +97,38 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
     </Select>
   ) : (
     <div>
-      {curTagIds.map((tagId) => (
-        <Tag key={tagId} color={tags.get(tagId)?.color || TableTagColors.Blue}>
-          {tags.get(tagId)?.text || ""}
-        </Tag>
-      ))}
+      {curTagIds.map((tagId) => {
+        console.log({ tagId });
+
+        return (
+          <Tag
+            key={tagId}
+            color={tags.get(tagId)?.color || TableTagColors.Blue}
+          >
+            {tags.get(tagId)?.text || ""}
+          </Tag>
+        );
+      })}
     </div>
   );
 };
 
 export type TagRender = {
   label: React.ReactNode;
+  value: string;
 };
 
-function tagRender(props: TagRender) {
-  const { label } = props;
-
-  return <div className="multi_select_grid-tag_render">{label}</div>;
+function getTagRender(tags: Map<string, SelectOptionType>) {
+  return (props: TagRender) => {
+    const { label, value } = props;
+    const tag = tags.get(value);
+    if (!tag) return <></>;
+    return (
+      <Tag key={tag._id} color={tag.color}>
+        {tag.text}
+      </Tag>
+    );
+  };
 }
 
 export function diffTags(curTags: string[], ot: MultiSelectOT) {
