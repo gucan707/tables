@@ -4,7 +4,6 @@ import { FC, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Select, Tag } from "@arco-design/web-react";
-import { LabeledValue } from "@arco-design/web-react/es/Select/interface";
 import { MultiSelectOT } from "@tables/ot";
 import {
   MultiSelectOTData,
@@ -33,9 +32,7 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
   const heads = useAppSelector((state) => state.headsReducer.heads);
   const head = heads.find((h) => h._id === grid.headId);
   const versionRef = useRef<number>(grid.version);
-
   const [curTagIds, setCurTagIds] = useState<string[]>(grid.contents);
-  console.log({ curTagIds });
   const { tableId = "" } = useParams();
   const tagsOtRef = useRef<MultiSelectOT>();
   const tags = getMapTags(heads);
@@ -66,8 +63,6 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
       arrowIcon={null}
       value={curTagIds}
       onChange={(val: string[]) => {
-        console.log({ val });
-
         setCurTagIds(val);
 
         const ot = TagsOTController.current.createOT(
@@ -98,8 +93,6 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
   ) : (
     <div>
       {curTagIds.map((tagId) => {
-        console.log({ tagId });
-
         return (
           <Tag
             key={tagId}
