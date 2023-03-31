@@ -32,8 +32,12 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
   const { tableId = "" } = useParams();
   const tagsOtRef = useRef<MultiSelectOT>();
   const tags = getMapTags(heads);
-
+  const curTagIdsObj: MultiSelectOTData[] = curTagIds.map((id) => ({
+    tagId: id,
+  }));
   if (!head || head.type !== TableColumnTypes.MultiSelect) return null;
+
+  console.log(TagsOTController.current);
 
   useEffect(() => {
     if (!isActive) return;
@@ -55,6 +59,15 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
       value={curTagIds}
       onChange={(val: string[]) => {
         setCurTagIds(val);
+
+        const ot = TagsOTController.current.createOT(
+          grid._id,
+          curTagIdsObj,
+          val.length > curTagIds.length ? OTReason.Add : OTReason.Delete
+        );
+        tagsOtRef.current = ot.OT;
+
+        tagsOtRef.current && diffTags(val, tagsOtRef.current);
       }}
     >
       {head.tags.map((tag) => (
@@ -88,7 +101,8 @@ function tagRender(props: TagRender) {
   return <div className="multi_select_grid-tag_render">{label}</div>;
 }
 
-function diffTags(curTags: string[], ot: MultiSelectOT) {
+export function diffTags(curTags: string[], ot: MultiSelectOT) {
+  // debugger;
   const tags1 = ot.baseData;
   const tags2: MultiSelectOTData[] = curTags.map((t) => ({ tagId: t }));
 

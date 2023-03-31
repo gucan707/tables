@@ -39,6 +39,7 @@ export class TagsOTController {
 
   /** 只要发生了 change 就可以调用，create 内部来判断需不需要复用 */
   createOT(gridId: string, baseData: MultiSelectOTData[], reason: OTReason) {
+    // debugger;
     const lastOt = this.getLast();
     if (lastOt && !lastOt.OT.ops.length) {
       this.otInfo.pop();
