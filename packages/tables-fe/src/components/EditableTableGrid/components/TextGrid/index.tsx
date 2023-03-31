@@ -10,7 +10,7 @@ import { CommonGridProps } from "../..";
 import { addOps } from "../../../../http/table/addOps";
 import { useUserInfo } from "../../../../http/user/useUserInfo";
 import { changeActiveGridId } from "../../../../redux/activeGridSlice";
-import { useAppDispatch } from "../../../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../../../redux/store";
 import { checkMoveCursorKey, KeyStr } from "../../../../utils/keyStr";
 import { OTController, OTReason } from "../../../../utils/OTsController";
 import { setupShortcut } from "../../../../utils/setupShortcut";
@@ -20,7 +20,7 @@ export type TextGridProps = {
 } & CommonGridProps;
 
 export const TextGrid: FC<TextGridProps> = (props) => {
-  const { grid, isActive, rowId, shouldAppliedOT } = props;
+  const { grid, isActive, rowId } = props;
   const { tableId } = useParams();
   const [text, setText] = useState(grid.text);
   const versionRef = useRef<number>(grid.version);
@@ -29,6 +29,8 @@ export const TextGrid: FC<TextGridProps> = (props) => {
   const otRef = useRef<TextOT>();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { userInfo } = useUserInfo();
+  const shouldAppliedOT = useAppSelector((state) => state.shouldAppliedOT)
+    .shouldAppliedOT[grid?._id ?? ""];
 
   useEffect(() => {
     if (!isActive) return;
