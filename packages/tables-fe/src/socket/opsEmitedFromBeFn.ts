@@ -1,21 +1,24 @@
 import { MutableRefObject } from "react";
 
-import { OpsEmitedFromBeArgs, Table } from "@tables/types";
+import { MultiSelectOTData, OpsEmitedFromBeArgs, Table } from "@tables/types";
 
-import { pushOT } from "../redux/shouldAppliedOTSlice";
+import { pushOT, pushTagsOT } from "../redux/shouldAppliedOTSlice";
 import { store } from "../redux/store";
+import {
+  isStringOps,
+  isStringOpsEmited,
+  isStringOtsEmited,
+  isTagsOpsEmited,
+} from "../utils/checkOpsType";
 import { OTController } from "../utils/OTsController";
+import { TagsOTController } from "../utils/tagsOTController";
 
 export const opsEmitedFromBeFn = (
-  args: OpsEmitedFromBeArgs<string>,
+  args: OpsEmitedFromBeArgs<string | MultiSelectOTData>,
   tableDetailCopyRef: MutableRefObject<Table | undefined> | null | undefined
 ) => {
   console.log("Events.OpsEmitedFromBe", args);
 
-  const { unAppliedOT } = OTController;
-  if (!unAppliedOT[args.gridId]) {
-    unAppliedOT[args.gridId] = [];
-  }
   const curGrid = tableDetailCopyRef?.current?.rows
     .find((row) => row._id === args.rowId)
     ?.data.find((grid) => grid._id === args.gridId);
@@ -26,9 +29,31 @@ export const opsEmitedFromBeFn = (
     return;
   }
 
+  if (isStringOpsEmited(args)) {
+    const { unAppliedOT } = OTController;
+    if (!unAppliedOT[args.gridId]) {
+      unAppliedOT[args.gridId] = [];
+    }
+    const ots = unAppliedOT[args.gridId];
+    ots.push(args);
+  } else if (isTagsOpsEmited(args)) {
+    const { unAppliedOT } = TagsOTController;
+    if (!unAppliedOT[args.gridId]) {
+      unAppliedOT[args.gridId] = [];
+    }
+    const ots = unAppliedOT[args.gridId];
+    ots.push(args);
+  }
+
+  const { unAppliedOT } = isStringOps(args.ops)
+    ? OTController
+    : TagsOTController;
+
+  if (!unAppliedOT[args.gridId]) {
+    unAppliedOT[args.gridId] = [];
+  }
   const ots = unAppliedOT[args.gridId];
 
-  ots.push(args);
   ots.sort((a, b) => a.oldVersion - b.oldVersion);
   if (ots[0].oldVersion !== curGrid.version) {
     console.log(ots[0].oldVersion, curGrid.version);
@@ -50,10 +75,19 @@ export const opsEmitedFromBeFn = (
   curGrid.version = ots[index - 1].oldVersion + 1;
   const shouldAppliedOT = ots.splice(0, index);
 
-  store.dispatch(
-    pushOT({
-      gridId: curGrid._id,
-      ots: shouldAppliedOT,
-    })
-  );
+  if (isStringOtsEmited(shouldAppliedOT)) {
+    store.dispatch(
+      pushOT({
+        gridId: curGrid._id,
+        ots: shouldAppliedOT,
+      })
+    );
+  } else {
+    store.dispatch(
+      pushTagsOT({
+        gridId: curGrid._id,
+        ots: shouldAppliedOT,
+      })
+    );
+  }
 };
