@@ -6,7 +6,10 @@ import { useParams } from "react-router-dom";
 import { Select, Tag } from "@arco-design/web-react";
 import { MultiSelectOT } from "@tables/ot";
 import {
+  MultiSelectOTData,
   MultiSelectType,
+  Operator,
+  OperatorType,
   TableColumnTypes,
   TableTagColors,
 } from "@tables/types";
@@ -83,4 +86,67 @@ function tagRender(props: TagRender) {
   const { label } = props;
 
   return <div className="multi_select_grid-tag_render">{label}</div>;
+}
+
+function diffTags(curTags: string[], ot: MultiSelectOT) {
+  const tags1 = ot.baseData;
+  const tags2: MultiSelectOTData[] = curTags.map((t) => ({ tagId: t }));
+
+  if (JSON.stringify(tags1) === JSON.stringify(tags2)) return;
+  ot.init();
+
+  if (!tags1.length) {
+    ot.addOp({ type: OperatorType.Insert, data: tags2 });
+    return;
+  }
+
+  if (!tags2.length) {
+    ot.addOp({ type: OperatorType.Delete, count: tags1.length });
+    return;
+  }
+
+  let start1 = 0;
+  for (; start1 < tags1.length; start1++) {
+    if (tags1[start1].tagId !== tags2[start1].tagId) break;
+  }
+  start1--;
+
+  let end1 = tags1.length - 1;
+  let end2 = tags2.length - 1;
+  for (; end1 > start1 && end2 > start1; end1--, end2--) {
+    if (tags1[end1].tagId !== tags2[end2].tagId) break;
+  }
+  end1++;
+  end2++;
+
+  ot.addOp({ type: OperatorType.Retain, count: start1 + 1 });
+
+  const deleteOp: Operator<MultiSelectOTData> = {
+    type: OperatorType.Delete,
+    count: end1 - start1 - 1,
+  };
+
+  const insertOp: Operator<MultiSelectOTData> = {
+    type: OperatorType.Insert,
+    data: tags2.slice(start1 + 1, end2),
+  };
+
+  if (end2 > end1) {
+    ot.addOp(insertOp);
+    if (end1 !== start1 + 1) {
+      ot.addOp(deleteOp);
+    }
+  } else if (end2 < end1) {
+    ot.addOp(deleteOp);
+    if (end2 !== start1 + 1) {
+      ot.addOp(insertOp);
+    }
+  } else {
+    ot.addOp(deleteOp).addOp(insertOp);
+  }
+
+  ot.addOp({
+    type: OperatorType.Retain,
+    count: tags1.length - end1,
+  });
 }
