@@ -5,9 +5,9 @@ import { OT1D } from "./";
 export class MultiSelectOT extends OT1D<MultiSelectOTData> {
   baseData: MultiSelectOTData[];
 
-  constructor() {
+  constructor(baseData?: MultiSelectOTData[]) {
     super();
-    this.baseData = [];
+    this.baseData = baseData || [];
   }
   mergeInsert(
     op1: Operator<MultiSelectOTData>,

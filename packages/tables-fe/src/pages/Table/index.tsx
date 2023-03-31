@@ -23,6 +23,7 @@ import { addContent } from "../../redux/shouldReplacedContentSlice";
 import { useAppDispatch } from "../../redux/store";
 import { setup, socket } from "../../socket";
 import { OTController } from "../../utils/OTsController";
+import { TagsOTController } from "../../utils/tagsOTController";
 
 const AvatarGroup = Avatar.Group;
 
@@ -37,6 +38,7 @@ export const Table: FC = () => {
   useEffect(() => {
     if (!tableId) return;
     OTController.current = new OTController();
+    TagsOTController.current = new TagsOTController();
     setup(tableId);
     socket.on(Events.EmitOnlineUsers, (users: UserToken[]) => {
       setOnlineUsers(users);

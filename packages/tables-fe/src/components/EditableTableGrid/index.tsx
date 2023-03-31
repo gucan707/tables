@@ -62,7 +62,13 @@ export const EditableTableGrid: FC<EditableTableGridProps> = (props) => {
       content = <DateGrid grid={grid} rowId={rowId} />;
       break;
     case TableColumnTypes.MultiSelect:
-      content = <MultiSelectGrid grid={grid} rowId={rowId} />;
+      content = (
+        <MultiSelectGrid
+          grid={grid}
+          rowId={rowId}
+          isActive={activeGridId === grid._id}
+        />
+      );
       break;
     case TableColumnTypes.Number:
       content = (

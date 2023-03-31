@@ -39,7 +39,8 @@ export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
       );
       break;
     case TableColumnTypes.Date:
-      content = <>{grid.date > 0 && dayjs(grid.date).format(grid.format)}</>;
+      // TODO fomat
+      content = <>{grid.date > 0 && dayjs(grid.date).format()}</>;
       break;
     case TableColumnTypes.MultiSelect:
       content = (
