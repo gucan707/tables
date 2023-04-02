@@ -149,7 +149,7 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
       ))}
     </Select>
   ) : (
-    <div>
+    <div className="multi_select_grid-tags">
       {curTagIds.map((tagId) => {
         return (
           <Tag
