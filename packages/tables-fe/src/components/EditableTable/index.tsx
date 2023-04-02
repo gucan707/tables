@@ -1,3 +1,5 @@
+import "./index.less";
+
 import { FC, useEffect, useState } from "react";
 
 import { Modal, Trigger } from "@arco-design/web-react";
@@ -53,6 +55,9 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
                 </th>
               </Trigger>
             ))}
+            <th className="editable table-heads-item grid_common grid_add">
+              +
+            </th>
           </tr>
         </thead>
         <tbody>

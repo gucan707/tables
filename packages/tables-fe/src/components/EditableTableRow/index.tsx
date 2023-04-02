@@ -25,6 +25,7 @@ export const EditableTableRow: FC<EditableTableRowProps> = (props) => {
           tags={tags}
         />
       ))}
+      <td className="grid grid_common grid_add"></td>
     </tr>
   );
 };
