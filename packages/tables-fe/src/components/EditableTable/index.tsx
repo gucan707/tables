@@ -1,10 +1,12 @@
 import "./index.less";
 
 import { FC, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import { Modal, Trigger } from "@arco-design/web-react";
 import { Table } from "@tables/types";
 
+import { addColumn } from "../../http/table/addColumn";
 import { setHeads } from "../../redux/headsSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { getMapTags } from "../../utils/getMapTags";
@@ -24,6 +26,7 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
   const dispatch = useAppDispatch();
   const headsRedux = useAppSelector((state) => state.headsReducer.heads);
   const [activeHead, setActiveHead] = useState("");
+  const { tableId = "" } = useParams();
 
   useEffect(() => {
     dispatch(setHeads(heads));
@@ -55,7 +58,12 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
                 </th>
               </Trigger>
             ))}
-            <th className="editable table-heads-item grid_common grid_add">
+            <th
+              className="editable table-heads-item grid_common grid_add"
+              onClick={() => {
+                addColumn({ tableId });
+              }}
+            >
               +
             </th>
           </tr>

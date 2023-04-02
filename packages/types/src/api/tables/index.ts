@@ -81,3 +81,7 @@ export type ReqPutTag = {
 };
 
 export type ReqPostTag = Omit<ReqPutTag, "tagId">;
+
+export type ReqAddColumn = {
+  tableId: string;
+};
