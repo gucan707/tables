@@ -8,7 +8,10 @@ import { Events, OpsEmitedFromBeArgs, UserToken } from "@tables/types";
 
 import { EditableTable } from "../../components/EditableTable";
 import { useTableDetail } from "../../http/table/useTableDetail";
+import { addRows } from "../../redux/rowsSlice";
+import { useAppDispatch } from "../../redux/store";
 import { setup, socket } from "../../socket";
+import { addColumnFn } from "../../socket/addColumnFn";
 import { addTagFn } from "../../socket/addTagFn";
 import { opsEmitedFromBeFn } from "../../socket/opsEmitedFromBeFn";
 import { putHeadAttributeFn } from "../../socket/putHeadAttributeFn";
@@ -25,6 +28,7 @@ export const Table: FC = () => {
     tableId: tableId || "",
   });
   const [onlineUsers, setOnlineUsers] = useState<UserToken[]>([]);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!tableId) return;
@@ -45,6 +49,7 @@ export const Table: FC = () => {
     socket.on(Events.PutHeadAttributes, putHeadAttributeFn);
     socket.on(Events.AddTag, addTagFn);
     socket.on(Events.UpdateTag, updateTagFn);
+    socket.on(Events.AddColumn, addColumnFn);
 
     return () => {
       socket.off(Events.OpsEmitedFromBe, opsEmitedFromBeTempFn);
@@ -52,8 +57,14 @@ export const Table: FC = () => {
       socket.off(Events.PutHeadAttributes, putHeadAttributeFn);
       socket.off(Events.AddTag, addTagFn);
       socket.off(Events.UpdateTag, updateTagFn);
+      socket.off(Events.AddColumn, addColumnFn);
     };
   }, [tableDetail, socket]);
+
+  useEffect(() => {
+    if (!tableDetail) return;
+    dispatch(addRows(tableDetail.rows));
+  }, [tableDetail]);
 
   return (
     <div className="table">

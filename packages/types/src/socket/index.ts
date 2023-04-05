@@ -39,4 +39,7 @@ export type ReplaceGridContentArgs = ReqPutGridContent;
 export type PutHeadAttributesArgs = ReqPutHeadAttributes;
 export type AddTagArgs = SelectOptionType;
 export type UpdateTagArgs = Omit<ReqPutTag, "tableId">;
-export type AddColumnArgs = TableHead;
+export type AddColumnArgs = {
+  added: Record<string, string>;
+  head: TableHead;
+};

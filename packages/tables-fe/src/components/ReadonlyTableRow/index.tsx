@@ -13,7 +13,7 @@ export type ReadonlyTableRowProps = {
 
 export const ReadonlyTableRow: FC<ReadonlyTableRowProps> = (props) => {
   const { row, heads, tags } = props;
-  const mapRow = getMapRow(row);
+  const mapRow = getMapRow(row.data);
 
   return (
     <tr>

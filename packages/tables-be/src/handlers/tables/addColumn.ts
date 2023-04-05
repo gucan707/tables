@@ -2,6 +2,7 @@ import { IMiddleware } from "koa-router";
 import { ObjectId } from "mongodb";
 
 import {
+  AddColumnArgs,
   Events,
   ReqAddColumn,
   ResCommon,
@@ -74,7 +75,18 @@ export const addColumn: IMiddleware = async (ctx) => {
       .toArray(),
   ]);
 
-  io.to(req.tableId).emit(Events.AddColumn, addedHead);
+  const newRows = await rows.find({ tableId: req.tableId }).toArray();
+
+  const added: Record<string, string> = {};
+
+  newRows.forEach((row) => {
+    added[row._id] = row.data[row.data.length - 1]._id;
+  });
+
+  io.to(req.tableId).emit(Events.AddColumn, {
+    head: addedHead,
+    added,
+  } as AddColumnArgs);
 
   const res: ResCommon<string> = {
     status: 200,

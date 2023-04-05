@@ -4,6 +4,7 @@ import {
   ReqPostTag,
   ReqPutHeadAttributes,
   TableColumnTypes,
+  TableHead,
   TableHeads,
   UpdateTagArgs,
 } from "@tables/types";
@@ -72,9 +73,12 @@ export const headsSlice = createSlice({
       tag.color = payload.color;
       tag.text = payload.text;
     },
+    addHead: (state, action: PayloadAction<TableHead>) => {
+      state.heads.push(action.payload);
+    },
   },
 });
 
-export const { setHeadAttribute, setHeads, addTag, updateTag } =
+export const { setHeadAttribute, setHeads, addTag, updateTag, addHead } =
   headsSlice.actions;
 export default headsSlice.reducer;

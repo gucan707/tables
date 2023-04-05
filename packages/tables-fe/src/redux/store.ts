@@ -4,6 +4,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import activeGridReducer from "./activeGridSlice";
 import headsReducer from "./headsSlice";
+import rowsReducer from "./rowsSlice";
 import shouldAppliedOTReducer from "./shouldAppliedOTSlice";
 import shouldReplacedContentReducer from "./shouldReplacedContentSlice";
 
@@ -13,6 +14,7 @@ export const store = configureStore({
     shouldAppliedOT: shouldAppliedOTReducer,
     shouldReplacedContent: shouldReplacedContentReducer,
     headsReducer: headsReducer,
+    rowsReducer,
   },
 });
 

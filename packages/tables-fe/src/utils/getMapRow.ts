@@ -1,8 +1,8 @@
 import { Grid, Row } from "@tables/types";
 
-export function getMapRow(row: Row) {
+export function getMapRow(rowData: Grid[]) {
   const mapRow: Map<string, Grid> = new Map();
-  row.data.forEach((r) => {
+  rowData.forEach((r) => {
     mapRow.set(r.headId, r);
   });
   return mapRow;
