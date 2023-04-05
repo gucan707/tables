@@ -29,8 +29,9 @@ export const TextGrid: FC<TextGridProps> = (props) => {
   const otRef = useRef<TextOT>();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { userInfo } = useUserInfo();
-  const shouldAppliedOT = useAppSelector((state) => state.shouldAppliedOT)
-    .shouldAppliedOT[grid?._id ?? ""];
+  const shouldAppliedOT = useAppSelector(
+    (state) => state.shouldAppliedOT.shouldAppliedOT[grid?._id ?? ""]
+  );
 
   useEffect(() => {
     if (!isActive) return;
