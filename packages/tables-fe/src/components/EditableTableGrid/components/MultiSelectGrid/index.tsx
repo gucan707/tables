@@ -19,6 +19,7 @@ import { CommonGridProps } from "../..";
 import { addTagsOps } from "../../../../http/table/addTagsOps";
 import { useUserInfo } from "../../../../http/user/useUserInfo";
 import { changeActiveGridId } from "../../../../redux/activeGridSlice";
+import { delTagsOT } from "../../../../redux/shouldAppliedOTSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/store";
 import { getMapTags } from "../../../../utils/getMapTags";
 import {
@@ -64,10 +65,27 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
   }, [curTagIds]);
 
   useEffect(() => {
-    if (!shouldAppliedTagsOt || !userInfo) return;
+    if (!shouldAppliedTagsOt || !shouldAppliedTagsOt.length || !userInfo)
+      return;
+    if (shouldAppliedTagsOt[0].oldVersion !== versionRef.current) return;
+
+    let index = 1;
+    while (index < shouldAppliedTagsOt.length) {
+      if (
+        shouldAppliedTagsOt[index].oldVersion ===
+        shouldAppliedTagsOt[index - 1].oldVersion + 1
+      ) {
+        index++;
+      } else {
+        break;
+      }
+    }
+
+    const ots = [...shouldAppliedTagsOt].splice(0, index);
+
     const unEmitedOT = TagsOTController.unEmitedOT[grid._id];
     console.log("shouldAppliedTagsOt", shouldAppliedTagsOt);
-    shouldAppliedTagsOt.forEach((otInfo) => {
+    ots.forEach((otInfo) => {
       const ot = OT1D.createOTByOps(otInfo.ops, MultiSelectOT);
       console.log("shouldAppliedTagsOt ot", ot);
 
@@ -111,7 +129,14 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
       });
       versionRef.current = otInfo.oldVersion + 1;
     });
-  }, [shouldAppliedTagsOt, userInfo]);
+
+    dispatch(
+      delTagsOT({
+        gridId: grid._id,
+        index,
+      })
+    );
+  }, [shouldAppliedTagsOt, userInfo, grid._id]);
 
   return isActive ? (
     <Select

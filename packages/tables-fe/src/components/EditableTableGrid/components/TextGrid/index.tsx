@@ -10,6 +10,7 @@ import { CommonGridProps } from "../..";
 import { addOps } from "../../../../http/table/addOps";
 import { useUserInfo } from "../../../../http/user/useUserInfo";
 import { changeActiveGridId } from "../../../../redux/activeGridSlice";
+import { delOT } from "../../../../redux/shouldAppliedOTSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/store";
 import { checkMoveCursorKey, KeyStr } from "../../../../utils/keyStr";
 import { OTController, OTReason } from "../../../../utils/OTsController";
@@ -57,9 +58,24 @@ export const TextGrid: FC<TextGridProps> = (props) => {
   }, [inputRef.current, isActive]);
 
   useEffect(() => {
-    if (!shouldAppliedOT || !userInfo) return;
+    if (!shouldAppliedOT || !shouldAppliedOT.length || !userInfo) return;
+    if (shouldAppliedOT[0].oldVersion !== versionRef.current) return;
+    let index = 1;
+    while (index < shouldAppliedOT.length) {
+      if (
+        shouldAppliedOT[index].oldVersion ===
+        shouldAppliedOT[index - 1].oldVersion + 1
+      ) {
+        index++;
+      } else {
+        break;
+      }
+    }
+
+    const ots = [...shouldAppliedOT].splice(0, index);
+
     const unEmitedOT = OTController.unEmitedOT[grid._id];
-    shouldAppliedOT.forEach((otInfo) => {
+    ots.forEach((otInfo) => {
       const ot = OT1D.createOTByOps(otInfo.ops, TextOT);
       if (!ot) return;
       if (!unEmitedOT || !unEmitedOT.length) {
@@ -87,7 +103,13 @@ export const TextGrid: FC<TextGridProps> = (props) => {
       setText((text) => transformedOt.apply(text));
       versionRef.current = otInfo.oldVersion + 1;
     });
-  }, [shouldAppliedOT, userInfo]);
+    dispatch(
+      delOT({
+        gridId: grid._id,
+        index,
+      })
+    );
+  }, [shouldAppliedOT, userInfo, grid._id]);
 
   return isActive ? (
     <textarea

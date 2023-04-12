@@ -14,20 +14,8 @@ export function useTableDetail(req: ReqGetTableDetail) {
     getTableDetail(GET_TABLE_DETAIL_URL, req)
   );
 
-  /** 仅用于 Table Page check version 的工具 */
-  const tableDetailCopyRef = useRef<Table>();
-
-  useEffect(() => {
-    const tableDetailCopy = {} as unknown as Table;
-    if (data) {
-      deepClone(data, tableDetailCopy);
-    }
-    tableDetailCopyRef.current = tableDetailCopy;
-  }, [data]);
-
   return {
     tableDetail: data,
-    tableDetailCopyRef: data && tableDetailCopyRef,
     loading: data === undefined,
   };
 }

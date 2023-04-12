@@ -24,7 +24,8 @@ const AvatarGroup = Avatar.Group;
 
 export const Table: FC = () => {
   const { tableId } = useParams();
-  const { tableDetail, tableDetailCopyRef } = useTableDetail({
+
+  const { tableDetail } = useTableDetail({
     tableId: tableId || "",
   });
   const [onlineUsers, setOnlineUsers] = useState<UserToken[]>([]);
@@ -41,10 +42,7 @@ export const Table: FC = () => {
   }, [tableId]);
 
   useEffect(() => {
-    const opsEmitedFromBeTempFn = (args: OpsEmitedFromBeArgs<string>) =>
-      opsEmitedFromBeFn(args, tableDetailCopyRef);
-
-    socket.on(Events.OpsEmitedFromBe, opsEmitedFromBeTempFn);
+    socket.on(Events.OpsEmitedFromBe, opsEmitedFromBeFn);
     socket.on(Events.ReplaceGridContent, replaceGridContentFn);
     socket.on(Events.PutHeadAttributes, putHeadAttributeFn);
     socket.on(Events.AddTag, addTagFn);
@@ -52,14 +50,14 @@ export const Table: FC = () => {
     socket.on(Events.AddColumn, addColumnFn);
 
     return () => {
-      socket.off(Events.OpsEmitedFromBe, opsEmitedFromBeTempFn);
+      socket.off(Events.OpsEmitedFromBe, opsEmitedFromBeFn);
       socket.off(Events.ReplaceGridContent, replaceGridContentFn);
       socket.off(Events.PutHeadAttributes, putHeadAttributeFn);
       socket.off(Events.AddTag, addTagFn);
       socket.off(Events.UpdateTag, updateTagFn);
       socket.off(Events.AddColumn, addColumnFn);
     };
-  }, [tableDetail, socket]);
+  }, [tableDetail?._id, socket]);
 
   useEffect(() => {
     if (!tableDetail) return;
