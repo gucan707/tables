@@ -57,7 +57,7 @@ export const Table: FC = () => {
       socket.off(Events.UpdateTag, updateTagFn);
       socket.off(Events.AddColumn, addColumnFn);
     };
-  }, [tableDetail?._id, socket]);
+  }, [tableDetail, socket]);
 
   useEffect(() => {
     if (!tableDetail) return;

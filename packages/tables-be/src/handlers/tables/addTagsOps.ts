@@ -23,6 +23,7 @@ import {
 } from "../../utils/errors";
 import { sleep } from "../../utils/sleep";
 
+/** 多选格子的 ops 协同 */
 export const addTagsOps: IMiddleware = async (ctx) => {
   await sleep(5000);
   const userInfo = checkToken(ctx);

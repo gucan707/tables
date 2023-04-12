@@ -144,7 +144,7 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
       renderTag={getTagRender(tags)}
       className="multi_select_grid"
       arrowIcon={null}
-      value={curTagIds}
+      value={[...new Set(curTagIds)]}
       onChange={(val: string[]) => {
         setCurTagIds(val);
 
@@ -175,7 +175,7 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
     </Select>
   ) : (
     <div className="multi_select_grid-tags">
-      {curTagIds.map((tagId) => {
+      {[...new Set(curTagIds)].map((tagId) => {
         return (
           <Tag
             key={tagId}
