@@ -37,6 +37,7 @@ export const addOps: IMiddleware = async (ctx) => {
   }
 
   const row = await rows.findOne({ _id: req.rowId });
+  if (!row) return;
   const curGrid = row.data.find((grid) => grid._id === req.gridId);
   // TODO 文本以外的情况
   if (curGrid.type !== TableColumnTypes.Text) return;

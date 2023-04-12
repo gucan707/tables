@@ -38,6 +38,7 @@ export const addTagsOps: IMiddleware = async (ctx) => {
   }
 
   const row = await rows.findOne({ _id: req.rowId });
+  if (!row) return;
   const curGrid = row.data.find((grid) => grid._id === req.gridId);
 
   if (curGrid.type !== TableColumnTypes.MultiSelect) return;
