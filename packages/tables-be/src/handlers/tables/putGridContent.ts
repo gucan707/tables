@@ -47,8 +47,6 @@ export const putGridContent: IMiddleware = async (ctx) => {
       update = {
         $set: {
           "data.$[element].content": req.content,
-          "data.$[element].decimal": req.decimal,
-          "data.$[element].percent": req.percent,
         },
       };
       break;

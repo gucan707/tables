@@ -7,6 +7,7 @@ import { TableColumnTypes } from "@tables/types";
 
 import { useAppSelector } from "../../redux/store";
 import { DateConfig } from "./components/DateConfig";
+import { NumberConfig } from "./components/NumberConfig";
 import { TagsConfig } from "./components/TagsConfig";
 
 export type HeadConfigModalProps = {
@@ -30,6 +31,9 @@ export const HeadConfigModal: FC<HeadConfigModalProps> = (props) => {
     case TableColumnTypes.Select:
     case TableColumnTypes.MultiSelect:
       content = <TagsConfig curHead={curHead} />;
+      break;
+    case TableColumnTypes.Number:
+      content = <NumberConfig curHead={curHead} closeModal={closeModal} />;
       break;
     default:
       content = <>当前类型无额外配置项</>;

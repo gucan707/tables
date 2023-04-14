@@ -144,8 +144,6 @@ function getInitialTableRow(tableId: string, heads: TableHeads): Row {
           type: head.type,
           ...common,
           content: 0,
-          decimal: NumberFormatDecimal.None,
-          percent: NumberFormatPercent.None,
         });
         break;
       case TableColumnTypes.Select:

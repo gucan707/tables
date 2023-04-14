@@ -67,10 +67,6 @@ export enum DateFormatOptions {
 export type NumberType = {
   type: TableColumnTypes.Number;
   content: number;
-  /** 小数位数 */
-  decimal: NumberFormatDecimal;
-  /** 百分比格式 */
-  percent: NumberFormatPercent;
 } & CommonAtrributes;
 
 /** 小数位数 */

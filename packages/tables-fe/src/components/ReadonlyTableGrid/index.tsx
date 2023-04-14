@@ -60,7 +60,8 @@ export const ReadonlyTableGrid: FC<ReadonlyTableGridProps> = (props) => {
     case TableColumnTypes.Number:
       content = (
         <div className="readonly grid-num">
-          {getFormattedNumber(grid.content, grid.decimal, grid.percent)}
+          {/* TODO 使用 head 的 decimal */}
+          {getFormattedNumber(grid.content, 0, 0)}
         </div>
       );
       break;

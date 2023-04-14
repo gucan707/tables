@@ -19,8 +19,11 @@ export type NumberGridProps = {
 export const NumberGrid: FC<NumberGridProps> = (props) => {
   const { grid, rowId, isActive } = props;
   const [num, setNum] = useState(grid.content);
-  const [decimal, setDecimal] = useState(grid.decimal);
-  const [percent, setPercent] = useState(grid.percent);
+  const head = useAppSelector((state) => {
+    const heads = state.headsReducer.heads;
+    return heads.find((h) => h._id === grid.headId);
+  });
+  const [decimal, setDecimal] = useState(0);
   const { tableId = "" } = useParams();
   const dispatch = useAppDispatch();
   const replacedContent = useAppSelector(
@@ -28,18 +31,22 @@ export const NumberGrid: FC<NumberGridProps> = (props) => {
   );
 
   useEffect(() => {
+    if (!head || head.type !== TableColumnTypes.Number) return;
+    setDecimal(head.decimal);
+  }, [head]);
+
+  useEffect(() => {
     if (!replacedContent) return;
     if (replacedContent.type !== TableColumnTypes.Number) {
       console.error(
-        "CheckboxGrid: replacedContent.type !== TableColumnTypes.Number"
+        "NumberGrid: replacedContent.type !== TableColumnTypes.Number"
       );
       return;
     }
     setNum(replacedContent.content);
-    setDecimal(replacedContent.decimal);
   }, [replacedContent]);
 
-  const numStr = getFormattedNumber(num, decimal, percent);
+  const numStr = getFormattedNumber(num, decimal, 0);
   return isActive ? (
     <Input
       type={"number"}
@@ -51,8 +58,6 @@ export const NumberGrid: FC<NumberGridProps> = (props) => {
         putGridContent({
           type: TableColumnTypes.Number,
           content: Number(e.target.value),
-          decimal,
-          percent,
           gridId: grid._id,
           rowId,
           tableId,
