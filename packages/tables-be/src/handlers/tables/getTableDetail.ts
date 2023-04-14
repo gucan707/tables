@@ -53,6 +53,7 @@ export const getTableDetail: IMiddleware = async (ctx) => {
     throw new TErrorTableReadPermission();
   }
 
+  // TODO 把 rows 里多余的东西也删掉
   tableDetail.heads = tableDetail.heads.filter((h) => !h.isDeleted);
 
   const res: ResCommon<ResGetTableDetail> = {
