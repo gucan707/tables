@@ -13,6 +13,7 @@ import { useAppDispatch } from "../../redux/store";
 import { setup, socket } from "../../socket";
 import { addColumnFn } from "../../socket/addColumnFn";
 import { addTagFn } from "../../socket/addTagFn";
+import { delColumnFn } from "../../socket/delColumnFn";
 import { opsEmitedFromBeFn } from "../../socket/opsEmitedFromBeFn";
 import { putHeadAttributeFn } from "../../socket/putHeadAttributeFn";
 import { replaceGridContentFn } from "../../socket/replaceGridContentFn";
@@ -48,6 +49,7 @@ export const Table: FC = () => {
     socket.on(Events.AddTag, addTagFn);
     socket.on(Events.UpdateTag, updateTagFn);
     socket.on(Events.AddColumn, addColumnFn);
+    socket.on(Events.DelColumn, delColumnFn);
 
     return () => {
       socket.off(Events.OpsEmitedFromBe, opsEmitedFromBeFn);
@@ -56,6 +58,7 @@ export const Table: FC = () => {
       socket.off(Events.AddTag, addTagFn);
       socket.off(Events.UpdateTag, updateTagFn);
       socket.off(Events.AddColumn, addColumnFn);
+      socket.off(Events.DelColumn, delColumnFn);
     };
   }, [tableDetail, socket]);
 

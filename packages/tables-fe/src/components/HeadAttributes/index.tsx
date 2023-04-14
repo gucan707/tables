@@ -7,6 +7,7 @@ import { Input, Menu } from "@arco-design/web-react";
 import { IconBranch, IconDelete, IconEdit } from "@arco-design/web-react/icon";
 import { TableColumnTypes, TableHead } from "@tables/types";
 
+import { delColumn } from "../../http/table/delColumn";
 import { putHeadAttributes } from "../../http/table/putHeadAttributes";
 import { setHeadAttribute } from "../../redux/headsSlice";
 import { useAppDispatch } from "../../redux/store";
@@ -78,7 +79,10 @@ export const HeadAttributes: FC<HeadAttributesProps> = (props) => {
         <IconBranch />
         属性配置
       </MenuItem>
-      <MenuItem key="3">
+      <MenuItem
+        key="3"
+        onClick={() => delColumn({ headId: head._id, tableId })}
+      >
         <IconDelete />
         删除该列
       </MenuItem>

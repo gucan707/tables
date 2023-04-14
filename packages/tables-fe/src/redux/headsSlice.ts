@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   AddTagArgs,
+  DelColumnArgs,
   ReqPostTag,
   ReqPutHeadAttributes,
   TableColumnTypes,
@@ -76,9 +77,21 @@ export const headsSlice = createSlice({
     addHead: (state, action: PayloadAction<TableHead>) => {
       state.heads.push(action.payload);
     },
+    delHead: (state, action: PayloadAction<DelColumnArgs>) => {
+      const index = state.heads.findIndex(
+        (h) => h._id === action.payload.headId
+      );
+      state.heads.splice(index, 1);
+    },
   },
 });
 
-export const { setHeadAttribute, setHeads, addTag, updateTag, addHead } =
-  headsSlice.actions;
+export const {
+  setHeadAttribute,
+  setHeads,
+  addTag,
+  updateTag,
+  addHead,
+  delHead,
+} = headsSlice.actions;
 export default headsSlice.reducer;

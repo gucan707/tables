@@ -5,6 +5,7 @@ import { addColumn } from "../handlers/tables/addColumn";
 import { addOps } from "../handlers/tables/addOps";
 import { addTagsOps } from "../handlers/tables/addTagsOps";
 import { createTable } from "../handlers/tables/cretateTable";
+import { delColumn } from "../handlers/tables/delColumn";
 import { getTableDetail } from "../handlers/tables/getTableDetail";
 import { getTables } from "../handlers/tables/getTables";
 import { postTag } from "../handlers/tables/postTag";
@@ -18,7 +19,8 @@ tableRouter
   .post("/collaborator", addCollaborators)
   .post("/:tableId/addOps", addOps)
   .post("/:tableId/addTagsOps", addTagsOps)
-  .post("/:tableId/addColumn", addColumn)
+  .post("/:tableId/column", addColumn)
+  .delete("/:tableId/column/:headId", delColumn)
   .put("/:tableId/putGridContent", putGridContent)
   .put("/:tableId/putHeadAttributes", putHeadAttributes)
   .put("/:tableId/tags", putTag)
