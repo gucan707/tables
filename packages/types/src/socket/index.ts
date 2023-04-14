@@ -11,6 +11,7 @@ export enum Events {
   AddTag = "add tag",
   UpdateTag = "update tag",
   AddColumn = "add column",
+  DelColumn = "del column",
 }
 
 export type ReqJoinRoom = {
@@ -42,4 +43,7 @@ export type UpdateTagArgs = Omit<ReqPutTag, "tableId">;
 export type AddColumnArgs = {
   added: Record<string, string>;
   head: TableHead;
+};
+export type DelColumnArgs = {
+  headId: string;
 };

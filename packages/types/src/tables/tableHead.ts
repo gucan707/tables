@@ -17,6 +17,7 @@ export enum TableColumnTypes {
 export type CommonHeadAttributes = {
   _id: string;
   name: string;
+  isDeleted?: boolean;
 };
 
 export type TextHead = {

@@ -53,6 +53,8 @@ export const getTableDetail: IMiddleware = async (ctx) => {
     throw new TErrorTableReadPermission();
   }
 
+  tableDetail.heads = tableDetail.heads.filter((h) => !h.isDeleted);
+
   const res: ResCommon<ResGetTableDetail> = {
     status: 200,
     msg: "ok",
