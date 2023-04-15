@@ -8,6 +8,7 @@ import { IconBranch, IconDelete, IconEdit } from "@arco-design/web-react/icon";
 import { TableColumnTypes, TableHead } from "@tables/types";
 
 import { delColumn } from "../../http/table/delColumn";
+import { putColumnType } from "../../http/table/putColumnType";
 import { putHeadAttributes } from "../../http/table/putHeadAttributes";
 import { setHeadAttribute } from "../../redux/headsSlice";
 import { useAppDispatch } from "../../redux/store";
@@ -19,19 +20,27 @@ export type HeadAttributesProps = {
 };
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
-const dropList = (
-  <>
-    {Object.values(TableColumnTypes).map((type, index) => (
-      <MenuItem key={"1_" + index.toString()}>{type}</MenuItem>
-    ))}
-  </>
-);
 
 export const HeadAttributes: FC<HeadAttributesProps> = (props) => {
   const { head, setActiveHead } = props;
   const [headName, setHeadName] = useState(head.name);
   const dispatch = useAppDispatch();
   const { tableId = "" } = useParams();
+
+  const dropList = (
+    <>
+      {Object.values(TableColumnTypes).map((type, index) => (
+        <MenuItem
+          key={"1_" + index.toString()}
+          onClick={() => {
+            putColumnType({ headId: head._id, tableId, type });
+          }}
+        >
+          {type}
+        </MenuItem>
+      ))}
+    </>
+  );
 
   return (
     <Menu className="head_attributes" mode="pop">
