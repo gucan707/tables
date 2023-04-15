@@ -47,6 +47,15 @@ export const headsSlice = createSlice({
     setHeads: (state, action: PayloadAction<TableHeads>) => {
       state.heads = action.payload;
     },
+    setHead: (state, action: PayloadAction<TableHead>) => {
+      const newHead = action.payload;
+      const index = state.heads.findIndex((h) => h._id === newHead._id);
+      if (index === -1) {
+        state.heads.push(newHead);
+        return;
+      }
+      state.heads[index] = newHead;
+    },
     addTag: (state, action: PayloadAction<AddTagArgs>) => {
       const { payload } = action;
       const head = state.heads.find((h) => h._id === payload.headId);
@@ -93,5 +102,6 @@ export const {
   updateTag,
   addHead,
   delHead,
+  setHead,
 } = headsSlice.actions;
 export default headsSlice.reducer;

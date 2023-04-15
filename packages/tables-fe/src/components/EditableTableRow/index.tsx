@@ -7,6 +7,7 @@ import {
   TableColumnTypes,
   TableHeads,
 } from "@tables/types";
+import { createInitialGrid } from "@tables/utils";
 
 import { useAppSelector } from "../../redux/store";
 import { getMapRow } from "../../utils/getMapRow";
@@ -35,15 +36,9 @@ export const EditableTableRow: FC<EditableTableRowProps> = (props) => {
 
       const head = heads.find((h) => h._id === grid.headId);
       if (!head) return;
-
       // 视为新增
-      curRowData.push({
-        type: TableColumnTypes.Text,
-        _id: grid.gridId,
-        headId: head._id,
-        text: "",
-        version: 0,
-      });
+      const newGrid = createInitialGrid(grid.gridId, head.type, head._id);
+      newGrid && curRowData.push(newGrid);
     });
   } else {
     curRowData.push(...row.data);
