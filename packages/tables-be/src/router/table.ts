@@ -9,6 +9,7 @@ import { delColumn } from "../handlers/tables/delColumn";
 import { getTableDetail } from "../handlers/tables/getTableDetail";
 import { getTables } from "../handlers/tables/getTables";
 import { postTag } from "../handlers/tables/postTag";
+import { putColumnType } from "../handlers/tables/putColumnType";
 import { putGridContent } from "../handlers/tables/putGridContent";
 import { putHeadAttributes } from "../handlers/tables/putHeadAttributes";
 import { putTag } from "../handlers/tables/putTag";
@@ -20,6 +21,7 @@ tableRouter
   .post("/:tableId/addOps", addOps)
   .post("/:tableId/addTagsOps", addTagsOps)
   .post("/:tableId/column", addColumn)
+  .put("/:tableId/column", putColumnType)
   .delete("/:tableId/column/:headId", delColumn)
   .put("/:tableId/putGridContent", putGridContent)
   .put("/:tableId/putHeadAttributes", putHeadAttributes)

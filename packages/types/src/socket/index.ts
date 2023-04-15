@@ -12,6 +12,7 @@ export enum Events {
   UpdateTag = "update tag",
   AddColumn = "add column",
   DelColumn = "del column",
+  ChangeHeadType = "change head type",
 }
 
 export type ReqJoinRoom = {
@@ -46,4 +47,8 @@ export type AddColumnArgs = {
 };
 export type DelColumnArgs = {
   headId: string;
+};
+export type ChangeHeadTypeArgs = {
+  newGrids: Record<string, string>;
+  head: TableHead;
 };

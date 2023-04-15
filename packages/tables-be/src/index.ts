@@ -28,7 +28,7 @@ export const io = new Server(httpServer, {
 setup(io);
 
 app
-  // .use(logger())
+  .use(logger())
   .use(handleError)
   .use(cors({ credentials: true, origin: "http://127.0.0.1:5173" }))
   .use(KoaBody())

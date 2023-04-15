@@ -16,6 +16,8 @@ import {
 
 import { rows, tables } from "../../db";
 import { checkToken } from "../../utils/checkToken";
+import { createInitialGrid } from "../../utils/createInitialGrid";
+import { createInitialHead } from "../../utils/createInitialHead";
 
 const INIITIAL_ROW_NUM = 3;
 
@@ -58,46 +60,8 @@ function getInitialTableHeads(): TableHeads {
   const heads: TableHeads = [];
   for (let i in TableColumnTypes) {
     const value = TableColumnTypes[i as keyof typeof TableColumnTypes];
-    let head: TableHead;
     const _id = new ObjectId().toString();
-    switch (value) {
-      case TableColumnTypes.Text:
-      case TableColumnTypes.Checkbox:
-        head = {
-          type: value,
-          name: value,
-          _id,
-        };
-        break;
-      case TableColumnTypes.Date:
-        head = {
-          type: value,
-          _id,
-          name: value,
-          format: DateFormatOptions.YMD,
-        };
-        break;
-      case TableColumnTypes.MultiSelect:
-      case TableColumnTypes.Select:
-        head = {
-          type: value,
-          _id,
-          name: value,
-          tags: [],
-        };
-        break;
-      case TableColumnTypes.Number:
-        head = {
-          type: value,
-          _id,
-          name: value,
-          decimal: NumberFormatDecimal.None,
-          percent: NumberFormatPercent.None,
-        };
-        break;
-      default:
-        break;
-    }
+    const head = createInitialHead(_id, value);
 
     head && heads.push(head);
   }
@@ -112,56 +76,12 @@ function getInitialTableRow(tableId: string, heads: TableHeads): Row {
     tableId,
   };
   heads.forEach((head) => {
-    const common = {
-      _id: new ObjectId().toString(),
-      headId: head._id,
-      version: 0,
-    };
-    switch (head.type) {
-      case TableColumnTypes.Checkbox:
-        row.data.push({
-          ...common,
-          checked: false,
-          type: head.type,
-        });
-        break;
-      case TableColumnTypes.Date:
-        row.data.push({
-          ...common,
-          type: head.type,
-          date: -1,
-        });
-        break;
-      case TableColumnTypes.MultiSelect:
-        row.data.push({
-          type: head.type,
-          contents: [],
-          ...common,
-        });
-        break;
-      case TableColumnTypes.Number:
-        row.data.push({
-          type: head.type,
-          ...common,
-          content: 0,
-        });
-        break;
-      case TableColumnTypes.Select:
-        row.data.push({
-          type: head.type,
-          ...common,
-          content: "",
-        });
-        break;
-      case TableColumnTypes.Text:
-        row.data.push({
-          type: head.type,
-          ...common,
-          text: "",
-        });
-      default:
-        break;
-    }
+    const grid = createInitialGrid(
+      new ObjectId().toString(),
+      head.type,
+      head._id
+    );
+    grid && row.data.push(grid);
   });
   return row;
 }

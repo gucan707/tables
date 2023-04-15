@@ -7,6 +7,7 @@ import {
   NumberType,
   SelectType,
   Table,
+  TableColumnTypes,
   TableHead,
   TableTagColors,
 } from "../../tables";
@@ -89,4 +90,10 @@ export type ReqAddColumn = {
 export type ReqDelColumn = {
   tableId: string;
   headId: string;
+};
+
+export type ReqPutColumnType = {
+  tableId: string;
+  headId: string;
+  type: TableColumnTypes;
 };
