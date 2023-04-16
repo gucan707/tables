@@ -16,3 +16,4 @@ export type Operator<T> =
     };
 
 export type MultiSelectOTData = { tagId: string };
+export type RowOTData = { rowId: string };
