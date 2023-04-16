@@ -1,3 +1,5 @@
+import "./index.less";
+
 import { FC, useEffect } from "react";
 
 import {
@@ -47,7 +49,7 @@ export const EditableTableRow: FC<EditableTableRowProps> = (props) => {
   const mapRow = getMapRow(curRowData);
 
   return (
-    <tr>
+    <tr className="editable_row">
       {heads.map((head) => (
         <EditableTableGrid
           key={head._id}
@@ -57,6 +59,9 @@ export const EditableTableRow: FC<EditableTableRowProps> = (props) => {
         />
       ))}
       <td className="grid grid_common grid_add"></td>
+      <div className="editable_row-add_row">
+        <div className="editable_row-add_row-btn">+</div>
+      </div>
     </tr>
   );
 };

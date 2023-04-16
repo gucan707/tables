@@ -1,0 +1,35 @@
+.editable_row {
+  position: relative;
+
+  &:hover {
+    .editable_row-add_row {
+      opacity: 1;
+    }
+  }
+
+  &-add_row {
+    position: absolute;
+    left: 0;
+    height: 100%;
+    margin: auto;
+    transform: translate(-1em);
+    font-size: 1.5em;
+    font-weight: lighter;
+    opacity: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    &-btn {
+      height: 1em;
+      line-height: 1em;
+      width: 1em;
+      text-align: center;
+      user-select: none;
+
+      &:hover {
+        background-color: var(--color-fill-1);
+      }
+    }
+  }
+}
