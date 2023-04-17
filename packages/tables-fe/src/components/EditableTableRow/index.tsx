@@ -2,6 +2,7 @@ import "./index.less";
 
 import { FC, useEffect } from "react";
 
+import { IconClose, IconDelete } from "@arco-design/web-react/icon";
 import {
   Grid,
   Row,
@@ -37,9 +38,9 @@ export const EditableTableRow: FC<EditableTableRowProps> = (props) => {
         />
       ))}
       <td className="grid grid_common grid_add"></td>
-      {/* <div className="editable_row-add_row">
-        <div className="editable_row-add_row-btn">+</div>
-      </div> */}
+      <div className="editable_row-delete_row">
+        <IconClose className="editable_row-delete_row-btn" />
+      </div>
     </tr>
   );
 };
