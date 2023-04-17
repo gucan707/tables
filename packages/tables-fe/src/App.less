@@ -37,6 +37,7 @@ body {
   margin: auto;
   overflow-x: auto;
   background-color: white;
+  padding-bottom: 3px;
 }
 
 .table {
@@ -86,4 +87,18 @@ body {
   &-num {
     text-align: end;
   }
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #dbdbdb;
 }
