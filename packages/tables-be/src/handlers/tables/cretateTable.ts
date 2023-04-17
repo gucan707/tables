@@ -2,22 +2,18 @@ import { IMiddleware } from "koa-router";
 import { ObjectId } from "mongodb";
 
 import {
-  DateFormatOptions,
-  NumberFormatDecimal,
-  NumberFormatPercent,
   ResCommon,
   ResCreateTable,
   Row,
   Table,
   TableColumnTypes,
-  TableHead,
   TableHeads,
 } from "@tables/types";
 
 import { rows, tables } from "../../db";
 import { checkToken } from "../../utils/checkToken";
-import { createInitialGrid } from "../../utils/createInitialGrid";
 import { createInitialHead } from "../../utils/createInitialHead";
+import { getInitialTableRow } from "../../utils/getInitialTableRow";
 
 const INIITIAL_ROW_NUM = 3;
 
@@ -67,21 +63,4 @@ function getInitialTableHeads(): TableHeads {
   }
 
   return heads;
-}
-
-function getInitialTableRow(tableId: string, heads: TableHeads): Row {
-  const row: Row = {
-    _id: new ObjectId().toString(),
-    data: [],
-    tableId,
-  };
-  heads.forEach((head) => {
-    const grid = createInitialGrid(
-      new ObjectId().toString(),
-      head.type,
-      head._id
-    );
-    grid && row.data.push(grid);
-  });
-  return row;
 }

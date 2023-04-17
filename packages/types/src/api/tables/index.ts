@@ -93,6 +93,10 @@ export type ReqAddColumn = {
   tableId: string;
 };
 
+export type ReqAddRow = {
+  tableId: string;
+};
+
 export type ReqDelColumn = {
   tableId: string;
   headId: string;

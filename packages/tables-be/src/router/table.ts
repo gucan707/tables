@@ -3,6 +3,7 @@ import Router from "koa-router";
 import { addCollaborators } from "../handlers/tables/addCollaborators";
 import { addColumn } from "../handlers/tables/addColumn";
 import { addOps } from "../handlers/tables/addOps";
+import { addRow } from "../handlers/tables/addRow";
 import { addTagsOps } from "../handlers/tables/addTagsOps";
 import { createTable } from "../handlers/tables/cretateTable";
 import { delColumn } from "../handlers/tables/delColumn";
@@ -23,6 +24,7 @@ tableRouter
   .post("/:tableId/column", addColumn)
   .put("/:tableId/column", putColumnType)
   .delete("/:tableId/column/:headId", delColumn)
+  .post("/:tableId/row", addRow)
   .put("/:tableId/putGridContent", putGridContent)
   .put("/:tableId/putHeadAttributes", putHeadAttributes)
   .put("/:tableId/tags", putTag)

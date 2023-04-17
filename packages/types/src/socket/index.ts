@@ -1,6 +1,6 @@
 import { ReqPutGridContent, ReqPutHeadAttributes, ReqPutTag } from "../api";
 import { Operator } from "../ot";
-import { SelectOptionType, TableHead } from "../tables";
+import { Row, SelectOptionType, TableHead } from "../tables";
 
 export enum Events {
   JoinRoom = "join room",
@@ -13,6 +13,7 @@ export enum Events {
   AddColumn = "add column",
   DelColumn = "del column",
   ChangeHeadType = "change head type",
+  AddRow = "add row",
 }
 
 export type ReqJoinRoom = {
@@ -51,4 +52,8 @@ export type DelColumnArgs = {
 export type ChangeHeadTypeArgs = {
   newGrids: Record<string, string>;
   head: TableHead;
+};
+export type AddRowArgs = {
+  row: Row;
+  createTime: number;
 };
