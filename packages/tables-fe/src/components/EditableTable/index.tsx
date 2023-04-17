@@ -77,6 +77,14 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
               tags={tags}
             />
           ))}
+          <tr className="editable table-add_row">
+            <td
+              colSpan={heads.length + 1}
+              className="editable table-add_row-td"
+            >
+              +
+            </td>
+          </tr>
         </tbody>
       </table>
       <HeadConfigModal activeHead={activeHead} setActiveHead={setActiveHead} />

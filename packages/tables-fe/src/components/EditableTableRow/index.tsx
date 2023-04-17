@@ -59,9 +59,9 @@ export const EditableTableRow: FC<EditableTableRowProps> = (props) => {
         />
       ))}
       <td className="grid grid_common grid_add"></td>
-      <div className="editable_row-add_row">
+      {/* <div className="editable_row-add_row">
         <div className="editable_row-add_row-btn">+</div>
-      </div>
+      </div> */}
     </tr>
   );
 };

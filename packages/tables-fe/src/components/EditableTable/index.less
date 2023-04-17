@@ -3,5 +3,25 @@
 }
 
 .editable.table {
-  margin-left: 2em;
+  // margin-left: 2em;
+
+  &-add_row {
+    border: 1px solid var(--border-gray);
+    border-left: none;
+    border-right: none;
+    font-size: 1.3em;
+    font-weight: lighter;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      background-color: var(--color-fill-1);
+    }
+
+    &-td {
+      padding: var(--grid-padding);
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { MultiSelectOTData, Operator } from "../../ot";
+import { MultiSelectOTData, Operator, RowOTData } from "../../ot";
 import {
   CheckboxType,
   CommonAtrributes,
@@ -54,6 +54,12 @@ export type ReqAddTagsOps = {
   gridId: string;
   basedVersion: number;
   tagsOps: Operator<MultiSelectOTData>[];
+};
+
+export type ReqAddRowOps = {
+  feId: string;
+  basedVersion: number;
+  rowOps: Operator<RowOTData>[];
 };
 
 export type ReqPutGridContent = {
