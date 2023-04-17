@@ -21,6 +21,32 @@ export const getTableDetail: IMiddleware = async (ctx) => {
 
   const req = ctx.params as ReqGetTableDetail;
 
+  const deletedIds: string[] = (
+    await tables
+      .aggregate([
+        {
+          $match: {
+            _id: req.tableId,
+          },
+        },
+        {
+          $unwind: "$heads",
+        },
+        {
+          $match: {
+            "heads.isDeleted": true,
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            headId: "$heads._id",
+          },
+        },
+      ])
+      .toArray()
+  ).map((i) => i.headId);
+
   const result = await tables
     .aggregate<Table>([
       {
@@ -29,12 +55,46 @@ export const getTableDetail: IMiddleware = async (ctx) => {
         },
       },
       {
+        $addFields: {
+          heads: {
+            $filter: {
+              input: "$heads",
+              as: "head",
+              cond: {
+                $not: [{ $in: ["$$head._id", deletedIds] }],
+              },
+            },
+          },
+        },
+      },
+      {
         $lookup: {
           from: "rows",
-          localField: "_id",
-          foreignField: "tableId",
+          let: { table_id: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ["$tableId", "$$table_id"],
+                },
+              },
+            },
+            {
+              $addFields: {
+                data: {
+                  $filter: {
+                    input: "$data",
+                    as: "item",
+                    cond: {
+                      $not: [{ $in: ["$$item.headId", deletedIds] }],
+                    },
+                  },
+                },
+              },
+            },
+            { $limit: LIMIT_ROWS },
+          ],
           as: "rows",
-          pipeline: [{ $limit: LIMIT_ROWS }],
         },
       },
     ])
@@ -52,9 +112,6 @@ export const getTableDetail: IMiddleware = async (ctx) => {
   ) {
     throw new TErrorTableReadPermission();
   }
-
-  // TODO 把 rows 里多余的东西也删掉
-  tableDetail.heads = tableDetail.heads.filter((h) => !h.isDeleted);
 
   const res: ResCommon<ResGetTableDetail> = {
     status: 200,
