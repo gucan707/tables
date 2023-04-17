@@ -12,6 +12,7 @@ import { addRows } from "../../redux/rowsSlice";
 import { useAppDispatch } from "../../redux/store";
 import { setup, socket } from "../../socket";
 import { addColumnFn } from "../../socket/addColumnFn";
+import { addRowFn } from "../../socket/addRowFn";
 import { addTagFn } from "../../socket/addTagFn";
 import { changeHeadTypeFn } from "../../socket/changeHeadTypeFn";
 import { delColumnFn } from "../../socket/delColumnFn";
@@ -52,6 +53,7 @@ export const Table: FC = () => {
     socket.on(Events.AddColumn, addColumnFn);
     socket.on(Events.DelColumn, delColumnFn);
     socket.on(Events.ChangeHeadType, changeHeadTypeFn);
+    socket.on(Events.AddRow, addRowFn);
 
     return () => {
       socket.off(Events.OpsEmitedFromBe, opsEmitedFromBeFn);
@@ -62,6 +64,7 @@ export const Table: FC = () => {
       socket.off(Events.AddColumn, addColumnFn);
       socket.off(Events.DelColumn, delColumnFn);
       socket.off(Events.ChangeHeadType, changeHeadTypeFn);
+      socket.off(Events.AddRow, addRowFn);
     };
   }, [tableDetail, socket]);
 

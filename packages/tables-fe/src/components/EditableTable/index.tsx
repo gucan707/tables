@@ -4,12 +4,14 @@ import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Modal, Trigger } from "@arco-design/web-react";
-import { Table } from "@tables/types";
+import { Grid, Row, Table } from "@tables/types";
+import { createInitialGrid } from "@tables/utils";
 
 import { addColumn } from "../../http/table/addColumn";
 import { addRow } from "../../http/table/addRow";
 import { setHeads } from "../../redux/headsSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { createInitialRow } from "../../utils/createInitialRow";
 import { getMapTags } from "../../utils/getMapTags";
 import { EditableTableRow } from "../EditableTableRow";
 import { HeadAttributes } from "../HeadAttributes";
@@ -28,6 +30,52 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
   const headsRedux = useAppSelector((state) => state.headsReducer.heads);
   const [activeHead, setActiveHead] = useState("");
   const { tableId = "" } = useParams();
+  const rowRedux = useAppSelector((state) => state.rowsReducer.rows);
+  const [curRows, setCurRows] = useState<Omit<Row, "tableId">[]>(rows);
+
+  useEffect(() => {
+    if (!rows || !rowRedux || !heads) return;
+    const rowsIds = Object.keys(rowRedux);
+    const newCurRows: Omit<Row, "tableId">[] = [];
+    rowsIds.forEach((rowId) => {
+      const row = rows.find((r) => r._id === rowId);
+      const rowReduxData = rowRedux[rowId];
+
+      // 初始数据中不存在该列，说明为新加的一列，直接初始化一列插入
+      if (!row) {
+        const initialRow = createInitialRow({
+          dataInfo: rowReduxData,
+          heads,
+          rowId,
+        });
+        newCurRows.push(initialRow);
+        return;
+      }
+
+      // 初始数据与当前redux中均存在该列，需要逐一对比每一个格子
+      const grids: Grid[] = [];
+      rowReduxData.forEach((grid) => {
+        const head = heads.find((h) => h._id === grid.headId);
+        // 没有对应的 head，直接忽略
+        if (!head) return;
+
+        const exited = row.data.find((g) => g._id === grid.gridId);
+        // 初始数据与当前 redux 中均存在该格子，直接保留
+        if (exited) {
+          grids.push(exited);
+          return;
+        }
+
+        // redux 中存在该格子而初始数据中不存在，视为新增的格子
+        const newGrid = createInitialGrid(grid.gridId, head.type, head._id);
+        newGrid && grids.push(newGrid);
+      });
+
+      newCurRows.push({ _id: rowId, data: grids });
+    });
+
+    setCurRows(newCurRows);
+  }, [rows, rowRedux, heads]);
 
   useEffect(() => {
     dispatch(setHeads(heads));
@@ -70,7 +118,7 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
+          {curRows.map((row) => (
             <EditableTableRow
               heads={headsRedux}
               row={row}
