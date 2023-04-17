@@ -7,6 +7,7 @@ import { Modal, Trigger } from "@arco-design/web-react";
 import { Table } from "@tables/types";
 
 import { addColumn } from "../../http/table/addColumn";
+import { addRow } from "../../http/table/addRow";
 import { setHeads } from "../../redux/headsSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { getMapTags } from "../../utils/getMapTags";
@@ -77,7 +78,12 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
               tags={tags}
             />
           ))}
-          <tr className="editable table-add_row">
+          <tr
+            className="editable table-add_row"
+            onClick={() => {
+              addRow({ tableId });
+            }}
+          >
             <td
               colSpan={heads.length + 1}
               className="editable table-add_row-td"
