@@ -34,7 +34,7 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
   const [curRows, setCurRows] = useState<Omit<Row, "tableId">[]>(rows);
 
   useEffect(() => {
-    if (!rows || !rowRedux || !heads) return;
+    if (!rows || !rowRedux || !headsRedux) return;
     const rowsIds = Object.keys(rowRedux);
     const newCurRows: Omit<Row, "tableId">[] = [];
     rowsIds.forEach((rowId) => {
@@ -55,9 +55,11 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
       // 初始数据与当前redux中均存在该列，需要逐一对比每一个格子
       const grids: Grid[] = [];
       rowReduxData.forEach((grid) => {
-        const head = heads.find((h) => h._id === grid.headId);
+        const head = headsRedux.find((h) => h._id === grid.headId);
         // 没有对应的 head，直接忽略
-        if (!head) return;
+        if (!head) {
+          return;
+        }
 
         const exited = row.data.find((g) => g._id === grid.gridId);
         // 初始数据与当前 redux 中均存在该格子，直接保留
@@ -75,13 +77,13 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
     });
 
     setCurRows(newCurRows);
-  }, [rows, rowRedux, heads]);
+  }, [rows, rowRedux, headsRedux]);
 
   useEffect(() => {
     dispatch(setHeads(heads));
   }, [heads]);
 
-  const tags = getMapTags(heads);
+  const tags = getMapTags(headsRedux);
 
   return (
     <div className={`editable table-container ${className}`}>
