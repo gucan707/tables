@@ -14,10 +14,13 @@ type RowsState = Record<
   }[]
 >;
 
+type RowsArrState = { rowId: string; createTime: number }[];
+
 export const rowsSlice = createSlice({
   name: "rows",
   initialState: {
     rows: {} as RowsState,
+    rowsArr: [] as RowsArrState,
   },
   reducers: {
     addRows: (state, action: PayloadAction<Row[]>) => {
@@ -28,15 +31,21 @@ export const rowsSlice = createSlice({
           headId: grid.headId,
         }));
         state.rows[row._id] = gridIds;
+        state.rowsArr.push({
+          rowId: row._id,
+          createTime: row.createTime ?? -1,
+        });
       });
+
+      state.rowsArr.sort((a, b) => a.createTime - b.createTime);
     },
     addColumn: (state, action: PayloadAction<AddColumnArgs>) => {
       const { added, head } = action.payload;
       const rowIds = Object.keys(state.rows);
       // TODO 或许要考虑一下分页或其他异常情况
-      rowIds.forEach((rowId) => {
-        state.rows[rowId].push({
-          gridId: added[rowId],
+      state.rowsArr.forEach((r) => {
+        state.rows[r.rowId].push({
+          gridId: added[r.rowId],
           headId: head._id,
         });
       });

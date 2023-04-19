@@ -31,22 +31,22 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
   const [activeHead, setActiveHead] = useState("");
   const { tableId = "" } = useParams();
   const rowRedux = useAppSelector((state) => state.rowsReducer.rows);
+  const rowArrRedux = useAppSelector((state) => state.rowsReducer.rowsArr);
   const [curRows, setCurRows] = useState<Omit<Row, "tableId">[]>(rows);
 
   useEffect(() => {
     if (!rows || !rowRedux || !headsRedux) return;
-    const rowsIds = Object.keys(rowRedux);
     const newCurRows: Omit<Row, "tableId">[] = [];
-    rowsIds.forEach((rowId) => {
-      const row = rows.find((r) => r._id === rowId);
-      const rowReduxData = rowRedux[rowId];
+    rowArrRedux.forEach((rowItem) => {
+      const row = rows.find((r) => r._id === rowItem.rowId);
+      const rowReduxData = rowRedux[rowItem.rowId];
 
       // 初始数据中不存在该列，说明为新加的一列，直接初始化一列插入
       if (!row) {
         const initialRow = createInitialRow({
           dataInfo: rowReduxData,
           heads,
-          rowId,
+          rowId: rowItem.rowId,
         });
         newCurRows.push(initialRow);
         return;
@@ -73,7 +73,7 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
         newGrid && grids.push(newGrid);
       });
 
-      newCurRows.push({ _id: rowId, data: grids });
+      newCurRows.push({ _id: rowItem.rowId, data: grids });
     });
 
     setCurRows(newCurRows);

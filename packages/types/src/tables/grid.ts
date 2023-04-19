@@ -98,4 +98,5 @@ export type Row = {
   data: Grid[];
   tableId: string;
   isDeleted?: boolean;
+  createTime?: number;
 };

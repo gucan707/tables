@@ -1,4 +1,5 @@
 import { IMiddleware } from "koa-router";
+import { ObjectId } from "mongodb";
 
 import {
   ReqGetTableDetail,
@@ -115,6 +116,9 @@ export const getTableDetail: IMiddleware = async (ctx) => {
   ) {
     throw new TErrorTableReadPermission();
   }
+  tableDetail.rows.forEach((r) => {
+    r.createTime = new ObjectId(r._id).getTimestamp().valueOf();
+  });
 
   const res: ResCommon<ResGetTableDetail> = {
     status: 200,
