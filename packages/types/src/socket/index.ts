@@ -14,6 +14,7 @@ export enum Events {
   DelColumn = "del column",
   ChangeHeadType = "change head type",
   AddRow = "add row",
+  DelRow = "del row",
 }
 
 export type ReqJoinRoom = {
@@ -60,4 +61,7 @@ export type ChangeHeadTypeArgs = {
 export type AddRowArgs = {
   row: Row;
   createTime: number;
+};
+export type DelRowArgs = {
+  rowId: string;
 };

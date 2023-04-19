@@ -97,6 +97,11 @@ export type ReqAddRow = {
   tableId: string;
 };
 
+export type ReqDeleteRow = {
+  tableId: string;
+  rowId: string;
+};
+
 export type ReqDelColumn = {
   tableId: string;
   headId: string;

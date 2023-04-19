@@ -75,7 +75,10 @@ export const getTableDetail: IMiddleware = async (ctx) => {
             {
               $match: {
                 $expr: {
-                  $eq: ["$tableId", "$$table_id"],
+                  $and: [
+                    { $eq: ["$tableId", "$$table_id"] },
+                    { $ne: ["$isDeleted", true] },
+                  ],
                 },
               },
             },

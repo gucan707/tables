@@ -97,4 +97,5 @@ export type Row = {
   _id: string;
   data: Grid[];
   tableId: string;
+  isDeleted?: boolean;
 };
