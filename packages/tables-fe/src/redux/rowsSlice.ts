@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AddColumnArgs, ChangeHeadTypeArgs, Row } from "@tables/types";
+import {
+  AddColumnArgs,
+  ChangeHeadTypeArgs,
+  DelRowArgs,
+  Row,
+} from "@tables/types";
 
 type RowsState = Record<
   string,
@@ -49,8 +54,13 @@ export const rowsSlice = createSlice({
         }
       }
     },
+    delRowInRedux: (state, action: PayloadAction<DelRowArgs>) => {
+      const { rowId } = action.payload;
+      delete state.rows[rowId];
+    },
   },
 });
 
-export const { addColumn, addRows, replaceGrids } = rowsSlice.actions;
+export const { addColumn, addRows, replaceGrids, delRowInRedux } =
+  rowsSlice.actions;
 export default rowsSlice.reducer;

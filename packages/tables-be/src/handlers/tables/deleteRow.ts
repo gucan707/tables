@@ -19,7 +19,14 @@ export const deleteRow: IMiddleware = async (ctx) => {
     throw new TErrorTableReadPermission();
   }
 
-  await rows.updateOne({ _id: req.rowId }, { isDeleted: true });
+  await rows.updateOne(
+    { _id: req.rowId },
+    {
+      $set: {
+        isDeleted: true,
+      },
+    }
+  );
 
   io.to(req.tableId).emit(Events.DelRow, { rowId: req.rowId } as DelRowArgs);
 

@@ -1,6 +1,7 @@
 import "./index.less";
 
 import { FC, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 import { IconClose, IconDelete } from "@arco-design/web-react/icon";
 import {
@@ -12,6 +13,7 @@ import {
 } from "@tables/types";
 import { createInitialGrid } from "@tables/utils";
 
+import { delRow } from "../../http/table/delRow";
 import { useAppSelector } from "../../redux/store";
 import { getMapRow } from "../../utils/getMapRow";
 import { EditableTableGrid } from "../EditableTableGrid";
@@ -24,6 +26,7 @@ export type EditableTableRowProps = {
 
 export const EditableTableRow: FC<EditableTableRowProps> = (props) => {
   const { row, heads, tags } = props;
+  const { tableId = "" } = useParams();
 
   const mapRow = getMapRow(row.data);
 
@@ -39,7 +42,10 @@ export const EditableTableRow: FC<EditableTableRowProps> = (props) => {
       ))}
       <td className="grid grid_common grid_add"></td>
       <div className="editable_row-delete_row">
-        <IconClose className="editable_row-delete_row-btn" />
+        <IconClose
+          className="editable_row-delete_row-btn"
+          onClick={() => delRow({ rowId: row._id, tableId })}
+        />
       </div>
     </tr>
   );

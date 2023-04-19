@@ -16,6 +16,7 @@ import { addRowFn } from "../../socket/addRowFn";
 import { addTagFn } from "../../socket/addTagFn";
 import { changeHeadTypeFn } from "../../socket/changeHeadTypeFn";
 import { delColumnFn } from "../../socket/delColumnFn";
+import { delRowFn } from "../../socket/delRow";
 import { opsEmitedFromBeFn } from "../../socket/opsEmitedFromBeFn";
 import { putHeadAttributeFn } from "../../socket/putHeadAttributeFn";
 import { replaceGridContentFn } from "../../socket/replaceGridContentFn";
@@ -54,6 +55,7 @@ export const Table: FC = () => {
     socket.on(Events.DelColumn, delColumnFn);
     socket.on(Events.ChangeHeadType, changeHeadTypeFn);
     socket.on(Events.AddRow, addRowFn);
+    socket.on(Events.DelRow, delRowFn);
 
     return () => {
       socket.off(Events.OpsEmitedFromBe, opsEmitedFromBeFn);
@@ -65,6 +67,7 @@ export const Table: FC = () => {
       socket.off(Events.DelColumn, delColumnFn);
       socket.off(Events.ChangeHeadType, changeHeadTypeFn);
       socket.off(Events.AddRow, addRowFn);
+      socket.off(Events.DelRow, delRowFn);
     };
   }, [tableDetail, socket]);
 
