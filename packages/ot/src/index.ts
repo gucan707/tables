@@ -379,4 +379,24 @@ export abstract class OT1D<T> {
    * @param orignal 需要被应用 ops 的原始数据
    */
   abstract apply(orignal: DataType<T>): DataType<T>;
+
+  invert<U, OT extends new () => OT1D<U>>(OT: OT, curValue: DataType<T>) {
+    let index = 0;
+    const inverse = new OT();
+    this.ops.forEach((op) => {
+      if (op.type === OperatorType.Retain) {
+        inverse.addOp(op);
+        index += op.count;
+      } else if (op.type === OperatorType.Insert) {
+        inverse.addOp({ type: OperatorType.Delete, count: op.data.length });
+      } else {
+        inverse.addOp({
+          type: OperatorType.Insert,
+          data: curValue.slice(index, index + op.count) as any,
+        });
+        index += op.count;
+      }
+    });
+    return inverse;
+  }
 }

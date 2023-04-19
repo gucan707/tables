@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   AddTagArgs,
+  ChangeHeadTypeArgs,
   DelColumnArgs,
   ReqPostTag,
   ReqPutHeadAttributes,
@@ -47,14 +48,14 @@ export const headsSlice = createSlice({
     setHeads: (state, action: PayloadAction<TableHeads>) => {
       state.heads = action.payload;
     },
-    setHead: (state, action: PayloadAction<TableHead>) => {
-      const newHead = action.payload;
-      const index = state.heads.findIndex((h) => h._id === newHead._id);
+    changeHeadType: (state, action: PayloadAction<ChangeHeadTypeArgs>) => {
+      const { head, oldHeadId } = action.payload;
+      const index = state.heads.findIndex((h) => h._id === oldHeadId);
       if (index === -1) {
-        state.heads.push(newHead);
+        state.heads.push(head);
         return;
       }
-      state.heads[index] = newHead;
+      state.heads[index] = head;
     },
     addTag: (state, action: PayloadAction<AddTagArgs>) => {
       const { payload } = action;
@@ -102,6 +103,6 @@ export const {
   updateTag,
   addHead,
   delHead,
-  setHead,
+  changeHeadType,
 } = headsSlice.actions;
 export default headsSlice.reducer;

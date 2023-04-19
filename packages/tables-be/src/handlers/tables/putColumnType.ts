@@ -1,4 +1,5 @@
 import { IMiddleware } from "koa-router";
+import { ObjectId } from "mongodb";
 
 import {
   ChangeHeadTypeArgs,
@@ -24,77 +25,72 @@ export const putColumnType: IMiddleware = async (ctx) => {
   }
 
   const head = tableInfo.heads.find((h) => h._id === req.headId);
+  const headIndex = tableInfo.heads.findIndex((h) => h._id === req.headId);
   if (!head) return;
-
-  const newHead = createInitialHead(req.headId, req.type);
-
-  if (head.type !== req.type) {
-    await Promise.all([
-      tables.updateOne(
-        { _id: req.tableId },
-        {
-          $set: {
-            "heads.$[element]": newHead,
-          },
-        },
-        {
-          arrayFilters: [{ "element._id": req.headId }],
-        }
-      ),
-      rows.updateMany({ tableId: req.tableId }, [
-        {
-          $set: {
-            data: {
-              $map: {
-                input: "$data",
-                as: "elem",
-                in: {
-                  $cond: [
-                    { $eq: ["$$elem.headId", req.headId] },
-                    {
-                      ...createInitialGrid("", req.type, req.headId),
-                      _id: {
-                        $toString: {
-                          $function: {
-                            body: "function() { return new ObjectId(); }",
-                            lang: "js",
-                            args: [],
-                          },
-                        },
-                      },
-                      version: 0,
-                    },
-                    "$$elem",
-                  ],
-                },
-              },
-            },
-          },
-        },
-      ]),
-    ]);
-  }
-
-  const newRows = await rows.find({ tableId: req.tableId }).toArray();
-
-  const newGrids: Record<string, string> = {};
-
-  newRows.forEach((r) => {
-    const grid = r.data.find((g) => g.headId === req.headId);
-    if (!grid) return;
-    newGrids[r._id] = grid._id;
-  });
-
-  io.to(req.tableId).emit(Events.ChangeHeadType, {
-    head: newHead,
-    newGrids,
-  } as ChangeHeadTypeArgs);
 
   const res: ResCommon<string> = {
     status: 200,
     msg: "ok",
     data: "ok",
   };
+
+  if (head.type === req.type) {
+    ctx.body = res;
+    return;
+  }
+
+  const newHead = createInitialHead(new ObjectId().toHexString(), req.type);
+  const allRows = await rows.find({ tableId: req.tableId }).toArray();
+
+  const bulkUpdateOps = allRows.map((row) => {
+    const _id = new ObjectId().toHexString();
+    const newDataItem = {
+      _id,
+      ...createInitialGrid(_id, newHead.type, newHead._id),
+    };
+
+    return {
+      updateOne: {
+        filter: { _id: row._id },
+        update: { $push: { data: newDataItem } },
+      },
+    };
+  });
+
+  await Promise.all([
+    tables.updateOne(
+      { _id: req.tableId, "heads._id": req.headId },
+      { $set: { "heads.$.isDeleted": true } }
+    ),
+    tables.updateOne(
+      { _id: req.tableId, "heads._id": req.headId },
+      {
+        $push: {
+          heads: {
+            $each: [newHead],
+            $position: headIndex + 1,
+          },
+        },
+      }
+    ),
+    rows.bulkWrite(bulkUpdateOps),
+  ]);
+
+  const newRows = await rows.find({ tableId: req.tableId }).toArray();
+
+  const newGrids: Record<string, string> = {};
+
+  newRows.forEach((r) => {
+    const grid = r.data.find((g) => g.headId === newHead._id);
+    if (!grid) return;
+    newGrids[r._id] = grid._id;
+  });
+
+  io.to(req.tableId).emit(Events.ChangeHeadType, {
+    oldHeadId: req.headId,
+    head: newHead,
+    newGrids,
+  } as ChangeHeadTypeArgs);
 
   ctx.body = res;
 };

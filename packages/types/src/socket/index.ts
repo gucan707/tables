@@ -50,6 +50,7 @@ export type DelColumnArgs = {
   headId: string;
 };
 export type ChangeHeadTypeArgs = {
+  oldHeadId: string;
   newGrids: Record<string, string>;
   head: TableHead;
 };
