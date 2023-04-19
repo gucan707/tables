@@ -42,9 +42,12 @@ export type ReplaceGridContentArgs = ReqPutGridContent;
 export type PutHeadAttributesArgs = ReqPutHeadAttributes;
 export type AddTagArgs = SelectOptionType;
 export type UpdateTagArgs = Omit<ReqPutTag, "tableId">;
+
 export type AddColumnArgs = {
   added: Record<string, string>;
   head: TableHead;
+  /** 需要在哪一列后面新增 */
+  beforeHeadId?: string;
 };
 export type DelColumnArgs = {
   headId: string;
