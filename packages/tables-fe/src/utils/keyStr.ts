@@ -10,6 +10,7 @@ export enum KeyStr {
   A = "a",
   C = "c",
   V = "v",
+  Z = "z",
   Dot = ".",
 }
 

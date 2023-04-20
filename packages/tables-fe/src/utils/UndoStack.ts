@@ -1,11 +1,15 @@
 import { Message } from "@arco-design/web-react";
 import { UndoStackData } from "@tables/types";
 
+import { undo } from "../http/table/undo";
+
 export class UndoStack {
   private undo: UndoStackData[] = [];
+  private tableId: string = "";
 
-  init() {
+  init(tableId: string) {
     this.undo = [];
+    this.tableId = tableId;
   }
 
   add(data: UndoStackData) {
@@ -18,7 +22,7 @@ export class UndoStack {
       Message.warning("无可撤销操作");
       return;
     }
-    console.log({ latestUndo });
+    undo({ ...latestUndo, tableId: this.tableId });
   }
 }
 

@@ -22,6 +22,7 @@ import { putHeadAttributeFn } from "../../socket/putHeadAttributeFn";
 import { replaceGridContentFn } from "../../socket/replaceGridContentFn";
 import { updateTagFn } from "../../socket/updateTagFn";
 import { OTController } from "../../utils/OTsController";
+import { setupShortcut } from "../../utils/setupShortcut";
 import { TagsOTController } from "../../utils/tagsOTController";
 import { undoStack } from "../../utils/UndoStack";
 
@@ -39,7 +40,7 @@ export const Table: FC = () => {
 
   useEffect(() => {
     if (!tableId) return;
-    undoStack.init();
+    undoStack.init(tableId);
     OTController.current = new OTController();
     TagsOTController.current = new TagsOTController();
     setup(tableId);
@@ -121,7 +122,10 @@ export const Table: FC = () => {
         type="text"
         ref={shortcutInputRef}
         readOnly
-        onKeyDown={(e) => console.log(e)}
+        onKeyDown={(e) => {
+          console.log(e);
+          setupShortcut({ e });
+        }}
       />
     </div>
   );

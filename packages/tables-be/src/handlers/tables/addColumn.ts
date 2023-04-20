@@ -91,7 +91,7 @@ export const addColumn: IMiddleware = async (ctx) => {
   const res: ResCommon<string> = {
     status: 200,
     msg: "ok",
-    data: "ok",
+    data: headId,
   };
 
   ctx.body = res;

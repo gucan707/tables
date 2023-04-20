@@ -4,7 +4,7 @@ import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Modal, Trigger } from "@arco-design/web-react";
-import { Grid, Row, Table } from "@tables/types";
+import { Grid, Row, Table, UndoType } from "@tables/types";
 import { createInitialGrid } from "@tables/utils";
 
 import { addColumn } from "../../http/table/addColumn";
@@ -13,6 +13,7 @@ import { setHeads } from "../../redux/headsSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { createInitialRow } from "../../utils/createInitialRow";
 import { getMapTags } from "../../utils/getMapTags";
+import { undoStack } from "../../utils/UndoStack";
 import { EditableTableRow } from "../EditableTableRow";
 import { HeadAttributes } from "../HeadAttributes";
 import { HeadConfigModal } from "../HeadConfigModal";
@@ -111,8 +112,14 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
             ))}
             <th
               className="editable table-heads-item grid_common grid_add"
-              onClick={() => {
-                addColumn({ tableId });
+              onClick={async () => {
+                const headId = await addColumn({ tableId });
+                if (!headId) return;
+                undoStack.add({
+                  type: UndoType.Column,
+                  headId,
+                  isDelete: true,
+                });
               }}
             >
               +
