@@ -31,10 +31,20 @@ export const rowsSlice = createSlice({
           headId: grid.headId,
         }));
         state.rows[row._id] = gridIds;
-        state.rowsArr.push({
-          rowId: row._id,
-          createTime: row.createTime ?? -1,
-        });
+        const exitedRowIndex = state.rowsArr.findIndex(
+          (r) => r.rowId === row._id
+        );
+        if (exitedRowIndex !== -1) {
+          state.rowsArr[exitedRowIndex] = {
+            rowId: row._id,
+            createTime: row.createTime ?? -1,
+          };
+        } else {
+          state.rowsArr.push({
+            rowId: row._id,
+            createTime: row.createTime ?? -1,
+          });
+        }
       });
 
       state.rowsArr.sort((a, b) => a.createTime - b.createTime);
@@ -66,6 +76,9 @@ export const rowsSlice = createSlice({
     delRowInRedux: (state, action: PayloadAction<DelRowArgs>) => {
       const { rowId } = action.payload;
       delete state.rows[rowId];
+      const index = state.rowsArr.findIndex((r) => r.rowId === rowId);
+      if (index === -1) return;
+      state.rowsArr.splice(index, 1);
     },
   },
 });
