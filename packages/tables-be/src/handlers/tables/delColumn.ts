@@ -15,17 +15,7 @@ export const delColumn: IMiddleware = async (ctx) => {
     throw new TErrorTablePermission();
   }
 
-  await tables.updateOne(
-    { _id: req.tableId },
-    {
-      $set: {
-        "heads.$[element].isDeleted": true,
-      },
-    },
-    {
-      arrayFilters: [{ "element._id": req.headId }],
-    }
-  );
+  await delColumnFromDB(req.tableId, req.headId);
 
   io.to(req.tableId).emit(Events.DelColumn, {
     headId: req.headId,
@@ -39,3 +29,17 @@ export const delColumn: IMiddleware = async (ctx) => {
 
   ctx.body = res;
 };
+
+export function delColumnFromDB(tableId: string, headId: string) {
+  return tables.updateOne(
+    { _id: tableId },
+    {
+      $set: {
+        "heads.$[element].isDeleted": true,
+      },
+    },
+    {
+      arrayFilters: [{ "element._id": headId }],
+    }
+  );
+}

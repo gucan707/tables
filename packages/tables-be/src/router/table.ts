@@ -15,6 +15,7 @@ import { putColumnType } from "../handlers/tables/putColumnType";
 import { putGridContent } from "../handlers/tables/putGridContent";
 import { putHeadAttributes } from "../handlers/tables/putHeadAttributes";
 import { putTag } from "../handlers/tables/putTag";
+import { undo } from "../handlers/tables/undo";
 
 export const tableRouter = new Router();
 
@@ -27,6 +28,7 @@ tableRouter
   .delete("/:tableId/column/:headId", delColumn)
   .post("/:tableId/row", addRow)
   .delete("/:tableId/row/:rowId", deleteRow)
+  .put("/:tableId/undo", undo)
   .put("/:tableId/putGridContent", putGridContent)
   .put("/:tableId/putHeadAttributes", putHeadAttributes)
   .put("/:tableId/tags", putTag)

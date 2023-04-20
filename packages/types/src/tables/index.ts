@@ -3,3 +3,4 @@ export * from "./grid";
 export * from "./table";
 export * from "./tableHead";
 export * from "./changes";
+export * from "./undo";

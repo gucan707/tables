@@ -10,6 +10,7 @@ import {
   TableColumnTypes,
   TableHead,
   TableTagColors,
+  UndoStackData,
 } from "../../tables";
 import { UserToken } from "../../users";
 
@@ -112,3 +113,7 @@ export type ReqPutColumnType = {
   headId: string;
   type: TableColumnTypes;
 };
+
+export type ReqUndo = {
+  tableId: string;
+} & UndoStackData;
