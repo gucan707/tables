@@ -8,6 +8,7 @@ import { addTagsOps } from "../handlers/tables/addTagsOps";
 import { createTable } from "../handlers/tables/cretateTable";
 import { delColumn } from "../handlers/tables/delColumn";
 import { deleteRow } from "../handlers/tables/deleteRow";
+import { getColumn } from "../handlers/tables/getColumn";
 import { getTableDetail } from "../handlers/tables/getTableDetail";
 import { getTables } from "../handlers/tables/getTables";
 import { postTag } from "../handlers/tables/postTag";
@@ -23,6 +24,7 @@ tableRouter
   .post("/collaborator", addCollaborators)
   .post("/:tableId/addOps", addOps)
   .post("/:tableId/addTagsOps", addTagsOps)
+  .post("/:tableId/getColumn", getColumn) // T^T
   .post("/:tableId/column", addColumn)
   .put("/:tableId/column", putColumnType)
   .delete("/:tableId/column/:headId", delColumn)

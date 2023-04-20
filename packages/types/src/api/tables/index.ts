@@ -108,6 +108,22 @@ export type ReqDelColumn = {
   headId: string;
 };
 
+export type ReqGetColumn = {
+  tableId: string;
+  headId: string;
+  rowIds: string[];
+};
+
+export type ResGetColumnItem = {
+  rowId: string;
+  grid: Grid;
+};
+
+export type ResGetColumn = {
+  rowId: string;
+  grid: Grid;
+}[];
+
 export type ReqPutColumnType = {
   tableId: string;
   headId: string;
