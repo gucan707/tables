@@ -1,6 +1,6 @@
 import "./index.less";
 
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Avatar, Button, Spin } from "@arco-design/web-react";
@@ -23,6 +23,7 @@ import { replaceGridContentFn } from "../../socket/replaceGridContentFn";
 import { updateTagFn } from "../../socket/updateTagFn";
 import { OTController } from "../../utils/OTsController";
 import { TagsOTController } from "../../utils/tagsOTController";
+import { undoStack } from "../../utils/UndoStack";
 
 const AvatarGroup = Avatar.Group;
 
@@ -34,9 +35,11 @@ export const Table: FC = () => {
   });
   const [onlineUsers, setOnlineUsers] = useState<UserToken[]>([]);
   const dispatch = useAppDispatch();
+  const shortcutInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!tableId) return;
+    undoStack.init();
     OTController.current = new OTController();
     TagsOTController.current = new TagsOTController();
     setup(tableId);
@@ -76,6 +79,26 @@ export const Table: FC = () => {
     dispatch(addRows(tableDetail.rows));
   }, [tableDetail]);
 
+  useEffect(() => {
+    if (!shortcutInputRef || !shortcutInputRef.current) return;
+    if (!document.activeElement || document.activeElement === document.body) {
+      shortcutInputRef.current.focus();
+    }
+    const handleMouseDown = (event: MouseEvent) => {
+      // 检查点击的元素是否为输入框
+      if ((event.target as HTMLElement)?.tagName !== "INPUT") {
+        // 如果不是输入框，则聚焦隐藏的输入框
+        event.preventDefault();
+        shortcutInputRef.current?.focus();
+      }
+    };
+    document.addEventListener("mousedown", handleMouseDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+    };
+  }, [shortcutInputRef]);
+
   return (
     <div className="table">
       <header className="table-header">
@@ -93,6 +116,13 @@ export const Table: FC = () => {
         <div className="table-content-title">学习计划</div>
         {tableDetail ? <EditableTable table={tableDetail} /> : <Spin />}
       </div>
+      <input
+        className="hidden"
+        type="text"
+        ref={shortcutInputRef}
+        readOnly
+        onKeyDown={(e) => console.log(e)}
+      />
     </div>
   );
 };
