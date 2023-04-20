@@ -25,6 +25,8 @@ export const rowsSlice = createSlice({
   reducers: {
     addRows: (state, action: PayloadAction<Row[]>) => {
       const { payload } = action;
+      console.log("redux addRows", payload);
+
       payload.forEach((row) => {
         const gridIds = row.data.map((grid) => ({
           gridId: grid._id,

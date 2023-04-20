@@ -4,7 +4,12 @@ import { FC, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Avatar, Button, Spin } from "@arco-design/web-react";
-import { Events, OpsEmitedFromBeArgs, UserToken } from "@tables/types";
+import {
+  Events,
+  OpsEmitedFromBeArgs,
+  ToGetColumnArgs,
+  UserToken,
+} from "@tables/types";
 
 import { EditableTable } from "../../components/EditableTable";
 import { useTableDetail } from "../../http/table/useTableDetail";
@@ -21,6 +26,7 @@ import { opsEmitedFromBeFn } from "../../socket/opsEmitedFromBeFn";
 import { putHeadAttributeFn } from "../../socket/putHeadAttributeFn";
 import { replaceGridContentFn } from "../../socket/replaceGridContentFn";
 import { updateTagFn } from "../../socket/updateTagFn";
+import { getColumnFn } from "../../utils/getColumnFn";
 import { OTController } from "../../utils/OTsController";
 import { setupShortcut } from "../../utils/setupShortcut";
 import { TagsOTController } from "../../utils/tagsOTController";
@@ -29,11 +35,12 @@ import { undoStack } from "../../utils/UndoStack";
 const AvatarGroup = Avatar.Group;
 
 export const Table: FC = () => {
-  const { tableId } = useParams();
+  const { tableId = "" } = useParams();
 
   const { tableDetail } = useTableDetail({
     tableId: tableId || "",
   });
+  const [table, setTable] = useState(tableDetail);
   const [onlineUsers, setOnlineUsers] = useState<UserToken[]>([]);
   const dispatch = useAppDispatch();
   const shortcutInputRef = useRef<HTMLInputElement>(null);
@@ -50,6 +57,10 @@ export const Table: FC = () => {
   }, [tableId]);
 
   useEffect(() => {
+    const toGetColumnFn = (args: ToGetColumnArgs) => {
+      getColumnFn(args, tableId, setTable);
+    };
+
     socket.on(Events.OpsEmitedFromBe, opsEmitedFromBeFn);
     socket.on(Events.ReplaceGridContent, replaceGridContentFn);
     socket.on(Events.PutHeadAttributes, putHeadAttributeFn);
@@ -60,6 +71,7 @@ export const Table: FC = () => {
     socket.on(Events.ChangeHeadType, changeHeadTypeFn);
     socket.on(Events.AddRow, addRowFn);
     socket.on(Events.DelRow, delRowFn);
+    socket.on(Events.ToGetColumn, toGetColumnFn);
 
     return () => {
       socket.off(Events.OpsEmitedFromBe, opsEmitedFromBeFn);
@@ -72,13 +84,18 @@ export const Table: FC = () => {
       socket.off(Events.ChangeHeadType, changeHeadTypeFn);
       socket.off(Events.AddRow, addRowFn);
       socket.off(Events.DelRow, delRowFn);
+      socket.off(Events.ToGetColumn, toGetColumnFn);
     };
-  }, [tableDetail, socket]);
+  }, [tableId, socket]);
 
   useEffect(() => {
-    if (!tableDetail) return;
-    dispatch(addRows(tableDetail.rows));
+    setTable(tableDetail);
   }, [tableDetail]);
+
+  useEffect(() => {
+    if (!table) return;
+    dispatch(addRows(table.rows));
+  }, [table]);
 
   useEffect(() => {
     if (!shortcutInputRef || !shortcutInputRef.current) return;
@@ -115,7 +132,7 @@ export const Table: FC = () => {
       </header>
       <div className="table-content">
         <div className="table-content-title">学习计划</div>
-        {tableDetail ? <EditableTable table={tableDetail} /> : <Spin />}
+        {table ? <EditableTable table={table} /> : <Spin />}
       </div>
       <input
         className="hidden"

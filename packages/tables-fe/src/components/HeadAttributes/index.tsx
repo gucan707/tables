@@ -5,13 +5,14 @@ import { useParams } from "react-router-dom";
 
 import { Input, Menu } from "@arco-design/web-react";
 import { IconBranch, IconDelete, IconEdit } from "@arco-design/web-react/icon";
-import { TableColumnTypes, TableHead } from "@tables/types";
+import { TableColumnTypes, TableHead, UndoType } from "@tables/types";
 
 import { delColumn } from "../../http/table/delColumn";
 import { putColumnType } from "../../http/table/putColumnType";
 import { putHeadAttributes } from "../../http/table/putHeadAttributes";
 import { setHeadAttribute } from "../../redux/headsSlice";
 import { useAppDispatch } from "../../redux/store";
+import { undoStack } from "../../utils/UndoStack";
 import { TableIcon } from "../TableIcon";
 
 export type HeadAttributesProps = {
@@ -90,7 +91,14 @@ export const HeadAttributes: FC<HeadAttributesProps> = (props) => {
       </MenuItem>
       <MenuItem
         key="3"
-        onClick={() => delColumn({ headId: head._id, tableId })}
+        onClick={() => {
+          delColumn({ headId: head._id, tableId });
+          undoStack.add({
+            type: UndoType.Column,
+            headId: head._id,
+            isDelete: false,
+          });
+        }}
       >
         <IconDelete />
         删除该列

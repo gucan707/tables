@@ -11,6 +11,11 @@ import {
   UpdateTagArgs,
 } from "@tables/types";
 
+export type AddHeadByBeforeId = {
+  head: TableHead;
+  beforeHeadId?: string;
+};
+
 export const headsSlice = createSlice({
   name: "headsSlice",
   initialState: {
@@ -93,6 +98,17 @@ export const headsSlice = createSlice({
       );
       state.heads.splice(index, 1);
     },
+    addHeadByBeforeId: (state, action: PayloadAction<AddHeadByBeforeId>) => {
+      const { head, beforeHeadId = "" } = action.payload;
+
+      const index = state.heads.findIndex((h) => h._id === beforeHeadId);
+      if (index === -1) {
+        state.heads.unshift(head);
+        return;
+      }
+
+      state.heads.splice(index, 0, head);
+    },
   },
 });
 
@@ -104,5 +120,6 @@ export const {
   addHead,
   delHead,
   changeHeadType,
+  addHeadByBeforeId,
 } = headsSlice.actions;
 export default headsSlice.reducer;

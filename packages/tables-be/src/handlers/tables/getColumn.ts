@@ -22,6 +22,16 @@ export const getColumn: IMiddleware = async (ctx) => {
   ) {
     throw new TErrorTableReadPermission();
   }
+  const heads = tableInfo.heads;
+  let beforeHeadId, head;
+  for (let i = 0; i < heads.length; i++) {
+    if (heads[i].isDeleted) continue;
+    if (heads[i]._id === req.headId) {
+      head = heads[i];
+      break;
+    }
+    beforeHeadId = heads[i]._id;
+  }
 
   const result = await rows
     .aggregate<ResGetColumnItem>([
@@ -35,7 +45,11 @@ export const getColumn: IMiddleware = async (ctx) => {
   const res: ResCommon<ResGetColumn> = {
     status: 200,
     msg: "ok",
-    data: result,
+    data: {
+      data: result,
+      head,
+      beforeHeadId,
+    },
   };
 
   ctx.body = res;

@@ -120,9 +120,10 @@ export type ResGetColumnItem = {
 };
 
 export type ResGetColumn = {
-  rowId: string;
-  grid: Grid;
-}[];
+  data: ResGetColumnItem[];
+  head: TableHead;
+  beforeHeadId?: string;
+};
 
 export type ReqPutColumnType = {
   tableId: string;
