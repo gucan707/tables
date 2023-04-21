@@ -141,7 +141,7 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
     );
   }, [shouldAppliedTagsOt, userInfo, grid._id]);
 
-  return isActive ? (
+  return (
     <Select
       mode="multiple"
       renderTag={getTagRender(tags)}
@@ -149,6 +149,8 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
       arrowIcon={null}
       value={[...new Set(curTagIds)]}
       onChange={(val: string[]) => {
+        console.log("change");
+
         setCurTagIds(val);
 
         const ot = TagsOTController.current.createOT(
@@ -176,19 +178,6 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
         </Option>
       ))}
     </Select>
-  ) : (
-    <div className="multi_select_grid-tags">
-      {[...new Set(curTagIds)].map((tagId) => {
-        return (
-          <Tag
-            key={tagId}
-            color={tags.get(tagId)?.color || TableTagColors.Blue}
-          >
-            {tags.get(tagId)?.text || ""}
-          </Tag>
-        );
-      })}
-    </div>
   );
 };
 

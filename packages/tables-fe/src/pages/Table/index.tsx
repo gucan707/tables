@@ -106,18 +106,18 @@ export const Table: FC = () => {
     if (!document.activeElement || document.activeElement === document.body) {
       shortcutInputRef.current.focus();
     }
-    const handleMouseDown = (event: MouseEvent) => {
+    const setActiveElement = (event: MouseEvent) => {
       // 检查点击的元素是否为输入框
-      if ((event.target as HTMLElement)?.tagName !== "INPUT") {
+      if (!document.activeElement || document.activeElement === document.body) {
         // 如果不是输入框，则聚焦隐藏的输入框
         event.preventDefault();
         shortcutInputRef.current?.focus();
       }
     };
-    document.addEventListener("mousedown", handleMouseDown);
+    document.addEventListener("click", setActiveElement);
 
     return () => {
-      document.removeEventListener("mousedown", handleMouseDown);
+      document.removeEventListener("click", setActiveElement);
     };
   }, [shortcutInputRef]);
 

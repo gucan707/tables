@@ -6,7 +6,6 @@ import { TagsOTController } from "../../utils/tagsOTController";
 import { request } from "../request";
 import { TABLE_BASE_URL } from "../url";
 
-// TODO 还未改完
 export async function addTagsOps(
   gridId: string,
   tableId: string,
