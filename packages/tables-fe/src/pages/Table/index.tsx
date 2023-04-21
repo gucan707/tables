@@ -14,6 +14,7 @@ import {
 
 import { EditableTable } from "../../components/EditableTable";
 import { useTableDetail } from "../../http/table/useTableDetail";
+import { setHeads } from "../../redux/headsSlice";
 import { addRows } from "../../redux/rowsSlice";
 import { useAppDispatch } from "../../redux/store";
 import { setup, socket } from "../../socket";
@@ -42,7 +43,6 @@ export const Table: FC = () => {
   const { tableDetail } = useTableDetail({
     tableId: tableId || "",
   });
-  const [table, setTable] = useState(tableDetail);
   const [onlineUsers, setOnlineUsers] = useState<UserToken[]>([]);
   const dispatch = useAppDispatch();
   const shortcutInputRef = useRef<HTMLInputElement>(null);
@@ -60,10 +60,10 @@ export const Table: FC = () => {
 
   useEffect(() => {
     const toGetColumnFn = (args: ToGetColumnArgs) => {
-      getColumnFn(args, tableId, setTable);
+      getColumnFn(args, tableId);
     };
     const toReplaceColumnFn = (args: ReplaceColumnArgs) => {
-      replaceColumnFn(args, tableId, setTable);
+      replaceColumnFn(args, tableId);
     };
 
     socket.on(Events.OpsEmitedFromBe, opsEmitedFromBeFn);
@@ -96,13 +96,10 @@ export const Table: FC = () => {
   }, [tableId, socket]);
 
   useEffect(() => {
-    setTable(tableDetail);
+    if (!tableDetail) return;
+    dispatch(addRows(tableDetail.rows));
+    dispatch(setHeads(tableDetail.heads));
   }, [tableDetail]);
-
-  useEffect(() => {
-    if (!table) return;
-    dispatch(addRows(table.rows));
-  }, [table]);
 
   useEffect(() => {
     if (!shortcutInputRef || !shortcutInputRef.current) return;
@@ -139,7 +136,7 @@ export const Table: FC = () => {
       </header>
       <div className="table-content">
         <div className="table-content-title">学习计划</div>
-        {table ? <EditableTable table={table} /> : <Spin />}
+        {tableDetail ? <EditableTable /> : <Spin />}
       </div>
       <input
         className="hidden"

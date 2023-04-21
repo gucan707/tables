@@ -19,16 +19,17 @@ import { getMapRow } from "../../utils/getMapRow";
 import { EditableTableGrid } from "../EditableTableGrid";
 
 export type EditableTableRowProps = {
-  row: Omit<Row, "tableId">;
   heads: TableHeads;
   tags: Map<string, SelectOptionType>;
+  data: Grid[];
+  rowId: string;
 };
 
 export const EditableTableRow: FC<EditableTableRowProps> = (props) => {
-  const { row, heads, tags } = props;
+  const { heads, tags, data, rowId } = props;
   const { tableId = "" } = useParams();
 
-  const mapRow = getMapRow(row.data);
+  const mapRow = getMapRow(data);
 
   return (
     <tr className="editable_row">
@@ -36,7 +37,7 @@ export const EditableTableRow: FC<EditableTableRowProps> = (props) => {
         <EditableTableGrid
           key={head._id}
           grid={mapRow.get(head._id)}
-          rowId={row._id}
+          rowId={rowId}
           tags={tags}
         />
       ))}
@@ -44,7 +45,7 @@ export const EditableTableRow: FC<EditableTableRowProps> = (props) => {
       <div className="editable_row-delete_row">
         <IconClose
           className="editable_row-delete_row-btn"
-          onClick={() => delRow({ rowId: row._id, tableId })}
+          onClick={() => delRow({ rowId, tableId })}
         />
       </div>
     </tr>

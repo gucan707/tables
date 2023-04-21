@@ -36,6 +36,7 @@ const Option = Select.Option;
 export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
   const { grid, rowId, isActive } = props;
   const { userInfo } = useUserInfo();
+  const gridRef = useRef(grid);
   const heads = useAppSelector((state) => state.headsReducer.heads);
   const head = heads.find((h) => h._id === grid.headId);
   const versionRef = useRef<number>(grid.version);
@@ -54,15 +55,17 @@ export const MultiSelectGrid: FC<MultiSelectGridProps> = (props) => {
   if (!head || head.type !== TableColumnTypes.MultiSelect) return null;
 
   useEffect(() => {
-    if (!isActive) return;
-    const ids = grid.contents.map((c) => ({ tagId: c }));
+    if (!isActive || !gridRef.current) return;
+    const ids = gridRef.current.contents.map((c) => ({ tagId: c }));
     const ot = TagsOTController.current.createOT(grid._id, ids, OTReason.Init);
     tagsOtRef.current = ot.OT;
-  }, [isActive]);
+  }, [isActive, gridRef]);
 
   useEffect(() => {
-    grid.contents = curTagIds;
-  }, [curTagIds]);
+    if (!gridRef.current) return;
+    gridRef.current = { ...gridRef.current, contents: curTagIds };
+    // gridRef.current.contents = curTagIds;
+  }, [curTagIds, gridRef]);
 
   useEffect(() => {
     if (!shouldAppliedTagsOt || !shouldAppliedTagsOt.length || !userInfo)

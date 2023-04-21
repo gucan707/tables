@@ -23,6 +23,7 @@ export type TextGridProps = {
 export const TextGrid: FC<TextGridProps> = (props) => {
   const { grid, isActive, rowId } = props;
   const { tableId } = useParams();
+  const gridRef = useRef(grid);
   const [text, setText] = useState(grid.text);
   const versionRef = useRef<number>(grid.version);
   const isInputZh = useRef(false);
@@ -35,27 +36,29 @@ export const TextGrid: FC<TextGridProps> = (props) => {
   );
 
   useEffect(() => {
-    if (!isActive) return;
+    if (!isActive || !gridRef.current) return;
     const ot = OTController.current.createOT(
-      grid._id,
-      grid.text,
+      gridRef.current._id,
+      gridRef.current.text,
       OTReason.Init
     );
     otRef.current = ot.OT;
-  }, [isActive]);
+  }, [isActive, gridRef]);
 
   useEffect(() => {
-    grid.text = text;
-  }, [text]);
+    if (!gridRef.current) return;
+    gridRef.current = { ...gridRef.current, text };
+  }, [text, gridRef]);
 
   useEffect(() => {
+    if (!gridRef.current) return;
     if (!inputRef.current || !isActive) return;
     if (inputRef.current === document.activeElement) return;
 
     inputRef.current.focus();
-    inputRef.current.selectionStart = grid.text.length;
-    inputRef.current.selectionEnd = grid.text.length;
-  }, [inputRef.current, isActive]);
+    inputRef.current.selectionStart = gridRef.current.text.length;
+    inputRef.current.selectionEnd = gridRef.current.text.length;
+  }, [inputRef.current, isActive, gridRef]);
 
   useEffect(() => {
     if (!shouldAppliedOT || !shouldAppliedOT.length || !userInfo) return;
