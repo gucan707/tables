@@ -19,14 +19,7 @@ export const deleteRow: IMiddleware = async (ctx) => {
     throw new TErrorTableReadPermission();
   }
 
-  await rows.updateOne(
-    { _id: req.rowId },
-    {
-      $set: {
-        isDeleted: true,
-      },
-    }
-  );
+  await delRowFromDB(req.rowId);
 
   io.to(req.tableId).emit(Events.DelRow, { rowId: req.rowId } as DelRowArgs);
 
@@ -38,3 +31,14 @@ export const deleteRow: IMiddleware = async (ctx) => {
 
   ctx.body = res;
 };
+
+export function delRowFromDB(rowId: string) {
+  return rows.updateOne(
+    { _id: rowId },
+    {
+      $set: {
+        isDeleted: true,
+      },
+    }
+  );
+}

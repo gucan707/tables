@@ -10,12 +10,14 @@ import {
   SelectOptionType,
   TableColumnTypes,
   TableHeads,
+  UndoType,
 } from "@tables/types";
 import { createInitialGrid } from "@tables/utils";
 
 import { delRow } from "../../http/table/delRow";
 import { useAppSelector } from "../../redux/store";
 import { getMapRow } from "../../utils/getMapRow";
+import { undoStack } from "../../utils/UndoStack";
 import { EditableTableGrid } from "../EditableTableGrid";
 
 export type EditableTableRowProps = {
@@ -45,7 +47,14 @@ export const EditableTableRow: FC<EditableTableRowProps> = (props) => {
       <div className="editable_row-delete_row">
         <IconClose
           className="editable_row-delete_row-btn"
-          onClick={() => delRow({ rowId, tableId })}
+          onClick={async () => {
+            await delRow({ rowId, tableId });
+            undoStack.add({
+              undoType: UndoType.Row,
+              isDeleted: false,
+              rowId,
+            });
+          }}
         />
       </div>
     </tr>

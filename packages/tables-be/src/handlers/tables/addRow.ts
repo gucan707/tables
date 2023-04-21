@@ -31,7 +31,7 @@ export const addRow: IMiddleware = async (ctx) => {
   const res: ResCommon<string> = {
     status: 200,
     msg: "ok",
-    data: "ok",
+    data: newRow._id,
   };
 
   ctx.body = res;

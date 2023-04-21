@@ -1,7 +1,10 @@
 import { IMiddleware } from "koa-router";
+import { ObjectId } from "mongodb";
 
 import {
+  AddRowArgs,
   DelColumnArgs,
+  DelRowArgs,
   Events,
   ReplaceColumnArgs,
   ReqUndo,
@@ -11,10 +14,11 @@ import {
 } from "@tables/types";
 
 import { io } from "../..";
-import { tables } from "../../db";
+import { rows, tables } from "../../db";
 import { checkToken } from "../../utils/checkToken";
 import { TErrorTablePermission } from "../../utils/errors";
 import { delColumnFromDB } from "./delColumn";
+import { delRowFromDB } from "./deleteRow";
 import { putHeadAttributesFromDB } from "./putHeadAttributes";
 
 export const undo: IMiddleware = async (ctx) => {
@@ -87,5 +91,24 @@ export async function undoByType(req: ReqUndo) {
     case UndoType.HeadAttributes:
       await putHeadAttributesFromDB(req);
       io.to(req.tableId).emit(Events.PutHeadAttributes, req);
+      break;
+    case UndoType.Row:
+      if (req.isDeleted) {
+        await delRowFromDB(req.rowId);
+        io.to(req.tableId).emit(Events.DelRow, {
+          rowId: req.rowId,
+        } as DelRowArgs);
+      } else {
+        await rows.updateOne(
+          { _id: req.rowId },
+          { $set: { isDeleted: false } }
+        );
+        const row = await rows.findOne({ _id: req.rowId });
+        io.to(req.tableId).emit(Events.AddRow, {
+          row,
+          createTime: new ObjectId(row._id).getTimestamp().valueOf(),
+        } as AddRowArgs);
+      }
+      break;
   }
 }

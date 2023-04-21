@@ -135,8 +135,14 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
           ))}
           <tr
             className="editable table-add_row"
-            onClick={() => {
-              addRow({ tableId });
+            onClick={async () => {
+              const rowId = await addRow({ tableId });
+              if (!rowId) return;
+              undoStack.add({
+                undoType: UndoType.Row,
+                isDeleted: true,
+                rowId,
+              });
             }}
           >
             <td
