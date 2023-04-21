@@ -30,7 +30,7 @@ export const undo: IMiddleware = async (ctx) => {
 
   if (
     tableInfo.owner !== userInfo._id &&
-    (req.type === UndoType.Column || req.type === UndoType.ColumnType)
+    (req.undoType === UndoType.Column || req.undoType === UndoType.ColumnType)
   ) {
     console.error("undo: 权限错误，需检查 undo stack");
     throw new TErrorTablePermission();
@@ -48,7 +48,7 @@ export const undo: IMiddleware = async (ctx) => {
 };
 
 export async function undoByType(req: ReqUndo) {
-  switch (req.type) {
+  switch (req.undoType) {
     case UndoType.Column:
       if (req.isDelete) {
         // 需要撤销‘新增一列’，也就是需要删除一列
@@ -82,12 +82,7 @@ export async function undoByType(req: ReqUndo) {
         curHeadId: req.shouldRestoreHead,
         oldHeadId: req.shouldDeleteHead,
       } as ReplaceColumnArgs);
-      // io.to(req.tableId).emit(Events.DelColumn, {
-      //   headId: req.shouldDeleteHead,
-      // } as DelColumnArgs);
-      // io.to(req.tableId).emit(Events.ToGetColumn, {
-      //   headId: req.shouldRestoreHead,
-      // } as ToGetColumnArgs);
       break;
+    case UndoType.HeadAttributes:
   }
 }

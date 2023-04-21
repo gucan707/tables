@@ -113,7 +113,7 @@ export const EditableTable: FC<EditableTableProps> = (props) => {
                 const headId = await addColumn({ tableId });
                 if (!headId) return;
                 undoStack.add({
-                  type: UndoType.Column,
+                  undoType: UndoType.Column,
                   headId,
                   isDelete: true,
                 });

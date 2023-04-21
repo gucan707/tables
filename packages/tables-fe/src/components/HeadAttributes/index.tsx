@@ -42,7 +42,7 @@ export const HeadAttributes: FC<HeadAttributesProps> = (props) => {
             });
             if (!newHeadId) return;
             undoStack.add({
-              type: UndoType.ColumnType,
+              undoType: UndoType.ColumnType,
               shouldDeleteHead: newHeadId,
               shouldRestoreHead: head._id,
             });
@@ -105,7 +105,7 @@ export const HeadAttributes: FC<HeadAttributesProps> = (props) => {
         onClick={() => {
           delColumn({ headId: head._id, tableId });
           undoStack.add({
-            type: UndoType.Column,
+            undoType: UndoType.Column,
             headId: head._id,
             isDelete: false,
           });

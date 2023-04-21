@@ -12,13 +12,13 @@ export enum UndoType {
 }
 
 type UndoColumn = {
-  type: UndoType.Column;
+  undoType: UndoType.Column;
   isDelete: boolean;
   headId: string;
 };
 
 type UndoColumnType = {
-  type: UndoType.ColumnType;
+  undoType: UndoType.ColumnType;
   /** 修改类型后得到的headId，undo 时需要删除 */
   shouldDeleteHead: string;
   /** 修改类型前的headId，undo 时需要恢复 */
@@ -26,11 +26,11 @@ type UndoColumnType = {
 };
 
 type UndoHeadAttributes = PutHeadAttributesArgs & {
-  type: UndoType.HeadAttributes;
+  undoType: UndoType.HeadAttributes;
 };
 
 type UndoRow = {
-  type: UndoType.Row;
+  undoType: UndoType.Row;
   isDeleted: boolean;
   rowId: string;
 };
