@@ -16,6 +16,7 @@ export enum Events {
   AddRow = "add row",
   DelRow = "del row",
   ToGetColumn = "to get column",
+  ReplaceColumn = "replace column",
 }
 
 export type ReqJoinRoom = {
@@ -68,4 +69,8 @@ export type DelRowArgs = {
 };
 export type ToGetColumnArgs = {
   headId: string;
+};
+export type ReplaceColumnArgs = {
+  oldHeadId: string;
+  curHeadId: string;
 };

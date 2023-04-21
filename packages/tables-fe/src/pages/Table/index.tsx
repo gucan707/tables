@@ -7,6 +7,7 @@ import { Avatar, Button, Spin } from "@arco-design/web-react";
 import {
   Events,
   OpsEmitedFromBeArgs,
+  ReplaceColumnArgs,
   ToGetColumnArgs,
   UserToken,
 } from "@tables/types";
@@ -25,6 +26,7 @@ import { delRowFn } from "../../socket/delRow";
 import { getColumnFn } from "../../socket/getColumnFn";
 import { opsEmitedFromBeFn } from "../../socket/opsEmitedFromBeFn";
 import { putHeadAttributeFn } from "../../socket/putHeadAttributeFn";
+import { replaceColumnFn } from "../../socket/replaceColumnFn";
 import { replaceGridContentFn } from "../../socket/replaceGridContentFn";
 import { updateTagFn } from "../../socket/updateTagFn";
 import { OTController } from "../../utils/OTsController";
@@ -60,6 +62,9 @@ export const Table: FC = () => {
     const toGetColumnFn = (args: ToGetColumnArgs) => {
       getColumnFn(args, tableId, setTable);
     };
+    const toReplaceColumnFn = (args: ReplaceColumnArgs) => {
+      replaceColumnFn(args, tableId, setTable);
+    };
 
     socket.on(Events.OpsEmitedFromBe, opsEmitedFromBeFn);
     socket.on(Events.ReplaceGridContent, replaceGridContentFn);
@@ -72,6 +77,7 @@ export const Table: FC = () => {
     socket.on(Events.AddRow, addRowFn);
     socket.on(Events.DelRow, delRowFn);
     socket.on(Events.ToGetColumn, toGetColumnFn);
+    socket.on(Events.ReplaceColumn, toReplaceColumnFn);
 
     return () => {
       socket.off(Events.OpsEmitedFromBe, opsEmitedFromBeFn);
@@ -85,6 +91,7 @@ export const Table: FC = () => {
       socket.off(Events.AddRow, addRowFn);
       socket.off(Events.DelRow, delRowFn);
       socket.off(Events.ToGetColumn, toGetColumnFn);
+      socket.off(Events.ReplaceColumn, toReplaceColumnFn);
     };
   }, [tableId, socket]);
 

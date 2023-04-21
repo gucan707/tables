@@ -28,14 +28,7 @@ export const putColumnType: IMiddleware = async (ctx) => {
   const headIndex = tableInfo.heads.findIndex((h) => h._id === req.headId);
   if (!head) return;
 
-  const res: ResCommon<string> = {
-    status: 200,
-    msg: "ok",
-    data: "ok",
-  };
-
   if (head.type === req.type) {
-    ctx.body = res;
     return;
   }
 
@@ -91,6 +84,12 @@ export const putColumnType: IMiddleware = async (ctx) => {
     head: newHead,
     newGrids,
   } as ChangeHeadTypeArgs);
+
+  const res: ResCommon<string> = {
+    status: 200,
+    msg: "ok",
+    data: newHead._id,
+  };
 
   ctx.body = res;
 };

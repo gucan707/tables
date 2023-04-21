@@ -33,8 +33,19 @@ export const HeadAttributes: FC<HeadAttributesProps> = (props) => {
       {Object.values(TableColumnTypes).map((type, index) => (
         <MenuItem
           key={"1_" + index.toString()}
-          onClick={() => {
-            putColumnType({ headId: head._id, tableId, type });
+          onClick={async () => {
+            if (head.type === type) return;
+            const newHeadId = await putColumnType({
+              headId: head._id,
+              tableId,
+              type,
+            });
+            if (!newHeadId) return;
+            undoStack.add({
+              type: UndoType.ColumnType,
+              shouldDeleteHead: newHeadId,
+              shouldRestoreHead: head._id,
+            });
           }}
         >
           {type}

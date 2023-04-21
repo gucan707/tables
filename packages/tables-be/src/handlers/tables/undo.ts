@@ -3,6 +3,7 @@ import { IMiddleware } from "koa-router";
 import {
   DelColumnArgs,
   Events,
+  ReplaceColumnArgs,
   ReqUndo,
   ResCommon,
   ToGetColumnArgs,
@@ -50,13 +51,13 @@ export async function undoByType(req: ReqUndo) {
   switch (req.type) {
     case UndoType.Column:
       if (req.isDelete) {
-        // 需要删除一列
+        // 需要撤销‘新增一列’，也就是需要删除一列
         await delColumnFromDB(req.tableId, req.headId);
         io.to(req.tableId).emit(Events.DelColumn, {
           headId: req.headId,
         } as DelColumnArgs);
       } else {
-        // 需要撤销‘删除一列’
+        // 需要撤销‘删除一列’，也就是把被删除的一列还原
         await tables.updateOne(
           { _id: req.tableId, "heads._id": req.headId },
           { $set: { "heads.$.isDeleted": false } }
@@ -65,5 +66,28 @@ export async function undoByType(req: ReqUndo) {
           headId: req.headId,
         } as ToGetColumnArgs);
       }
+      break;
+    case UndoType.ColumnType:
+      await Promise.all([
+        tables.updateOne(
+          { _id: req.tableId, "heads._id": req.shouldDeleteHead },
+          { $set: { "heads.$.isDeleted": true } }
+        ),
+        tables.updateOne(
+          { _id: req.tableId, "heads._id": req.shouldRestoreHead },
+          { $set: { "heads.$.isDeleted": false } }
+        ),
+      ]);
+      io.to(req.tableId).emit(Events.ReplaceColumn, {
+        curHeadId: req.shouldRestoreHead,
+        oldHeadId: req.shouldDeleteHead,
+      } as ReplaceColumnArgs);
+      // io.to(req.tableId).emit(Events.DelColumn, {
+      //   headId: req.shouldDeleteHead,
+      // } as DelColumnArgs);
+      // io.to(req.tableId).emit(Events.ToGetColumn, {
+      //   headId: req.shouldRestoreHead,
+      // } as ToGetColumnArgs);
+      break;
   }
 }

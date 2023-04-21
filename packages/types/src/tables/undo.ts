@@ -19,8 +19,10 @@ type UndoColumn = {
 
 type UndoColumnType = {
   type: UndoType.ColumnType;
-  oldHeadId: string;
-  curHeadId: string;
+  /** 修改类型后得到的headId，undo 时需要删除 */
+  shouldDeleteHead: string;
+  /** 修改类型前的headId，undo 时需要恢复 */
+  shouldRestoreHead: string;
 };
 
 type UndoHeadAttributes = PutHeadAttributesArgs & {
