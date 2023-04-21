@@ -1,6 +1,6 @@
 import "./index.less";
 
-import { FC, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Input, Menu } from "@arco-design/web-react";
@@ -25,6 +25,7 @@ const SubMenu = Menu.SubMenu;
 export const HeadAttributes: FC<HeadAttributesProps> = (props) => {
   const { head, setActiveHead } = props;
   const [headName, setHeadName] = useState(head.name);
+  const nameRef = useRef(head.name);
   const dispatch = useAppDispatch();
   const { tableId = "" } = useParams();
 
@@ -61,21 +62,23 @@ export const HeadAttributes: FC<HeadAttributesProps> = (props) => {
         <Input
           value={headName}
           onChange={(str) => setHeadName(str)}
-          onBlur={() => {
-            dispatch(
-              setHeadAttribute({
-                ...head,
-                headId: head._id,
-                name: headName,
-                tableId,
-              })
-            );
-            putHeadAttributes({
+          onBlur={async () => {
+            await putHeadAttributes({
               ...head,
               headId: head._id,
               name: headName,
               tableId,
             });
+
+            undoStack.add({
+              undoType: UndoType.HeadAttributes,
+              ...head,
+              name: nameRef.current,
+              headId: head._id,
+              tableId,
+            });
+
+            nameRef.current = headName;
           }}
           className="head_attributes-item-input"
         />

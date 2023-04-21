@@ -1,13 +1,19 @@
 import "./index.less";
 
 import dayjs from "dayjs";
-import { FC, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Button, Select } from "@arco-design/web-react";
-import { DateFormatOptions, DateHead, TableColumnTypes } from "@tables/types";
+import {
+  DateFormatOptions,
+  DateHead,
+  TableColumnTypes,
+  UndoType,
+} from "@tables/types";
 
 import { putHeadAttributes } from "../../../../http/table/putHeadAttributes";
+import { undoStack } from "../../../../utils/UndoStack";
 
 const Option = Select.Option;
 
@@ -20,6 +26,7 @@ export const DateConfig: FC<DateConfigProps> = (props) => {
   const { curHead, closeModal } = props;
   const [format, setFormat] = useState(curHead.format);
   const { tableId = "" } = useParams();
+  const headRef = useRef(curHead);
 
   return (
     <div className="date_config">
@@ -44,14 +51,23 @@ export const DateConfig: FC<DateConfigProps> = (props) => {
       <div className="date_config-content-btns">
         <Button
           type="primary"
-          onClick={() => {
-            putHeadAttributes({
+          onClick={async () => {
+            await putHeadAttributes({
               type: TableColumnTypes.Date,
               format,
               headId: curHead._id,
               name: curHead.name,
               tableId,
             });
+
+            undoStack.add({
+              undoType: UndoType.HeadAttributes,
+              ...headRef.current,
+              headId: headRef.current._id,
+              tableId,
+            });
+
+            headRef.current = { ...headRef.current, format };
             closeModal();
           }}
         >

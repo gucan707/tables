@@ -15,6 +15,7 @@ import { tables } from "../../db";
 import { checkToken } from "../../utils/checkToken";
 import { TErrorTablePermission } from "../../utils/errors";
 import { delColumnFromDB } from "./delColumn";
+import { putHeadAttributesFromDB } from "./putHeadAttributes";
 
 export const undo: IMiddleware = async (ctx) => {
   const userInfo = checkToken(ctx);
@@ -84,5 +85,7 @@ export async function undoByType(req: ReqUndo) {
       } as ReplaceColumnArgs);
       break;
     case UndoType.HeadAttributes:
+      await putHeadAttributesFromDB(req);
+      io.to(req.tableId).emit(Events.PutHeadAttributes, req);
   }
 }

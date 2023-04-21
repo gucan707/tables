@@ -1,6 +1,6 @@
 import "./index.less";
 
-import { FC, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Button, Select } from "@arco-design/web-react";
@@ -8,10 +8,12 @@ import {
   NumberFormatDecimal,
   NumberHead,
   TableColumnTypes,
+  UndoType,
 } from "@tables/types";
 
 import { putHeadAttributes } from "../../../../http/table/putHeadAttributes";
 import { getFormattedNumber } from "../../../../utils/getFormattedNumber";
+import { undoStack } from "../../../../utils/UndoStack";
 
 export type NumberConfigProps = {
   curHead: NumberHead;
@@ -22,6 +24,7 @@ export const NumberConfig: FC<NumberConfigProps> = (props) => {
   const { closeModal, curHead } = props;
   const format = [0, 1, 2] as NumberFormatDecimal[];
   const [decimal, setDecimal] = useState(curHead.decimal);
+  const headRef = useRef(curHead);
   const { tableId = "" } = useParams();
 
   return (
@@ -47,8 +50,8 @@ export const NumberConfig: FC<NumberConfigProps> = (props) => {
       <div className="number_config-btns">
         <Button
           type="primary"
-          onClick={() => {
-            putHeadAttributes({
+          onClick={async () => {
+            await putHeadAttributes({
               type: TableColumnTypes.Number,
               decimal,
               headId: curHead._id,
@@ -56,6 +59,17 @@ export const NumberConfig: FC<NumberConfigProps> = (props) => {
               tableId,
               percent: curHead.percent,
             });
+
+            undoStack.add({
+              undoType: UndoType.HeadAttributes,
+              ...headRef.current,
+              headId: headRef.current._id,
+              tableId,
+            });
+            headRef.current = {
+              ...headRef.current,
+              decimal,
+            };
             closeModal();
           }}
         >

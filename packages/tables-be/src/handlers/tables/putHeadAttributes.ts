@@ -29,6 +29,22 @@ export const putHeadAttributes: IMiddleware = async (ctx) => {
     throw new TErrorTablePermission();
   }
 
+  await putHeadAttributesFromDB(req);
+
+  io.to(tableInfo._id).emit(Events.PutHeadAttributes, req);
+
+  const res: ResCommon<string> = {
+    status: 200,
+    msg: "ok",
+    data: "ok",
+  };
+
+  ctx.body = res;
+};
+
+export async function putHeadAttributesFromDB(req: ReqPutHeadAttributes) {
+  const tableInfo = await tables.findOne({ _id: req.tableId });
+
   const head = tableInfo.heads.find((head) => head._id === req.headId);
 
   if (req.type !== head.type) {
@@ -73,14 +89,4 @@ export const putHeadAttributes: IMiddleware = async (ctx) => {
   await tables.updateOne({ _id: req.tableId }, update, {
     arrayFilters: [{ "element._id": req.headId }],
   });
-
-  io.to(tableInfo._id).emit(Events.PutHeadAttributes, req);
-
-  const res: ResCommon<string> = {
-    status: 200,
-    msg: "ok",
-    data: "ok",
-  };
-
-  ctx.body = res;
-};
+}
