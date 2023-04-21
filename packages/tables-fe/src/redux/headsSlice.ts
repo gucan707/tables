@@ -107,7 +107,7 @@ export const headsSlice = createSlice({
         return;
       }
 
-      state.heads.splice(index, 0, head);
+      state.heads.splice(index + 1, 0, head);
     },
   },
 });
