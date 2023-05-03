@@ -1,5 +1,5 @@
-import { Row } from "./grid";
-import { TableHeads } from "./tableHead";
+import { Row } from './grid';
+import { TableHeads } from './tableHead';
 
 export type Table = {
   _id: string;
@@ -8,4 +8,5 @@ export type Table = {
   rows: Row[];
   owner: string;
   collaborators: string[];
+  createTime?: number;
 };

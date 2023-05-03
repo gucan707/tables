@@ -1,12 +1,13 @@
-import "./index.less";
+import './index.less';
 
-import { FC } from "react";
-import { useNavigate } from "react-router-dom";
+import dayjs from 'dayjs';
+import { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { Card } from "@arco-design/web-react";
-import { Table } from "@tables/types";
+import { Card } from '@arco-design/web-react';
+import { Table } from '@tables/types';
 
-import { ReadonlyTable } from "../ReadonlyTable";
+import { ReadonlyTable } from '../ReadonlyTable';
 
 const Meta = Card.Meta;
 
@@ -32,11 +33,13 @@ export const TableCard: FC<TableCardProps> = (props) => {
       }
     >
       <Meta
-        title="Card Title"
+        title={table.title}
         description={
-          <div>
-            上次修改：2022/01/01 <br /> 创建于：2020/01/01
-          </div>
+          table.createTime ? (
+            <div>创建于：{dayjs(table.createTime).format("YYYY/MM/DD")}</div>
+          ) : (
+            <></>
+          )
         }
       />
     </Card>

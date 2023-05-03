@@ -1,10 +1,11 @@
-import { IMiddleware } from "koa-router";
+import { IMiddleware } from 'koa-router';
+import { ObjectId } from 'mongodb';
 
-import { ReqGetTables, ResCommon, ResGetTables, Table } from "@tables/types";
+import { ReqGetTables, ResCommon, ResGetTables, Table } from '@tables/types';
 
-import { rows, tables, users } from "../../db";
-import { checkToken } from "../../utils/checkToken";
-import { TErrorPageError } from "../../utils/errors";
+import { rows, tables, users } from '../../db';
+import { checkToken } from '../../utils/checkToken';
+import { TErrorPageError } from '../../utils/errors';
 
 const LIMIT_TABLES = 24;
 const LIMIT_ROWS = 3;
@@ -37,6 +38,10 @@ export const getTables: IMiddleware = async (ctx) => {
       },
     ])
     .toArray();
+
+  result.forEach((r) => {
+    r.createTime = new ObjectId(r._id).getTimestamp().valueOf();
+  });
 
   const res: ResCommon<ResGetTables> = {
     status: 200,
