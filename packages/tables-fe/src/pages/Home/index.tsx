@@ -3,10 +3,11 @@ import './index.less';
 import { FC } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { Avatar, Empty, Layout, Tabs } from '@arco-design/web-react';
+import { Avatar, Button, Empty, Layout, Tabs } from '@arco-design/web-react';
 
 import { ReadonlyTable } from '../../components/ReadonlyTable';
 import { TableCard } from '../../components/TableCard';
+import { createTable } from '../../http/table/createTable';
 import { useTables } from '../../http/table/useTables';
 
 const TabPane = Tabs.TabPane;
@@ -24,6 +25,15 @@ export const Home: FC = () => {
         <Avatar>A</Avatar>
       </header>
       <div className="home-content">
+        <Button
+          type="primary"
+          style={{ margin: "10px 0" }}
+          onClick={() => {
+            createTable();
+          }}
+        >
+          创建表格
+        </Button>
         <Tabs defaultActiveTab="1">
           <TabPane title="我创建的" key="1">
             <div className="home-content-cards">
