@@ -1,39 +1,36 @@
-import "./index.less";
+import './index.less';
 
-import { FC, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { FC, useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-import { Avatar, Button, Spin } from "@arco-design/web-react";
+import { Avatar, Button, Spin } from '@arco-design/web-react';
 import {
-  Events,
-  OpsEmitedFromBeArgs,
-  ReplaceColumnArgs,
-  ToGetColumnArgs,
-  UserToken,
-} from "@tables/types";
+    Events, OpsEmitedFromBeArgs, ReplaceColumnArgs, ToGetColumnArgs, UserToken
+} from '@tables/types';
 
-import { EditableTable } from "../../components/EditableTable";
-import { useTableDetail } from "../../http/table/useTableDetail";
-import { setHeads } from "../../redux/headsSlice";
-import { addRows } from "../../redux/rowsSlice";
-import { useAppDispatch } from "../../redux/store";
-import { setup, socket } from "../../socket";
-import { addColumnFn } from "../../socket/addColumnFn";
-import { addRowFn } from "../../socket/addRowFn";
-import { addTagFn } from "../../socket/addTagFn";
-import { changeHeadTypeFn } from "../../socket/changeHeadTypeFn";
-import { delColumnFn } from "../../socket/delColumnFn";
-import { delRowFn } from "../../socket/delRow";
-import { getColumnFn } from "../../socket/getColumnFn";
-import { opsEmitedFromBeFn } from "../../socket/opsEmitedFromBeFn";
-import { putHeadAttributeFn } from "../../socket/putHeadAttributeFn";
-import { replaceColumnFn } from "../../socket/replaceColumnFn";
-import { replaceGridContentFn } from "../../socket/replaceGridContentFn";
-import { updateTagFn } from "../../socket/updateTagFn";
-import { OTController } from "../../utils/OTsController";
-import { setupShortcut } from "../../utils/setupShortcut";
-import { TagsOTController } from "../../utils/tagsOTController";
-import { undoStack } from "../../utils/UndoStack";
+import { EditableTable } from '../../components/EditableTable';
+import { useTableDetail } from '../../http/table/useTableDetail';
+import { useUserInfo } from '../../http/user/useUserInfo';
+import { setHeads } from '../../redux/headsSlice';
+import { addRows } from '../../redux/rowsSlice';
+import { useAppDispatch } from '../../redux/store';
+import { setup, socket } from '../../socket';
+import { addColumnFn } from '../../socket/addColumnFn';
+import { addRowFn } from '../../socket/addRowFn';
+import { addTagFn } from '../../socket/addTagFn';
+import { changeHeadTypeFn } from '../../socket/changeHeadTypeFn';
+import { delColumnFn } from '../../socket/delColumnFn';
+import { delRowFn } from '../../socket/delRow';
+import { getColumnFn } from '../../socket/getColumnFn';
+import { opsEmitedFromBeFn } from '../../socket/opsEmitedFromBeFn';
+import { putHeadAttributeFn } from '../../socket/putHeadAttributeFn';
+import { replaceColumnFn } from '../../socket/replaceColumnFn';
+import { replaceGridContentFn } from '../../socket/replaceGridContentFn';
+import { updateTagFn } from '../../socket/updateTagFn';
+import { OTController } from '../../utils/OTsController';
+import { setupShortcut } from '../../utils/setupShortcut';
+import { TagsOTController } from '../../utils/tagsOTController';
+import { undoStack } from '../../utils/UndoStack';
 
 const AvatarGroup = Avatar.Group;
 
@@ -46,6 +43,7 @@ export const Table: FC = () => {
   const [onlineUsers, setOnlineUsers] = useState<UserToken[]>([]);
   const dispatch = useAppDispatch();
   const shortcutInputRef = useRef<HTMLInputElement>(null);
+  const { userInfo } = useUserInfo();
 
   useEffect(() => {
     if (!tableId) return;
@@ -132,10 +130,10 @@ export const Table: FC = () => {
             </Avatar>
           ))}
         </AvatarGroup>
-        <Avatar>A</Avatar>
+        {userInfo && <Avatar>{userInfo.name.slice(0, 1)}</Avatar>}
       </header>
       <div className="table-content">
-        <div className="table-content-title">学习计划</div>
+        <div className="table-content-title">{tableDetail?.title}</div>
         {tableDetail ? <EditableTable /> : <Spin />}
       </div>
       <input
