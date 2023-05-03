@@ -24,7 +24,7 @@ export const Home: FC = () => {
     <div className="home">
       <header className="home-header">
         <h1>表格总览</h1>
-        <Avatar>{userInfo?.name}</Avatar>
+        <Button type="text">{userInfo?.name}</Button>
       </header>
       <div className="home-content">
         <div>

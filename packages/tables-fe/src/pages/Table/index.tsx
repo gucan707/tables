@@ -130,7 +130,7 @@ export const Table: FC = () => {
             </Avatar>
           ))}
         </AvatarGroup>
-        {userInfo && <Avatar>{userInfo.name.slice(0, 1)}</Avatar>}
+        <Button type="text">{userInfo?.name}</Button>
       </header>
       <div className="table-content">
         <div className="table-content-title">{tableDetail?.title}</div>
