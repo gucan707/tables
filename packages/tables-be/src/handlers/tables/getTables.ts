@@ -25,6 +25,11 @@ export const getTables: IMiddleware = async (ctx) => {
           owner: userInfo._id,
         },
       },
+      {
+        $sort: {
+          _id: -1, // 按照_id降序排序，相当于按照创建时间降序排序
+        },
+      },
       { $skip: Number(req.page) * LIMIT_TABLES },
       { $limit: LIMIT_TABLES },
       {
